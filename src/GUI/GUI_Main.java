@@ -6,7 +6,6 @@
 package GUI;
 
 import DTO.DTO_employee;
-import GUI.System.GUI_ChangPassword;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -148,6 +147,7 @@ public class GUI_Main extends javax.swing.JFrame {
             // TODO add your handling code here:
             GUI_Product gUI_Product = new GUI_Product();
             gUI_Product.setVisible(true);
+            
         } catch (SQLException ex) {
             Logger.getLogger(GUI_Main.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -47,7 +47,7 @@ public class DAL_Category extends DAL{
         ArrayList<DTO_Category> result = new ArrayList<DTO_Category>();
         try {
             connection = dbUltils.Get_connection();
-            String sqlFind = "Select Id,Name,Description"
+            String sqlFind = "Select id,Name,Description "
                     + "from categories where IsDelete != 1";
             preparedStatement = connection.prepareStatement(sqlFind);
 

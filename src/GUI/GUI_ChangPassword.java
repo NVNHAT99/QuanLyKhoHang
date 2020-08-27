@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package GUI.System;
+package GUI;
 
 import BLL.BLL_Employee;
 import DTO.DTO_employee;

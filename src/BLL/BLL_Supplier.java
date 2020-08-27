@@ -26,5 +26,7 @@ public class BLL_Supplier {
     public ArrayList<DTO_Supplier> GetAllSuppliers() throws SQLException {
         return  dAL_Supplier.GetAllSuppliers();
     }
-    
+    public ArrayList<DTO_Supplier> GetAllSuppliers_ID_Name() throws SQLException {
+        return dAL_Supplier.GetAllSuppliers_ID_Name();
+    }
 }

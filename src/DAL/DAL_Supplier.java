@@ -55,8 +55,8 @@ public class DAL_Supplier extends DAL {
             while (resultSet.next()) {
                 DTO_Supplier supplier = new DTO_Supplier();
                 supplier.setId(resultSet.getInt(1));
-                supplier.setName(resultSet.getString(2));
-                supplier.setPhoneNumber(resultSet.getString(3));
+                supplier.setName(resultSet.getString(3));
+                supplier.setPhoneNumber(resultSet.getString(2));
                 supplier.setEmail(resultSet.getString(4));
                 supplier.setAddress(resultSet.getString(5));
                 result.add(supplier);

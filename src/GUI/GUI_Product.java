@@ -250,23 +250,33 @@ public class GUI_Product extends javax.swing.JFrame {
 
         // get all category and supplier
         ArrayList<DTO_Supplier> list_supplier = bLL_Supplier.GetAllSuppliers();
-        //ArrayList<DTO_Category> list_Categories = bLL_Category.GetAllCatgory();
+        ArrayList<DTO_Category> list_Categories = bLL_Category.GetAllCatgory();
         // create combobox and then add to table
         JComboBox supplierBox = new JComboBox();
         JComboBox catComboBox = new JComboBox();
 
-        Object[] items = new Object[]{new CustomCombo(1,"INDIA"), new CustomCombo(2,"UAE"), new CustomCombo(4,"USA")};
-        javax.swing.JComboBox jComboBox1 = new javax.swing.JComboBox();
-        DefaultComboBoxModel mod = new DefaultComboBoxModel(items);
+        DefaultComboBoxModel Supplier_mod = new DefaultComboBoxModel();
+        DefaultComboBoxModel Category_mod = new DefaultComboBoxModel();
 
-//        for(int i=0;i<list_supplier.size();i++){
-//            Object item = new CustomCombo(list_supplier.get(i).getId(),list_supplier.get(i).getName());
-//            mod.addElement(item);
-//        }
-        supplierBox.setModel(mod);
+        for(int i=0;i<list_supplier.size();i++){
+            Object item = new CustomCombo(list_supplier.get(i).getId(),list_supplier.get(i).getName());
+            Supplier_mod.addElement(item);
+        }
+        
+        for(int j=0;j<list_supplier.size();j++){
+            Object item = new CustomCombo(list_Categories.get(j).getId(),list_Categories.get(j).getName());
+            Category_mod.addElement(item);
+        }
+        supplierBox.setModel(Supplier_mod);
         TableColumn col_supplier = Table_Product.getColumnModel().getColumn(3);
         col_supplier.setCellEditor(new DefaultCellEditor(supplierBox));
-
+        
+        catComboBox.setModel(Category_mod);
+        TableColumn col_Category = Table_Product.getColumnModel().getColumn(4);
+        col_Category.setCellEditor(new DefaultCellEditor(catComboBox));
+        
+        // set value for category colum and supplier colum is selected
+        
     }
 
     public static void main(String args[]) {
