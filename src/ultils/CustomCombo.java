@@ -15,6 +15,7 @@ public class CustomCombo {
     String label;
 
     public CustomCombo(int id, String label) {
+        super();
         this.ID = id;
         this.label = label;
     }

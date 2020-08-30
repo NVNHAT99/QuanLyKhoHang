@@ -13,11 +13,12 @@
             <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/DTO/Custom_DTO_ForModelTable/DTO_Product_ModelTable.java</file>
             <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/DAL/DAL_Product.java</file>
             <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/ultils/CustomCombo.java</file>
-            <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/ultils/Product_TableModel.java</file>
             <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_Main.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_Login.java</file>
             <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_Product.java</file>
             <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/BLL/BLL_Product.java</file>
-            <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/ultils/CustomCellRenderer.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/ultils/DBUtils.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/DAL/DAL_Employee.java</file>
         </group>
     </open-files>
 </project-private>

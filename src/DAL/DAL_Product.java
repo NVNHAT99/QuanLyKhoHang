@@ -5,19 +5,21 @@
  */
 package DAL;
 
+import DTO.Custom_DTO_ForModelTable.DTO_Product_ModelTable;
 import DTO.DTO_Product;
 import DTO.DTO_employee;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import ultils.CustomCombo;
 
 /**
  *
  * @author Nhat
  */
-public class DAL_Product extends DAL{
-    
+public class DAL_Product extends DAL {
+
     public ArrayList<DTO_Product> FindByProductName(String productName) throws SQLException {
         ArrayList<DTO_Product> result = new ArrayList<DTO_Product>();
         try {
@@ -42,9 +44,9 @@ public class DAL_Product extends DAL{
         }
         return result;
     }
-    
-    public  ArrayList<DTO_Product> GetAllProductsNotDelete() throws SQLException{
-        
+
+    public ArrayList<DTO_Product> GetAllProductsNotDelete() throws SQLException {
+
         ArrayList<DTO_Product> result = new ArrayList<DTO_Product>();
         try {
             connection = dbUltils.Get_connection();
@@ -73,8 +75,8 @@ public class DAL_Product extends DAL{
         }
         return result;
     }
-    
-    public boolean Insert(String Name, float Price,int SupplierId,int CategoryId,int Unit,int UnitsInStock,String ImagePath) throws SQLException {
+
+    public boolean Insert(String Name, float Price, int SupplierId, int CategoryId, int Unit, int UnitsInStock, String ImagePath) throws SQLException {
         boolean result = false;
         try {
             connection = dbUltils.Get_connection();
@@ -95,6 +97,40 @@ public class DAL_Product extends DAL{
                 result = true;
             }
 
+        } catch (Exception e) {
+            JOptionPane.showInputDialog(e);
+
+        } finally {
+            connection.close();
+        }
+        return result;
+    }
+
+    public ArrayList<DTO_Product_ModelTable> GetAllProduct_ForProductTable() throws SQLException {
+
+        ArrayList<DTO_Product_ModelTable> result = new ArrayList<DTO_Product_ModelTable>();
+        try {
+            connection = dbUltils.Get_connection();
+            String sqlFind = "Select prt.Id,prt.Name,prt.Price,prt.SupplierId,supp.Name,prt.CategoryId,"
+                    + "cate.Name,prt.Unit,prt.UnitsInStock,prt.ImagePath "
+                    + "FROM (products prt JOIN suppliers supp on(supp.Id=prt.SupplierId)) "
+                    + "JOIN categories cate on(cate.Id = prt.CategoryId)"
+                    + " WHERE prt.IsDelete != 1 ";
+            preparedStatement = connection.prepareStatement(sqlFind);
+
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                DTO_Product_ModelTable product_model = new DTO_Product_ModelTable();
+                product_model.setId(resultSet.getInt(1));
+                product_model.setName(resultSet.getString(2));
+                product_model.setPrice(resultSet.getFloat(3));
+                product_model.setSupplier(new CustomCombo(resultSet.getInt(4),resultSet.getString(5)));
+                product_model.setCategory(new CustomCombo(resultSet.getInt(6),resultSet.getString(7)));
+                product_model.setUnit(resultSet.getString(8));
+                product_model.setUnitsInStock(resultSet.getInt(9));
+                product_model.setImagePath(resultSet.getString(10));
+                result.add(product_model);
+            }
         } catch (Exception e) {
             JOptionPane.showInputDialog(e);
 

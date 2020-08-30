@@ -8,6 +8,7 @@ package GUI;
 import BLL.BLL_Category;
 import BLL.BLL_Product;
 import BLL.BLL_Supplier;
+import DTO.Custom_DTO_ForModelTable.DTO_Product_ModelTable;
 import DTO.DTO_Category;
 import DTO.DTO_Product;
 import DTO.DTO_Supplier;
@@ -19,11 +20,11 @@ import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import ultils.CustomCombo;
-import ultils.Product_TableModel;
 
 /**
  *
@@ -34,9 +35,6 @@ public class GUI_Product extends javax.swing.JFrame {
     static BLL_Product bll_product = new BLL_Product();
     static BLL_Supplier bLL_Supplier = new BLL_Supplier();
     static BLL_Category bLL_Category = new BLL_Category();
-    
-    private JTable table = new JTable();
-    private Product_TableModel  tableModel;
 
     /**
      * Creates new form GUI_Product
@@ -240,49 +238,30 @@ public class GUI_Product extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public void Load() throws SQLException {
-//        ArrayList<DTO_Product> List_product = bll_product.GetAllProductsNotDelete();
-//        String[] columeNames = new String[]{"ID", "Name", "Price", "SupplierId", "CategoryId", "Unit", "UnitsInStock", "ImagePath"};
-//        DefaultTableModel model = new DefaultTableModel(null, columeNames);
-//        for (int i = 0; i < List_product.size(); i++) {
-//            // create object(is a row in table) SupplierId and CategoryId null for set combobox late
-//            Object[] product = new Object[]{
-//                List_product.get(i).getId(), List_product.get(i).getName(), List_product.get(i).getPrice(),
-//                "", "", List_product.get(i).getUnit(), List_product.get(i).getUnitsInStock(),
-//                List_product.get(i).getImagePath()};
-//            model.addRow(product);
-//        }
-//        Table_Product.setModel(model);
-//
-//        // get all category and supplier
-//        ArrayList<DTO_Supplier> list_supplier = bLL_Supplier.GetAllSuppliers();
-//        ArrayList<DTO_Category> list_Categories = bLL_Category.GetAllCatgory();
-//        // create combobox and then add to table
-//        JComboBox supplierBox = new JComboBox();
-//        JComboBox catComboBox = new JComboBox();
-//
-//        DefaultComboBoxModel Supplier_mod = new DefaultComboBoxModel();
-//        DefaultComboBoxModel Category_mod = new DefaultComboBoxModel();
-//
-//        for(int i=0;i<list_supplier.size();i++){
-//            Object item = new CustomCombo(list_supplier.get(i).getId(),list_supplier.get(i).getName());
-//            Supplier_mod.addElement(item);
-//        }
-//        
-//        for(int j=0;j<list_supplier.size();j++){
-//            Object item = new CustomCombo(list_Categories.get(j).getId(),list_Categories.get(j).getName());
-//            Category_mod.addElement(item);
-//        }
-//        supplierBox.setModel(Supplier_mod);
-//        TableColumn col_supplier = Table_Product.getColumnModel().getColumn(3);
-//        col_supplier.setCellEditor(new DefaultCellEditor(supplierBox));
-//        
-//        catComboBox.setModel(Category_mod);
-//        TableColumn col_Category = Table_Product.getColumnModel().getColumn(4);
-//        col_Category.setCellEditor(new DefaultCellEditor(catComboBox));
-//        
-//        // set value for category colum and supplier colum is selected
+        ArrayList<DTO_Product_ModelTable> List_product_ModelTables = bll_product.GetAllProduct_ForProductTable();
+        String[] columeNames = new String[]{"ID", "Name", "Price", "Supplier", "Category", "Unit", "UnitsInStock", "ImagePath"};
+        DefaultTableModel model = new DefaultTableModel(null, columeNames) {
 
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // or a condition at your choice with row and column
+            }
+        };
+        for (int i = 0;
+                i < List_product_ModelTables.size();
+                i++) {
+            // create object(is a row in table) 
+            Object[] product = new Object[]{
+                List_product_ModelTables.get(i).getId(), List_product_ModelTables.get(i).getName(), List_product_ModelTables.get(i).getPrice(),
+                List_product_ModelTables.get(i).getSupplier(), List_product_ModelTables.get(i).getCategory(), List_product_ModelTables.get(i).getUnit(),
+                List_product_ModelTables.get(i).getUnitsInStock(),
+                List_product_ModelTables.get(i).getImagePath()};
+            model.addRow(product);
+        }
+
+        Table_Product.setModel(model);
         
+
     }
 
     public static void main(String args[]) {
