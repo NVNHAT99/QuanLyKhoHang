@@ -75,8 +75,8 @@ public class DAL_Supplier extends DAL {
         ArrayList<DTO_Supplier> result = new ArrayList<DTO_Supplier>();
         try {
             connection = dbUltils.Get_connection();
-            String sqlFind = "Select Id,Name"
-                    + "from Suppliers where IsDelete != 1";
+            String sqlFind = "Select Suppliers.Id,Suppliers.Name "
+                    + " from Suppliers where IsDelete != 1 ";
             preparedStatement = connection.prepareStatement(sqlFind);
 
             resultSet = preparedStatement.executeQuery();
