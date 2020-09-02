@@ -10,13 +10,20 @@ import BLL.BLL_Product;
 import BLL.BLL_Supplier;
 import DTO.DTO_Category;
 import DTO.DTO_Supplier;
+import java.io.File;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 import sun.java2d.loops.CustomComponent;
 import ultils.CustomCombo;
 
@@ -35,6 +42,7 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
      */
     public GUI_Product_Insert_Update() throws SQLException {
         initComponents();
+        
         Load();
     }
 
@@ -48,25 +56,23 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
     private void initComponents() {
 
         txt_Name = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         Img_Product = new javax.swing.JLabel();
-        txt_Price = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        txt_Unit = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        txt_UnitStock = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btn_Close = new javax.swing.JButton();
         cmb_Supplier = new javax.swing.JComboBox<>();
         cmb_Category = new javax.swing.JComboBox<>();
+        txt_Unit = new javax.swing.JFormattedTextField();
+        txt_Pricce = new javax.swing.JFormattedTextField();
+        btn_ChoseImage = new javax.swing.JButton();
+        txt_ImagePath = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel8.setText("UnitsInStock");
 
         jLabel3.setText("Name :");
 
@@ -82,10 +88,10 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
 
         jButton1.setText("Save");
 
-        jButton2.setText("Close");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btn_Close.setText("Close");
+        btn_Close.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btn_CloseActionPerformed(evt);
             }
         });
 
@@ -93,75 +99,80 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
 
         cmb_Category.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        txt_Unit.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
+
+        txt_Pricce.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+
+        btn_ChoseImage.setText("Chose Image");
+        btn_ChoseImage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ChoseImageActionPerformed(evt);
+            }
+        });
+
+        txt_ImagePath.setEditable(false);
+        txt_ImagePath.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_ImagePathActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txt_Price)
-                            .addComponent(cmb_Supplier, 0, 133, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(29, 29, 29)
-                        .addComponent(txt_Name))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cmb_Category, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Img_Product, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8))
-                        .addGap(35, 35, 35)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_Unit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_UnitStock, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(1, 1, 1))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(53, 53, 53)
-                .addComponent(jButton2)
-                .addGap(175, 175, 175))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(194, 194, 194)
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel5))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(18, 18, 18)
+                                    .addComponent(cmb_Supplier, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txt_Pricce, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addGap(29, 29, 29)
+                            .addComponent(txt_Name))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel6)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(cmb_Category, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btn_Close)
+                        .addGap(143, 143, 143))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(btn_ChoseImage)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(txt_ImagePath))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(jLabel7)
+                            .addGap(18, 18, 18)
+                            .addComponent(txt_Unit)
+                            .addGap(51, 51, 51))
+                        .addComponent(Img_Product, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(39, 39, 39)
+                .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txt_Unit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(txt_UnitStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel8)))
-                        .addGap(18, 18, 18)
-                        .addComponent(Img_Product, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(jButton2)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
@@ -169,8 +180,24 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(txt_Price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_Pricce, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_Unit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
                         .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_ChoseImage)
+                            .addComponent(txt_ImagePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(Img_Product, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(52, 52, 52)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(btn_Close)))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(cmb_Supplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -184,10 +211,30 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btn_CloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CloseActionPerformed
         // TODO add your handling code here:
         dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btn_CloseActionPerformed
+
+    private void btn_ChoseImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ChoseImageActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter imageFitler = new FileNameExtensionFilter("Image", "jpg", "png");
+        fileChooser.setFileFilter(imageFitler);
+        // user only can select one image on one times
+        fileChooser.setMultiSelectionEnabled(false);
+
+        int NumberImage = fileChooser.showDialog(this, "Chose file image for Product");
+        if (NumberImage == JFileChooser.APPROVE_OPTION) {
+            File f = fileChooser.getSelectedFile();
+            txt_ImagePath.setText(f.getAbsolutePath());
+            Img_Product.setIcon(new ImageIcon(f.getAbsolutePath()));
+        }
+    }//GEN-LAST:event_btn_ChoseImageActionPerformed
+
+    private void txt_ImagePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_ImagePathActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_ImagePathActionPerformed
 
     public void Load() throws SQLException {
 
@@ -205,14 +252,24 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
             Object items_Category = new CustomCombo(ListCategorys.get(j).getId(), ListCategorys.get(j).getName());
             mod_Category.addElement(items_Category);
         }
-        
-        
+
         cmb_Supplier.setModel(mod_Supplier);
         cmb_Category.setModel(mod_Category);
         // this code to set selected items and get selected item
 //        cmb_Supplier.getModel().setSelectedItem(new CustomCombo(Listsuppliers.get(2).getId(), Listsuppliers.get(2).getName()));
 //        CustomCombo supplier = (CustomCombo) cmb_Supplier.getSelectedItem();
 //        JOptionPane.showMessageDialog(null, supplier.getID());
+
+        // set format number textfield
+
+        NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Integer.class);
+        formatter.setMinimum(1);
+        formatter.setMaximum(Integer.MAX_VALUE);
+        formatter.setAllowsInvalid(false);
+        
+        txt_Pricce.setFormatterFactory(new DefaultFormatterFactory(formatter));
     }
 
     /**
@@ -256,20 +313,20 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Img_Product;
+    private javax.swing.JButton btn_ChoseImage;
+    private javax.swing.JButton btn_Close;
     private javax.swing.JComboBox<String> cmb_Category;
     private javax.swing.JComboBox<String> cmb_Supplier;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
+    private javax.swing.JTextField txt_ImagePath;
     private javax.swing.JTextField txt_Name;
-    private javax.swing.JTextField txt_Price;
-    private javax.swing.JTextField txt_Unit;
-    private javax.swing.JTextField txt_UnitStock;
+    private javax.swing.JFormattedTextField txt_Pricce;
+    private javax.swing.JFormattedTextField txt_Unit;
     // End of variables declaration//GEN-END:variables
 }

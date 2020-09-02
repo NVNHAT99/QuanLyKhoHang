@@ -28,7 +28,7 @@ public class BLL_Product {
     }
 
     public boolean Insert(String Name, float Price, int SupplierId, int CategoryId, int Unit, int UnitsInStock, String ImagePath) throws SQLException {
-
+        
         return dal_product.Insert(Name, Price, SupplierId, CategoryId, Unit, UnitsInStock, ImagePath);
     }
 

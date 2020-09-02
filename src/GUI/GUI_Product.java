@@ -246,6 +246,8 @@ public class GUI_Product extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             GUI_Product_Insert_Update jfram_insert_product = new GUI_Product_Insert_Update();
+            jfram_insert_product.pack();
+            jfram_insert_product.setLocationRelativeTo(null);
             jfram_insert_product.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(GUI_Product.class.getName()).log(Level.SEVERE, null, ex);

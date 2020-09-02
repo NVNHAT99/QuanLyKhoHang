@@ -20,9 +20,10 @@ public class GUI_Main extends javax.swing.JFrame {
      * Creates new form GUI_Main
      */
     static DTO_employee _employee;
+
     public GUI_Main(DTO_employee employee) {
         initComponents();
-        _employee=employee;
+        _employee = employee;
     }
 
     /**
@@ -130,11 +131,11 @@ public class GUI_Main extends javax.swing.JFrame {
     }//GEN-LAST:event_formAncestorResized
 
     private void btn_ChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ChangePasswordActionPerformed
-           // TODO add your handling code here:
-           GUI_ChangPassword jframChangPassword = new  GUI_ChangPassword(_employee);
-           jframChangPassword.setResizable(false);
-           jframChangPassword.setVisible(true);
-        
+        // TODO add your handling code here:
+        GUI_ChangPassword jframChangPassword = new GUI_ChangPassword(_employee);
+        jframChangPassword.setResizable(false);
+        jframChangPassword.setVisible(true);
+
     }//GEN-LAST:event_btn_ChangePasswordActionPerformed
 
     private void btn_ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ExitActionPerformed
@@ -146,8 +147,10 @@ public class GUI_Main extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             GUI_Product gUI_Product = new GUI_Product();
+            gUI_Product.setLocationRelativeTo(null);
             gUI_Product.setVisible(true);
-            
+            gUI_Product.setVisible(true);
+
         } catch (SQLException ex) {
             Logger.getLogger(GUI_Main.class.getName()).log(Level.SEVERE, null, ex);
         }

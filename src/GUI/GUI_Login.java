@@ -23,6 +23,8 @@ public class GUI_Login extends javax.swing.JFrame {
      */
     public GUI_Login() {
         initComponents();
+        this.pack();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -85,6 +87,8 @@ public class GUI_Login extends javax.swing.JFrame {
                     GUI_Main jfarm_main = new GUI_Main(employee.get(0));
                     jfarm_main.pack();
                     setVisible(false);
+                    jfarm_main.pack();
+                    jfarm_main.setLocationRelativeTo(null);
                     jfarm_main.setVisible(true);
 
                 }
