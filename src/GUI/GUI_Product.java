@@ -259,6 +259,9 @@ public class GUI_Product extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public void Load() throws SQLException {
+        
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        
         ArrayList<DTO_Product_ModelTable> List_product_ModelTables = bll_product.GetAllProduct_ForProductTable();
         String[] columeNames = new String[]{"ID", "Name", "Price", "Supplier", "Category", "Unit", "UnitsInStock", "ImagePath"};
         DefaultTableModel model = new DefaultTableModel(null, columeNames) {

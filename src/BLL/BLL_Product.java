@@ -10,6 +10,7 @@ import DTO.Custom_DTO_ForModelTable.DTO_Product_ModelTable;
 import DTO.DTO_Product;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -27,9 +28,22 @@ public class BLL_Product {
         return dal_product.GetAllProductsNotDelete();
     }
 
-    public boolean Insert(String Name, float Price, int SupplierId, int CategoryId, int Unit, int UnitsInStock, String ImagePath) throws SQLException {
-        
-        return dal_product.Insert(Name, Price, SupplierId, CategoryId, Unit, UnitsInStock, ImagePath);
+    public void Insert(String Name, String Price, int SupplierId, int CategoryId, String Unit, String ImagePath) throws SQLException {
+
+        if ((Name.equals(null) || Name.equals(""))
+                || (Price.equals(null) || Price.equals(""))
+                || (Unit.equals(null) || Unit.equals(""))) {
+            JOptionPane.showMessageDialog(null, "co du lieu de trong moi kiem tra lai");
+        } else {
+            try {
+                if (dal_product.Insert(Name, Float.parseFloat(Price), SupplierId, CategoryId, Integer.parseInt(Unit),
+                         Integer.parseInt(Unit), ImagePath)) {
+                    JOptionPane.showMessageDialog(null, "Them san pham thanh cong");
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "co du lieu khong dung dinh dang moi kiem tra lai");
+            }
+        }
     }
 
     public ArrayList<DTO_Product_ModelTable> GetAllProduct_ForProductTable() throws SQLException {

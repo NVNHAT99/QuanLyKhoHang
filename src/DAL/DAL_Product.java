@@ -80,7 +80,7 @@ public class DAL_Product extends DAL {
         boolean result = false;
         try {
             connection = dbUltils.Get_connection();
-            String sql = "Insert into products(Id,Name,Price,SupplierId,CategoryId,Unit,UnitsInStock,ImagePath) values(?,?,?,?,?,?,?)";
+            String sql = "Insert into products(Name,Price,SupplierId,CategoryId,Unit,UnitsInStock,ImagePath) values(?,?,?,?,?,?,?)";
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, Name);
