@@ -104,6 +104,11 @@ public class GUI_Product extends javax.swing.JFrame {
         });
 
         btn_Update.setText("Update");
+        btn_Update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_UpdateActionPerformed(evt);
+            }
+        });
 
         btn_delete.setText("Delete");
 
@@ -252,16 +257,40 @@ public class GUI_Product extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(GUI_Product.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_btn_InsertActionPerformed
+
+    private void btn_UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_UpdateActionPerformed
+        try {
+            // TODO add your handling code here:
+            int row = Table_Product.getSelectedRow();
+            DTO_Product product = new DTO_Product();
+            product.setId(Integer.parseInt(Table_Product.getModel().getValueAt(row, 0).toString()));
+            product.setName(Table_Product.getModel().getValueAt(row, 1).toString());
+            product.setPrice(Double.parseDouble(Table_Product.getModel().getValueAt(row, 2).toString()));
+            product.setSupplierId(((CustomCombo) Table_Product.getModel().getValueAt(row, 3)).getID());
+            product.setCategoryId(((CustomCombo) Table_Product.getModel().getValueAt(row, 4)).getID());
+            product.setUnit(Table_Product.getModel().getValueAt(row, 5).toString());
+            product.setUnitsInStock(Integer.parseInt(Table_Product.getModel().getValueAt(row, 6).toString()));
+            product.setImagePath(Table_Product.getValueAt(row, 7).toString());
+
+            GUI_Product_Insert_Update jframe_UpdateProduct = new GUI_Product_Insert_Update(product);
+            jframe_UpdateProduct.pack();
+            jframe_UpdateProduct.setLocationRelativeTo(null);
+            jframe_UpdateProduct.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(GUI_Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_btn_UpdateActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public void Load() throws SQLException {
-        
+
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        
+
         ArrayList<DTO_Product_ModelTable> List_product_ModelTables = bll_product.GetAllProduct_ForProductTable();
         String[] columeNames = new String[]{"ID", "Name", "Price", "Supplier", "Category", "Unit", "UnitsInStock", "ImagePath"};
         DefaultTableModel model = new DefaultTableModel(null, columeNames) {
@@ -271,7 +300,7 @@ public class GUI_Product extends javax.swing.JFrame {
                 return false; // or a condition at your choice with row and column
             }
         };
-        for (int i = 0;i < List_product_ModelTables.size(); i++) {
+        for (int i = 0; i < List_product_ModelTables.size(); i++) {
             // create object(is a row in table) 
             Object[] product = new Object[]{
                 List_product_ModelTables.get(i).getId(), List_product_ModelTables.get(i).getName(), List_product_ModelTables.get(i).getPrice(),
@@ -300,6 +329,9 @@ public class GUI_Product extends javax.swing.JFrame {
                 }
             }
         });
+
+        // set selected row 
+        Table_Product.setRowSelectionInterval(0, 0);
 
     }
 

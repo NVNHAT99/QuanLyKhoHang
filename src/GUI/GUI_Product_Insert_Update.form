@@ -23,58 +23,61 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="194" max="-2" attributes="0"/>
-              <Component id="jLabel1" pref="102" max="32767" attributes="0"/>
-              <EmptySpace min="-2" pref="208" max="-2" attributes="0"/>
-          </Group>
           <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="jLabel1" min="-2" pref="118" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="197" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="139" pref="139" max="-2" attributes="0"/>
-                      <Component id="txt_Save" max="32767" attributes="0"/>
+                      <Component id="jLabel8" min="-2" pref="53" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                      <Component id="txt_UnitStock" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="165" max="-2" attributes="0"/>
+                      <Component id="btn_Save" pref="81" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel3" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                          <Component id="jLabel7" alignment="0" min="-2" pref="53" max="-2" attributes="0"/>
+                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="jLabel4" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jLabel6" alignment="0" pref="86" max="32767" attributes="0"/>
+                              <Component id="jLabel5" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jLabel4" max="32767" attributes="0"/>
-                          <Component id="jLabel5" max="32767" attributes="0"/>
-                          <Component id="jLabel6" max="32767" attributes="0"/>
+                          <Component id="jLabel3" alignment="0" min="-2" pref="78" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="txt_Name" max="32767" attributes="0"/>
                           <Component id="cmb_Category" max="32767" attributes="0"/>
                           <Component id="cmb_Supplier" max="32767" attributes="0"/>
                           <Component id="txt_price" max="32767" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="txt_Name" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="txt_unit" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="btn_Close" max="32767" attributes="0"/>
-                      <EmptySpace min="157" pref="157" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="btn_ChoseImage" min="-2" pref="95" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="txt_ImagePath" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="Img_Product" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="btn_ChoseImage" min="-2" pref="95" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="txt_ImagePath" pref="129" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jLabel7" min="-2" pref="53" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="txt_Unit" min="-2" pref="84" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="btn_Close" min="-2" pref="90" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="Img_Product" alignment="0" max="32767" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -83,75 +86,64 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="jLabel1" pref="41" max="32767" attributes="0"/>
-              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Group type="102" alignment="3" attributes="0">
-                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                              <Component id="jLabel3" pref="27" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="txt_Name" alignment="3" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Group type="102" alignment="3" attributes="0">
-                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                              <Component id="jLabel4" pref="27" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="txt_price" alignment="3" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txt_Unit" alignment="0" max="32767" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel7" max="32767" attributes="0"/>
-                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btn_ChoseImage" alignment="3" max="32767" attributes="0"/>
-                          <Group type="102" alignment="3" attributes="0">
-                              <EmptySpace min="3" pref="3" max="-2" attributes="0"/>
-                              <Component id="txt_ImagePath" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                  </Group>
+              <Component id="jLabel1" pref="48" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel3" alignment="3" pref="29" max="32767" attributes="0"/>
+                  <Component id="txt_Name" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btn_ChoseImage" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txt_ImagePath" alignment="3" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="Img_Product" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txt_Save" alignment="3" max="32767" attributes="0"/>
-                          <Component id="btn_Close" alignment="3" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                              <Component id="jLabel4" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="txt_price" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                              <Component id="jLabel5" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="cmb_Supplier" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                              <Component id="jLabel6" max="32767" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jLabel7" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                              <Component id="cmb_Category" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="txt_unit" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
+                              <Component id="jLabel8" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="txt_UnitStock" alignment="1" min="-2" pref="28" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Group type="102" alignment="3" attributes="0">
-                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                              <Component id="jLabel5" pref="27" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="cmb_Supplier" alignment="3" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Group type="102" alignment="3" attributes="0">
-                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                              <Component id="jLabel6" pref="27" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="cmb_Category" alignment="3" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="156" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="Img_Product" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btn_Save" alignment="3" pref="24" max="32767" attributes="0"/>
+                  <Component id="btn_Close" alignment="3" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -191,12 +183,12 @@
         <Property name="text" type="java.lang.String" value="Insert Product"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="txt_Save">
+    <Component class="javax.swing.JButton" name="btn_Save">
       <Properties>
         <Property name="text" type="java.lang.String" value="Save"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_SaveActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_SaveActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btn_Close">
@@ -237,13 +229,6 @@
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JFormattedTextField" name="txt_Unit">
-      <Properties>
-        <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-          <Format format="#,##0" subtype="-1" type="0"/>
-        </Property>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JButton" name="btn_ChoseImage">
       <Properties>
         <Property name="text" type="java.lang.String" value="Chose Image"/>
@@ -258,6 +243,20 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txt_price">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel8">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="UnitStock :"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JFormattedTextField" name="txt_UnitStock">
+      <Properties>
+        <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+          <Format format="#,##0" subtype="-1" type="0"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txt_unit">
     </Component>
   </SubComponents>
 </Form>

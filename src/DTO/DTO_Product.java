@@ -13,7 +13,7 @@ public class DTO_Product {
     
   private int Id;
   private String Name;
-  private float Price;
+  private double  Price;
   private int SupplierId;
   private int CategoryId;
   private String Unit;
@@ -51,14 +51,14 @@ public class DTO_Product {
     /**
      * @return the Price
      */
-    public float getPrice() {
+    public double getPrice() {
         return Price;
     }
 
     /**
      * @param Price the Price to set
      */
-    public void setPrice(float Price) {
+    public void setPrice(double Price) {
         this.Price = Price;
     }
 
