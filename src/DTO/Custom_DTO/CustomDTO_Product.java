@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package DTO.Custom_DTO_ForModelTable;
+package DTO.Custom_DTO;
 
 import ultils.CustomCombo;
 
@@ -11,11 +11,11 @@ import ultils.CustomCombo;
  *
  * @author Administrator
  */
-public class DTO_Product_ModelTable {
+public class CustomDTO_Product {
 
     private int Id;
     private String Name;
-    private float Price;
+    private double Price;
     private CustomCombo supplier;
     private CustomCombo category;
     private String Unit;
@@ -53,14 +53,14 @@ public class DTO_Product_ModelTable {
     /**
      * @return the Price
      */
-    public float getPrice() {
+    public double getPrice() {
         return Price;
     }
 
     /**
      * @param Price the Price to set
      */
-    public void setPrice(float Price) {
+    public void setPrice(double Price) {
         this.Price = Price;
     }
 

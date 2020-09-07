@@ -8,9 +8,11 @@ package GUI;
 import BLL.BLL_Category;
 import BLL.BLL_Product;
 import BLL.BLL_Supplier;
+import DTO.Custom_DTO.CustomDTO_Product;
 import DTO.DTO_Category;
 import DTO.DTO_Product;
 import DTO.DTO_Supplier;
+import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -40,8 +42,8 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
     static BLL_Product bll_product = new BLL_Product();
     static BLL_Supplier bLL_Supplier = new BLL_Supplier();
     static BLL_Category bLL_Category = new BLL_Category();
-    
-    static DTO_Product Current_Product = new DTO_Product();
+
+    static CustomDTO_Product Current_Product = null;
 
     /**
      * Creates new form GUI_Product_Insert_Update
@@ -50,16 +52,20 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
         initComponents();
         Load();
     }
-    
-    public GUI_Product_Insert_Update(DTO_Product product) throws SQLException {
+
+    public GUI_Product_Insert_Update(CustomDTO_Product product) throws SQLException {
         initComponents();
         Load();
         Current_Product = product;
         txt_Name.setText(product.getName());
         txt_price.setText(String.valueOf(product.getPrice()));
         txt_unit.setText(String.valueOf(product.getUnit()));
-        txt_ImagePath.setText(String.valueOf(product.getUnit()));
-        
+        txt_ImagePath.setText(product.getImagePath());
+        ImageIcon img_productIcon = new ImageIcon(new ImageIcon(product.getImagePath()).getImage().getScaledInstance(Img_Product.getWidth(), Img_Product.getHeight(), Image.SCALE_DEFAULT));
+        Img_Product.setIcon(img_productIcon);
+        cmb_Supplier.getModel().setSelectedItem(product.getSupplier());
+        cmb_Category.getModel().setSelectedItem(product.getCategory());
+
     }
 
     /**
@@ -254,19 +260,44 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
         if (NumberImage == JFileChooser.APPROVE_OPTION) {
             File f = fileChooser.getSelectedFile();
             txt_ImagePath.setText(f.getAbsolutePath());
-            Img_Product.setIcon(new ImageIcon(f.getAbsolutePath()));
+            Img_Product.setIcon(new ImageIcon(new ImageIcon(f.getAbsolutePath()).getImage().getScaledInstance(Img_Product.getWidth(), Img_Product.getHeight(), Image.SCALE_DEFAULT)));
         }
     }//GEN-LAST:event_btn_ChoseImageActionPerformed
 
     private void btn_SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SaveActionPerformed
         // TODO add your handling code here:
-        
-        int Supplier_ID= ((CustomCombo)cmb_Supplier.getSelectedItem()).getID();
-        int category_ID= ((CustomCombo)cmb_Category.getSelectedItem()).getID();
-        try {
-            bll_product.Insert(txt_Name.getText(), txt_price.getText(),Supplier_ID, category_ID, txt_unit.getText(), txt_ImagePath.getText());
-        } catch (SQLException ex) {
-            Logger.getLogger(GUI_Product_Insert_Update.class.getName()).log(Level.SEVERE, null, ex);
+
+        if (Current_Product == null) {
+            // insert
+            int Supplier_ID = ((CustomCombo) cmb_Supplier.getSelectedItem()).getID();
+            int category_ID = ((CustomCombo) cmb_Category.getSelectedItem()).getID();
+            try {
+                if (!bll_product.CheckProductNameExist(txt_Name.getText())) {
+                    bll_product.Insert(txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(),txt_UnitStock.getText(), txt_ImagePath.getText());
+                } else {
+                    JOptionPane.showMessageDialog(null, "sam pham da ton tai");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(GUI_Product_Insert_Update.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            //update
+            int Supplier_ID = ((CustomCombo) cmb_Supplier.getSelectedItem()).getID();
+            int category_ID = ((CustomCombo) cmb_Category.getSelectedItem()).getID();
+            try {
+                if (!Current_Product.getName().equals(txt_Name.getText())) {
+                    if (!bll_product.CheckProductNameExist(txt_Name.getText())) {
+                        bll_product.Update(Current_Product.getId(),txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(),txt_UnitStock.getText(), txt_ImagePath.getText());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "sam pham da ton tai");
+                    }
+                }
+                else{
+                    bll_product.Update(Current_Product.getId(),txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(),txt_UnitStock.getText(), txt_ImagePath.getText());
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(GUI_Product_Insert_Update.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btn_SaveActionPerformed
 
@@ -311,7 +342,6 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

@@ -8,7 +8,7 @@ package GUI;
 import BLL.BLL_Category;
 import BLL.BLL_Product;
 import BLL.BLL_Supplier;
-import DTO.Custom_DTO_ForModelTable.DTO_Product_ModelTable;
+import DTO.Custom_DTO.CustomDTO_Product;
 import DTO.DTO_Category;
 import DTO.DTO_Product;
 import DTO.DTO_Supplier;
@@ -264,12 +264,12 @@ public class GUI_Product extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             int row = Table_Product.getSelectedRow();
-            DTO_Product product = new DTO_Product();
+            CustomDTO_Product product = new CustomDTO_Product();
             product.setId(Integer.parseInt(Table_Product.getModel().getValueAt(row, 0).toString()));
             product.setName(Table_Product.getModel().getValueAt(row, 1).toString());
             product.setPrice(Double.parseDouble(Table_Product.getModel().getValueAt(row, 2).toString()));
-            product.setSupplierId(((CustomCombo) Table_Product.getModel().getValueAt(row, 3)).getID());
-            product.setCategoryId(((CustomCombo) Table_Product.getModel().getValueAt(row, 4)).getID());
+            product.setSupplier(((CustomCombo) Table_Product.getModel().getValueAt(row, 3)));
+            product.setCategory(((CustomCombo) Table_Product.getModel().getValueAt(row, 4)));
             product.setUnit(Table_Product.getModel().getValueAt(row, 5).toString());
             product.setUnitsInStock(Integer.parseInt(Table_Product.getModel().getValueAt(row, 6).toString()));
             product.setImagePath(Table_Product.getValueAt(row, 7).toString());
@@ -291,7 +291,7 @@ public class GUI_Product extends javax.swing.JFrame {
 
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        ArrayList<DTO_Product_ModelTable> List_product_ModelTables = bll_product.GetAllProduct_ForProductTable();
+        ArrayList<CustomDTO_Product> List_product_ModelTables = bll_product.GetAllProduct_ForProductTable();
         String[] columeNames = new String[]{"ID", "Name", "Price", "Supplier", "Category", "Unit", "UnitsInStock", "ImagePath"};
         DefaultTableModel model = new DefaultTableModel(null, columeNames) {
 
