@@ -111,6 +111,11 @@ public class GUI_Product extends javax.swing.JFrame {
         });
 
         btn_delete.setText("Delete");
+        btn_delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_deleteActionPerformed(evt);
+            }
+        });
 
         btn_close.setText("CLose");
         btn_close.addActionListener(new java.awt.event.ActionListener() {
@@ -250,7 +255,7 @@ public class GUI_Product extends javax.swing.JFrame {
     private void btn_InsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_InsertActionPerformed
         try {
             // TODO add your handling code here:
-            GUI_Product_Insert_Update jfram_insert_product = new GUI_Product_Insert_Update();
+            GUI_Product_Insert_Update jfram_insert_product = new GUI_Product_Insert_Update(this);
             jfram_insert_product.pack();
             jfram_insert_product.setLocationRelativeTo(null);
             jfram_insert_product.setVisible(true);
@@ -274,7 +279,7 @@ public class GUI_Product extends javax.swing.JFrame {
             product.setUnitsInStock(Integer.parseInt(Table_Product.getModel().getValueAt(row, 6).toString()));
             product.setImagePath(Table_Product.getValueAt(row, 7).toString());
 
-            GUI_Product_Insert_Update jframe_UpdateProduct = new GUI_Product_Insert_Update(product);
+            GUI_Product_Insert_Update jframe_UpdateProduct = new GUI_Product_Insert_Update(product, this);
             jframe_UpdateProduct.pack();
             jframe_UpdateProduct.setLocationRelativeTo(null);
             jframe_UpdateProduct.setVisible(true);
@@ -283,6 +288,21 @@ public class GUI_Product extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btn_UpdateActionPerformed
+
+    private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
+        // TODO add your handling code here:
+        try {
+            int row = Table_Product.getSelectedRow();
+            int Product_Id = Integer.parseInt(Table_Product.getModel().getValueAt(row, 0).toString());
+            bll_product.Delete(Product_Id, this);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+
+    }//GEN-LAST:event_btn_deleteActionPerformed
+    public void WhenInsertOrUpdateProductDone() throws SQLException {
+        Load();
+    }
 
     /**
      * @param args the command line arguments

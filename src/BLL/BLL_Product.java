@@ -8,6 +8,7 @@ package BLL;
 import DAL.DAL_Product;
 import DTO.Custom_DTO.CustomDTO_Product;
 import DTO.DTO_Product;
+import GUI.GUI_Product;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -28,7 +29,7 @@ public class BLL_Product {
         return dal_product.GetAllProductsNotDelete();
     }
 
-    public void Insert(String Name, String Price, int SupplierId, int CategoryId, String Unit,String UnitStock, String ImagePath) throws SQLException {
+    public void Insert(String Name, String Price, int SupplierId, int CategoryId, String Unit, String UnitStock, String ImagePath, GUI_Product gUI_Product) throws SQLException {
 
         if ((Name.equals(null) || Name.equals(""))
                 || (Price.equals(null) || Price.equals(""))
@@ -38,6 +39,7 @@ public class BLL_Product {
             try {
                 if (dal_product.Insert(Name, Float.parseFloat(Price), SupplierId, CategoryId, Unit,
                         Integer.parseInt(UnitStock), ImagePath)) {
+                    gUI_Product.Load();
                     JOptionPane.showMessageDialog(null, "Them san pham thanh cong");
                 }
             } catch (Exception e) {
@@ -46,24 +48,36 @@ public class BLL_Product {
         }
     }
 
-    public void Update(int ID, String Name, String Price, int SupplierId, int CategoryId, String Unit, String UnitsInStock, String ImagePath) throws SQLException {
+    public void Update(int ID, String Name, String Price, int SupplierId, int CategoryId, String Unit, String UnitsInStock, String ImagePath, GUI_Product gUI_Product) throws SQLException {
         if ((Name.equals(null) || Name.equals(""))
                 || (Price.equals(null) || Price.equals(""))
                 || (Unit.equals(null) || Unit.equals(""))) {
             JOptionPane.showMessageDialog(null, "co du lieu de trong moi kiem tra lai");
         } else {
             try {
-                if (dal_product.Update(ID,Name, Double.parseDouble(Price), SupplierId, CategoryId, Unit,
+                if (dal_product.Update(ID, Name, Double.parseDouble(Price), SupplierId, CategoryId, Unit,
                         Integer.parseInt(UnitsInStock), ImagePath)) {
                     JOptionPane.showMessageDialog(null, "Cap Nhap pham thanh cong");
-                }
-                else{
+                    gUI_Product.Load();
+                } else {
                     JOptionPane.showMessageDialog(null, "cap nhap that bai");
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "co du lieu khong dung dinh dang moi kiem tra lai");
+                JOptionPane.showMessageDialog(null,e);
             }
         }
+    }
+    public void Delete(int ID,GUI_Product gUI_Product) throws SQLException{
+        try {
+                if (dal_product.Delete(ID)) {
+                    JOptionPane.showMessageDialog(null, "Xoa San pham thanh cong");
+                    gUI_Product.Load();
+                } else {
+                    JOptionPane.showMessageDialog(null, "xoa that bai that bai");
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,e);
+            }
     }
 
     public ArrayList<CustomDTO_Product> GetAllProduct_ForProductTable() throws SQLException {

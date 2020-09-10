@@ -98,6 +98,11 @@ public class GUI_Main extends javax.swing.JFrame {
         Tab_Model.add(btn_Product);
 
         btn_Catgories.setText("Catgories");
+        btn_Catgories.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_CatgoriesActionPerformed(evt);
+            }
+        });
         Tab_Model.add(btn_Catgories);
 
         btn_Employee.setText("Employee");
@@ -155,6 +160,14 @@ public class GUI_Main extends javax.swing.JFrame {
             Logger.getLogger(GUI_Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btn_ProductActionPerformed
+
+    private void btn_CatgoriesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CatgoriesActionPerformed
+        // TODO add your handling code here:
+        GUI_Category jframeGUI_Category = new GUI_Category();
+        jframeGUI_Category.setLocationRelativeTo(null);
+        jframeGUI_Category.setVisible(true);
+        jframeGUI_Category.setVisible(true);
+    }//GEN-LAST:event_btn_CatgoriesActionPerformed
 
     /**
      * @param args the command line arguments

@@ -190,4 +190,28 @@ public class DAL_Product extends DAL {
         }
         return result;
     }
+    
+    public boolean Delete(int ID) throws SQLException{
+        boolean result = false;
+        try {
+            connection = dbUltils.Get_connection();
+            String sql = "Update products SET IsDelete = 1 WHERE Id = ?";
+            preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+            
+            preparedStatement.setInt(1, ID);
+            int rs = preparedStatement.executeUpdate();
+
+            if (rs > 0) {
+                result = true;
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showInputDialog(e);
+
+        } finally {
+            connection.close();
+        }
+        return result;
+    }
 }

@@ -27,5 +27,7 @@ public class BLL_Category {
         
         return dal_catgory.GetAllCategory_ID_Name();
     }
-    
+    public boolean CheckCategoryNameExist(String CategoryName) throws SQLException {
+        return dal_catgory.CheckCategoryNameExist(CategoryName);
+    }
 }

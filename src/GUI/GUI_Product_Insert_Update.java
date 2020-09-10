@@ -12,6 +12,7 @@ import DTO.Custom_DTO.CustomDTO_Product;
 import DTO.DTO_Category;
 import DTO.DTO_Product;
 import DTO.DTO_Supplier;
+import com.mysql.jdbc.log.NullLogger;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -44,19 +45,22 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
     static BLL_Category bLL_Category = new BLL_Category();
 
     static CustomDTO_Product Current_Product = null;
+    static GUI_Product GuiProduct = null;
 
     /**
      * Creates new form GUI_Product_Insert_Update
      */
-    public GUI_Product_Insert_Update() throws SQLException {
+    public GUI_Product_Insert_Update(GUI_Product gUI_Product) throws SQLException {
         initComponents();
         Load();
+        GuiProduct = gUI_Product;
     }
 
-    public GUI_Product_Insert_Update(CustomDTO_Product product) throws SQLException {
+    public GUI_Product_Insert_Update(CustomDTO_Product product, GUI_Product gUI_Product) throws SQLException {
         initComponents();
         Load();
         Current_Product = product;
+        GuiProduct = gUI_Product;
         txt_Name.setText(product.getName());
         txt_price.setText(String.valueOf(product.getPrice()));
         txt_unit.setText(String.valueOf(product.getUnit()));
@@ -65,7 +69,7 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
         Img_Product.setIcon(img_productIcon);
         cmb_Supplier.getModel().setSelectedItem(product.getSupplier());
         cmb_Category.getModel().setSelectedItem(product.getCategory());
-
+        label_Header.setText("Update Product");
     }
 
     /**
@@ -84,7 +88,7 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        label_Header = new javax.swing.JLabel();
         btn_Save = new javax.swing.JButton();
         btn_Close = new javax.swing.JButton();
         cmb_Supplier = new javax.swing.JComboBox<>();
@@ -108,7 +112,7 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
 
         jLabel7.setText("Unit :");
 
-        jLabel1.setText("Insert Product");
+        label_Header.setText("Insert Product");
 
         btn_Save.setText("Save");
         btn_Save.addActionListener(new java.awt.event.ActionListener() {
@@ -147,7 +151,7 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(label_Header, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(197, 197, 197))
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
@@ -193,7 +197,7 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                .addComponent(label_Header, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
@@ -226,7 +230,6 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(txt_unit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(8, 8, 8)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(7, 7, 7)
@@ -273,7 +276,7 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
             int category_ID = ((CustomCombo) cmb_Category.getSelectedItem()).getID();
             try {
                 if (!bll_product.CheckProductNameExist(txt_Name.getText())) {
-                    bll_product.Insert(txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(),txt_UnitStock.getText(), txt_ImagePath.getText());
+                    bll_product.Insert(txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(), txt_UnitStock.getText(), txt_ImagePath.getText(), GuiProduct);
                 } else {
                     JOptionPane.showMessageDialog(null, "sam pham da ton tai");
                 }
@@ -287,13 +290,13 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
             try {
                 if (!Current_Product.getName().equals(txt_Name.getText())) {
                     if (!bll_product.CheckProductNameExist(txt_Name.getText())) {
-                        bll_product.Update(Current_Product.getId(),txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(),txt_UnitStock.getText(), txt_ImagePath.getText());
+                        bll_product.Update(Current_Product.getId(), txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(), txt_UnitStock.getText(), txt_ImagePath.getText(),
+                                GuiProduct);
                     } else {
                         JOptionPane.showMessageDialog(null, "sam pham da ton tai");
                     }
-                }
-                else{
-                    bll_product.Update(Current_Product.getId(),txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(),txt_UnitStock.getText(), txt_ImagePath.getText());
+                } else {
+                    bll_product.Update(Current_Product.getId(), txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(), txt_UnitStock.getText(), txt_ImagePath.getText(), GuiProduct);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(GUI_Product_Insert_Update.class.getName()).log(Level.SEVERE, null, ex);
@@ -370,7 +373,7 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new GUI_Product_Insert_Update().setVisible(true);
+                    new GUI_Product_Insert_Update(GuiProduct).setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(GUI_Product_Insert_Update.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -385,13 +388,13 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
     private javax.swing.JButton btn_Save;
     private javax.swing.JComboBox<String> cmb_Category;
     private javax.swing.JComboBox<String> cmb_Supplier;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel label_Header;
     private javax.swing.JTextField txt_ImagePath;
     private javax.swing.JTextField txt_Name;
     private javax.swing.JFormattedTextField txt_UnitStock;
