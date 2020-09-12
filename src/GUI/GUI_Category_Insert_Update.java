@@ -5,6 +5,10 @@
  */
 package GUI;
 
+import BLL.BLL_Category;
+import DTO.DTO_Category;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Administrator
@@ -14,8 +18,19 @@ public class GUI_Category_Insert_Update extends javax.swing.JFrame {
     /**
      * Creates new form GUI_Category_Insert_Update
      */
+    static BLL_Category bLL_Category = new BLL_Category();
+    static DTO_Category curent_Category = null;
+
     public GUI_Category_Insert_Update() {
         initComponents();
+    }
+
+    public GUI_Category_Insert_Update(DTO_Category _category) {
+        initComponents();
+        curent_Category = _category;
+        label_Update_Insertcategory.setText("Update Category");
+        txt_Name.setText(_category.getName());
+        txt_Description.setText(_category.getDescription());
     }
 
     /**
@@ -34,7 +49,7 @@ public class GUI_Category_Insert_Update extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         btn_Save = new javax.swing.JButton();
         btn_Close = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        label_Update_Insertcategory = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -54,8 +69,13 @@ public class GUI_Category_Insert_Update extends javax.swing.JFrame {
         });
 
         btn_Close.setText("Close");
+        btn_Close.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_CloseActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setText("Add New Category");
+        label_Update_Insertcategory.setText("Add New Category");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -64,31 +84,29 @@ public class GUI_Category_Insert_Update extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(102, 102, 102)
+                        .addComponent(btn_Save)
+                        .addGap(18, 18, 18)
+                        .addComponent(btn_Close))
+                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4))
-                        .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txt_Name)
-                            .addComponent(jScrollPane2)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(102, 102, 102)
-                        .addComponent(btn_Save)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_Close)))
-                .addContainerGap(38, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(89, 89, 89))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(label_Update_Insertcategory)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txt_Name)
+                                .addComponent(jScrollPane2)))))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(27, 27, 27)
+                .addGap(22, 22, 22)
+                .addComponent(label_Update_Insertcategory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txt_Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -99,8 +117,7 @@ public class GUI_Category_Insert_Update extends javax.swing.JFrame {
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_Save)
-                    .addComponent(btn_Close))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btn_Close)))
         );
 
         pack();
@@ -108,7 +125,36 @@ public class GUI_Category_Insert_Update extends javax.swing.JFrame {
 
     private void btn_SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SaveActionPerformed
         // TODO add your handling code here:
+        try {
+            if (curent_Category != null) {
+                String Description = null;
+                try {
+                    Description = txt_Description.getText();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "sai ghi chú");
+                }
+                if (!curent_Category.getName().equals(txt_Name.getText())) {
+
+                    if (!bLL_Category.CheckCategoryNameExist(txt_Name.getText())) {
+
+                        bLL_Category.Update(curent_Category.getId(), txt_Name.getText(), Description);
+                    } else {
+                    }
+                } else {
+                    bLL_Category.Update(curent_Category.getId(), txt_Name.getText(),Description);
+                }
+
+            } else {
+                bLL_Category.Insert(txt_Name.getText(), txt_Description.getText());
+            }
+        } catch (Exception e) {
+        }
     }//GEN-LAST:event_btn_SaveActionPerformed
+
+    private void btn_CloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CloseActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btn_CloseActionPerformed
 
     /**
      * @param args the command line arguments
@@ -148,10 +194,10 @@ public class GUI_Category_Insert_Update extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Close;
     private javax.swing.JButton btn_Save;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel label_Update_Insertcategory;
     private javax.swing.JTextArea txt_Description;
     private javax.swing.JTextField txt_Name;
     // End of variables declaration//GEN-END:variables

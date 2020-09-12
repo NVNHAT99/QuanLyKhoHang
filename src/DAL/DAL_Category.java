@@ -119,7 +119,7 @@ public class DAL_Category extends DAL {
         boolean result = false;
         try {
             connection = dbUltils.Get_connection();
-            String sql = "Update products SET IsDelete = 1 WHERE Id = ?";
+            String sql = "Update categories SET IsDelete = 1 WHERE Id = ?";
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setInt(1, ID);

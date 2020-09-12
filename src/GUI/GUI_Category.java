@@ -129,10 +129,25 @@ public class GUI_Category extends javax.swing.JFrame {
         jLabel4.setText("Description:");
 
         btn_Insert.setText("Insert");
+        btn_Insert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_InsertActionPerformed(evt);
+            }
+        });
 
         btn_Update.setText("Update");
+        btn_Update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_UpdateActionPerformed(evt);
+            }
+        });
 
         btn_delete.setText("Delete");
+        btn_delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_deleteActionPerformed(evt);
+            }
+        });
 
         btn_close.setText("CLose");
         btn_close.addActionListener(new java.awt.event.ActionListener() {
@@ -219,6 +234,48 @@ public class GUI_Category extends javax.swing.JFrame {
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_btn_closeActionPerformed
+
+    private void btn_InsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_InsertActionPerformed
+        // TODO add your handling code here:
+        GUI_Category_Insert_Update jframGUI_Category_Insert_Update = new GUI_Category_Insert_Update();
+        jframGUI_Category_Insert_Update.pack();
+        jframGUI_Category_Insert_Update.setLocationRelativeTo(null);
+        jframGUI_Category_Insert_Update.setVisible(true);
+
+    }//GEN-LAST:event_btn_InsertActionPerformed
+
+    private void btn_UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_UpdateActionPerformed
+        // TODO add your handling code here:
+        try {
+            int rowselectted = Table_Category.getSelectedRow();
+            DTO_Category category = new DTO_Category();
+            category.setId(Integer.parseInt(Table_Category.getValueAt(rowselectted, 0).toString()));
+            category.setName(Table_Category.getValueAt(rowselectted, 1).toString());
+            String Description = "";
+            try {
+                Description = Table_Category.getValueAt(rowselectted, 2).toString();
+            } catch (Exception err) {
+
+            }
+            category.setDescription(Description);
+            GUI_Category_Insert_Update jframUpdate_category = new GUI_Category_Insert_Update(category);
+            jframUpdate_category.pack();
+            jframUpdate_category.setLocationRelativeTo(null);
+            jframUpdate_category.setVisible(true);
+        } catch (Exception e) {
+        }
+
+    }//GEN-LAST:event_btn_UpdateActionPerformed
+
+    private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
+        // TODO add your handling code here:
+        try {
+            int rowselectted = Table_Category.getSelectedRow();
+            int Category_Id = Integer.parseInt(Table_Category.getValueAt(rowselectted, 0).toString());
+            bll_category.Delete(Category_Id);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btn_deleteActionPerformed
 
     /**
      * @param args the command line arguments
