@@ -8,6 +8,7 @@ package BLL;
 import DAL.DAL_Category;
 import DTO.DTO_Category;
 import DTO.DTO_Supplier;
+import GUI.GUI_Category;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -33,10 +34,11 @@ public class BLL_Category {
         return dal_catgory.CheckCategoryNameExist(CategoryName);
     }
 
-    public void Insert(String Name, String Description) throws SQLException {
+    public void Insert(String Name, String Description,GUI_Category jframeGUI_Category) throws SQLException {
         if (!CheckCategoryNameExist(Name)) {
             try {
                 if (dal_catgory.Insert(Name, Description)) {
+                    jframeGUI_Category.Load();
                     JOptionPane.showMessageDialog(null, "Them loai san pham thanh cong");
                 } else {
                     JOptionPane.showMessageDialog(null, "Them loai san pham that bai");
@@ -48,9 +50,10 @@ public class BLL_Category {
         }
     }
 
-    public void Update(int Id, String Name, String Description) throws SQLException {
+    public void Update(int Id, String Name, String Description,GUI_Category jframeGUI_Category) throws SQLException {
         try {
             if (dal_catgory.Update(Id, Name, Description)) {
+                jframeGUI_Category.Load();
                 JOptionPane.showMessageDialog(null, "Cap Nhap Loai san pham thanh cong");
             } else {
                 JOptionPane.showMessageDialog(null, "Cap Nhap Loai san pham that bai");
@@ -59,11 +62,11 @@ public class BLL_Category {
         }
     }
 
-    public void Delete(int ID) throws SQLException {
+    public void Delete(int ID,GUI_Category jframeGUI_Category) throws SQLException {
         try {
             if (dal_catgory.Delete(ID)) {
+                jframeGUI_Category.Load();
                 JOptionPane.showMessageDialog(null, "Xoa Loai San Pham thanh cong");
-                //need reload table when delete succses dal_catgory.Load();
             } else {
                 JOptionPane.showMessageDialog(null, "xoa Loai San Pham that bai ");
             }

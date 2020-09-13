@@ -20,13 +20,21 @@ public class GUI_Category_Insert_Update extends javax.swing.JFrame {
      */
     static BLL_Category bLL_Category = new BLL_Category();
     static DTO_Category curent_Category = null;
-
-    public GUI_Category_Insert_Update() {
+    static GUI_Category jframGUI_Category = null;
+    public GUI_Category_Insert_Update(GUI_Category _jframGuiCategory) {
         initComponents();
+        try {
+            jframGUI_Category = _jframGuiCategory;
+        } catch (Exception e) {
+        }
     }
 
-    public GUI_Category_Insert_Update(DTO_Category _category) {
+    public GUI_Category_Insert_Update(DTO_Category _category,GUI_Category _jframGuiCategory) {
         initComponents();
+        try {
+            jframGUI_Category = _jframGuiCategory;
+        } catch (Exception e) {
+        }
         curent_Category = _category;
         label_Update_Insertcategory.setText("Update Category");
         txt_Name.setText(_category.getName());
@@ -131,21 +139,23 @@ public class GUI_Category_Insert_Update extends javax.swing.JFrame {
                 try {
                     Description = txt_Description.getText();
                 } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "sai ghi chú");
+                    JOptionPane.showMessageDialog(null, e);
                 }
+                // check user change Category Name or not
                 if (!curent_Category.getName().equals(txt_Name.getText())) {
-
+                    // if changed, check New Category Name exist
                     if (!bLL_Category.CheckCategoryNameExist(txt_Name.getText())) {
-
-                        bLL_Category.Update(curent_Category.getId(), txt_Name.getText(), Description);
+                        // if not exist , Update
+                        bLL_Category.Update(curent_Category.getId(), txt_Name.getText(), Description,jframGUI_Category);
                     } else {
+                        JOptionPane.showMessageDialog(null, "Ten Loai San Pham Da Ton Tai");
                     }
-                } else {
-                    bLL_Category.Update(curent_Category.getId(), txt_Name.getText(),Description);
+                } else{
+                    bLL_Category.Update(curent_Category.getId(), txt_Name.getText(),Description,jframGUI_Category);
                 }
 
             } else {
-                bLL_Category.Insert(txt_Name.getText(), txt_Description.getText());
+                bLL_Category.Insert(txt_Name.getText(), txt_Description.getText(),jframGUI_Category);
             }
         } catch (Exception e) {
         }
@@ -186,7 +196,7 @@ public class GUI_Category_Insert_Update extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI_Category_Insert_Update().setVisible(true);
+                new GUI_Category_Insert_Update(jframGUI_Category).setVisible(true);
             }
         });
     }

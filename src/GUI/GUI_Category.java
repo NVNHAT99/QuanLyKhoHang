@@ -237,7 +237,7 @@ public class GUI_Category extends javax.swing.JFrame {
 
     private void btn_InsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_InsertActionPerformed
         // TODO add your handling code here:
-        GUI_Category_Insert_Update jframGUI_Category_Insert_Update = new GUI_Category_Insert_Update();
+        GUI_Category_Insert_Update jframGUI_Category_Insert_Update = new GUI_Category_Insert_Update(this);
         jframGUI_Category_Insert_Update.pack();
         jframGUI_Category_Insert_Update.setLocationRelativeTo(null);
         jframGUI_Category_Insert_Update.setVisible(true);
@@ -258,7 +258,7 @@ public class GUI_Category extends javax.swing.JFrame {
 
             }
             category.setDescription(Description);
-            GUI_Category_Insert_Update jframUpdate_category = new GUI_Category_Insert_Update(category);
+            GUI_Category_Insert_Update jframUpdate_category = new GUI_Category_Insert_Update(category,this);
             jframUpdate_category.pack();
             jframUpdate_category.setLocationRelativeTo(null);
             jframUpdate_category.setVisible(true);
@@ -272,7 +272,7 @@ public class GUI_Category extends javax.swing.JFrame {
         try {
             int rowselectted = Table_Category.getSelectedRow();
             int Category_Id = Integer.parseInt(Table_Category.getValueAt(rowselectted, 0).toString());
-            bll_category.Delete(Category_Id);
+            bll_category.Delete(Category_Id,this);
         } catch (Exception e) {
         }
     }//GEN-LAST:event_btn_deleteActionPerformed

@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import DTO.DTO_employee;
 import ultils.DBUtils;
 
-public class DAL_Employee extends DAL{
+public class DAL_Employee extends DAL {
 
     // check user name when login exist
     public ArrayList<DTO_employee> FindByUserName(String UserName) throws SQLException {
@@ -64,4 +64,80 @@ public class DAL_Employee extends DAL{
         }
         return result;
     }
+
+    public boolean Insert(String username, String passwordHash, String name, String email) throws SQLException {
+        boolean result = false;
+        try {
+            connection = dbUltils.Get_connection();
+            // default  RoleId for New Employeer
+            String sql = "INSERT INTO Employees(Username, Password, Email, Name, RoleId) VALUES (?,?,?,?, 3)";
+            preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, passwordHash);
+            preparedStatement.setString(3, email);
+            preparedStatement.setString(4, name);
+
+            int rs = preparedStatement.executeUpdate();
+
+            if (rs > 0) {
+                result = true;
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showInputDialog(e);
+
+        } finally {
+            connection.close();
+        }
+        return result;
+    }
+
+//    public boolean Update(int ID, String Name, String Description) throws SQLException {
+//        boolean result = false;
+//        try {
+//            connection = dbUltils.Get_connection();
+//            String sql = "Update categories SET Name = ?,Description = ? WHERE Id = ? ";
+//            preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+//
+//            preparedStatement.setString(1, Name);
+//            preparedStatement.setString(2, Description);
+//            preparedStatement.setInt(3, ID);
+//            int rs = preparedStatement.executeUpdate();
+//
+//            if (rs > 0) {
+//                result = true;
+//            }
+//
+//        } catch (Exception e) {
+//            JOptionPane.showInputDialog(e);
+//
+//        } finally {
+//            connection.close();
+//        }
+//        return result;
+//    }
+//
+//    public boolean Delete(int ID) throws SQLException {
+//        boolean result = false;
+//        try {
+//            connection = dbUltils.Get_connection();
+//            String sql = "Update categories SET IsDelete = 1 WHERE Id = ?";
+//            preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+//
+//            preparedStatement.setInt(1, ID);
+//            int rs = preparedStatement.executeUpdate();
+//
+//            if (rs > 0) {
+//                result = true;
+//            }
+//
+//        } catch (Exception e) {
+//            JOptionPane.showInputDialog(e);
+//
+//        } finally {
+//            connection.close();
+//        }
+//        return result;
+//    }
 }
