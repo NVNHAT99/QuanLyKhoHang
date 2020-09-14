@@ -4,13 +4,14 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_Category.java</file>
-            <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_Product_Insert_Update.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_Login.java</file>
             <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_Product.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/BLL/BLL_Employee.java</file>
             <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/DTO/DTO_employee.java</file>
             <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_Category_Insert_Update.java</file>
-            <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/DAL/DAL_Category.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_Employee.java</file>
             <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/BLL/BLL_Product.java</file>
-            <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/BLL/BLL_Category.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/DAL/DAL_Product.java</file>
             <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/DAL/DAL_Employee.java</file>
             <file>file:/C:/Users/Administrator/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_Main.java</file>
         </group>

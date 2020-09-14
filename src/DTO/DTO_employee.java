@@ -10,7 +10,7 @@ public class DTO_employee {
 	private String Name;
 	private int RoleId;
 	private String PhoneNumber;
-	private float Salary;
+	private double Salary;
 	private Date date;
 	private String Gender;
 	public int getId() {
@@ -55,10 +55,10 @@ public class DTO_employee {
 	public void setPhoneNumber(String phoneNumber) {
 		PhoneNumber = phoneNumber;
 	}
-	public float getSalary() {
+	public double getSalary() {
 		return Salary;
 	}
-	public void setSalary(float salary) {
+	public void setSalary(double salary) {
 		Salary = salary;
 	}
 	public Date getDate() {

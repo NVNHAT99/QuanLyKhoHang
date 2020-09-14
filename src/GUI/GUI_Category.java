@@ -80,7 +80,7 @@ public class GUI_Category extends javax.swing.JFrame {
         });
 
         // set selected row 
-        //Table_Category.setRowSelectionInterval(0, 0);
+        Table_Category.setRowSelectionInterval(0, 0);
     }
 
     /**

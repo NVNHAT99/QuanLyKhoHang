@@ -106,6 +106,11 @@ public class GUI_Main extends javax.swing.JFrame {
         Tab_Model.add(btn_Catgories);
 
         btn_Employee.setText("Employee");
+        btn_Employee.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_EmployeeActionPerformed(evt);
+            }
+        });
         Tab_Model.add(btn_Employee);
 
         btn_Supplier.setText("Supplier");
@@ -162,12 +167,29 @@ public class GUI_Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_ProductActionPerformed
 
     private void btn_CatgoriesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CatgoriesActionPerformed
-        // TODO add your handling code here:
-        GUI_Category jframeGUI_Category = new GUI_Category();
-        jframeGUI_Category.setLocationRelativeTo(null);
-        jframeGUI_Category.setVisible(true);
-        jframeGUI_Category.setVisible(true);
+        try {
+            // TODO add your handling code here:
+            GUI_Category jframeGUI_Category = new GUI_Category();
+            jframeGUI_Category.setLocationRelativeTo(null);
+            jframeGUI_Category.setVisible(true);
+            jframeGUI_Category.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(GUI_Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btn_CatgoriesActionPerformed
+
+    private void btn_EmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EmployeeActionPerformed
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            GUI_Employee jframeGUI_Employee = new GUI_Employee();
+            jframeGUI_Employee.setLocationRelativeTo(null);
+            jframeGUI_Employee.setVisible(true);
+            jframeGUI_Employee.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(GUI_Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btn_EmployeeActionPerformed
 
     /**
      * @param args the command line arguments
