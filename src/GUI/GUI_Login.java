@@ -83,7 +83,7 @@ public class GUI_Login extends javax.swing.JFrame {
             BLL_Employee Bll_employee = new BLL_Employee();
             try {
                 if (BLL_Employee.Login(UserName, password)) {
-                    ArrayList<DTO_employee> employee = Bll_employee.Find(UserName);
+                    ArrayList<DTO_employee> employee = Bll_employee.FindbyUserName(UserName);
                     GUI_Main jfarm_main = new GUI_Main(employee.get(0));
                     jfarm_main.pack();
                     setVisible(false);

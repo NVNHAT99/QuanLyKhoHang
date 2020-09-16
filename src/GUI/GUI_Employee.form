@@ -48,7 +48,7 @@
               <EmptySpace pref="44" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="btn_Insert" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_Signup" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="btn_Update" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -149,7 +149,7 @@
                       <Component id="Isdelete" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btn_Insert" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_Signup" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btn_Update" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btn_delete" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btn_close" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -209,10 +209,13 @@
     </Component>
     <Component class="javax.swing.JTextField" name="txt_PhoneNumber">
     </Component>
-    <Component class="javax.swing.JButton" name="btn_Insert">
+    <Component class="javax.swing.JButton" name="btn_Signup">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Insert"/>
+        <Property name="text" type="java.lang.String" value="Signup"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_SignupActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
@@ -223,6 +226,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Update"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_UpdateActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="txt_Gender">
     </Component>

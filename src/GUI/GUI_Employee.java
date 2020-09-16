@@ -67,8 +67,7 @@ public class GUI_Employee extends javax.swing.JFrame {
                         txt_UserName.setText(Table_Employee.getValueAt(RowSelected, 1).toString());
                         txt_Email.setText(Table_Employee.getValueAt(RowSelected, 2).toString());
                         txt_Name.setText(Table_Employee.getValueAt(RowSelected, 3).toString());
-                        
-                        
+
                         try {
                             PhoneNumber = Table_Employee.getValueAt(RowSelected, 4).toString();
                         } catch (Exception ef) {
@@ -85,8 +84,7 @@ public class GUI_Employee extends javax.swing.JFrame {
                             Gender = Table_Employee.getValueAt(RowSelected, 4).toString();
                         } catch (Exception ef) {
                         }
-                        
-                        
+
                         txt_PhoneNumber.setText(PhoneNumber);
                         txt_Salary.setText(Salary);
                         txt_Birthdate.setText(Birthdate);
@@ -120,7 +118,7 @@ public class GUI_Employee extends javax.swing.JFrame {
         Table_Employee = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         txt_PhoneNumber = new javax.swing.JTextField();
-        btn_Insert = new javax.swing.JButton();
+        btn_Signup = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         btn_Update = new javax.swing.JButton();
         txt_Gender = new javax.swing.JTextField();
@@ -161,11 +159,21 @@ public class GUI_Employee extends javax.swing.JFrame {
 
         jLabel4.setText("Email");
 
-        btn_Insert.setText("Insert");
+        btn_Signup.setText("Signup");
+        btn_Signup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_SignupActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("PhoneNumber:");
 
         btn_Update.setText("Update");
+        btn_Update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_UpdateActionPerformed(evt);
+            }
+        });
 
         btn_delete.setText("Delete");
 
@@ -214,7 +222,7 @@ public class GUI_Employee extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btn_Insert)
+                        .addComponent(btn_Signup)
                         .addGap(18, 18, 18)
                         .addComponent(btn_Update)
                         .addGap(18, 18, 18)
@@ -293,7 +301,7 @@ public class GUI_Employee extends javax.swing.JFrame {
                         .addComponent(Isdelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_Insert)
+                            .addComponent(btn_Signup)
                             .addComponent(btn_Update)
                             .addComponent(btn_delete)
                             .addComponent(btn_close))
@@ -307,6 +315,28 @@ public class GUI_Employee extends javax.swing.JFrame {
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_btn_closeActionPerformed
+
+    private void btn_SignupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SignupActionPerformed
+        // TODO add your handling code here:
+        GUI_SignUp jframeGUI_SignUp = new GUI_SignUp();
+        jframeGUI_SignUp.pack();
+        jframeGUI_SignUp.setLocationRelativeTo(null);
+        jframeGUI_SignUp.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        jframeGUI_SignUp.setVisible(true);
+    }//GEN-LAST:event_btn_SignupActionPerformed
+
+    private void btn_UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_UpdateActionPerformed
+        // TODO add your handling code here:
+        try {
+            int Rowslected = Table_Employee.getSelectedRow();
+            int Id_Emloyee_Update;
+//            GUI_UpdateEmployee jframguiGUI_UpdateEmployee = new GUI_UpdateEmployee(DTO_employee, false);
+//            jframguiGUI_UpdateEmployee.pack();
+//            jframguiGUI_UpdateEmployee.setLocationRelativeTo(null);
+//            jframguiGUI_UpdateEmployee.setVisible(true);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btn_UpdateActionPerformed
 
     /**
      * @param args the command line arguments
@@ -350,7 +380,7 @@ public class GUI_Employee extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox Isdelete;
     private javax.swing.JTable Table_Employee;
-    private javax.swing.JButton btn_Insert;
+    private javax.swing.JButton btn_Signup;
     private javax.swing.JButton btn_Update;
     private javax.swing.JButton btn_close;
     private javax.swing.JButton btn_delete;

@@ -38,7 +38,7 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="165" max="-2" attributes="0"/>
-                      <Component id="btn_Save" pref="81" max="32767" attributes="0"/>
+                      <Component id="btn_Save" pref="58" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -68,7 +68,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="btn_ChoseImage" min="-2" pref="95" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txt_ImagePath" pref="129" max="32767" attributes="0"/>
+                              <Component id="txt_ImagePath" pref="106" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>

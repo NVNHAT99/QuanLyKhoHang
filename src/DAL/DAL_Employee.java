@@ -47,6 +47,7 @@ public class DAL_Employee extends DAL {
         }
         return result;
     }
+
     // check user name when login exist
     public ArrayList<DTO_employee> FindByUserName(String UserName) throws SQLException {
         ArrayList<DTO_employee> result = new ArrayList<DTO_employee>();
@@ -62,6 +63,32 @@ public class DAL_Employee extends DAL {
                 DTO_employee employee = new DTO_employee();
                 employee.setUsername(resultSet.getString(1));
                 employee.setPassword(resultSet.getString(2));
+                result.add(employee);
+            }
+        } catch (Exception e) {
+            JOptionPane.showInputDialog(e);
+
+        } finally {
+            connection.close();
+        }
+        return result;
+    }
+
+    public ArrayList<DTO_employee> FindByEmail(String Email) throws SQLException {
+        ArrayList<DTO_employee> result = new ArrayList<DTO_employee>();
+        try {
+            connection = dbUltils.Get_connection();
+            String sqlFind = "Select Username,Password,Email from employees where Email = ? ";
+            preparedStatement = connection.prepareStatement(sqlFind);
+
+            preparedStatement.setString(1, Email);
+
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                DTO_employee employee = new DTO_employee();
+                employee.setUsername(resultSet.getString(1));
+                employee.setPassword(resultSet.getString(2));
+                employee.setEmail(resultSet.getString(3));
                 result.add(employee);
             }
         } catch (Exception e) {
@@ -130,19 +157,39 @@ public class DAL_Employee extends DAL {
         return result;
     }
 
-    public boolean Update_WhenAddNewEmloyee(int Id, String phonenumber, String Gender, Date birtthdate, double salary) throws SQLException {
+    public boolean Update(int Id, String name, String email, String phonenumber, String Gender, Date birtthdate, double salary, Boolean Isdelete) throws SQLException {
         boolean result = false;
         try {
             connection = dbUltils.Get_connection();
-            String sql = "update Employees set PhoneNumber = ?, Gender = ?, Birthdate = ?, Salary = ? where Id = ? ";
-            preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            int rs = -1;
+            if (Isdelete == true) {
+                String sql = "update Employees set Name=?,PhoneNumber = ?, Gender = ?, Birthdate = ?, Salary = ?,Isdelete = ?, RoleId = ? where Id=? ";
+                preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
-            preparedStatement.setString(1, phonenumber);
-            preparedStatement.setString(2, Gender);
-            preparedStatement.setDate(3, birtthdate);
-            preparedStatement.setDouble(4, salary);
+                preparedStatement.setString(1, name);
+                preparedStatement.setString(2, phonenumber);
+                preparedStatement.setString(3, Gender);
+                preparedStatement.setDate(4, birtthdate);
+                preparedStatement.setDouble(5, salary);
+                preparedStatement.setBoolean(6, Isdelete);
+                // if isdelete == true. set roleID =4/ this roleid for emloyee is deleted
+                preparedStatement.setInt(7, 4);
+                preparedStatement.setInt(8, Id);
+                rs = preparedStatement.executeUpdate();
+            } else // if isdelete == false. not set roleIDz/ this roleid for emloyee new employee
+            {
+                String sql = "update Employees set Name=?,PhoneNumber = ?, Gender = ?, Birthdate = ?, Salary = ?,Isdelete = ? where Id=? ";
+                preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
-            int rs = preparedStatement.executeUpdate();
+                preparedStatement.setString(1, name);
+                preparedStatement.setString(2, phonenumber);
+                preparedStatement.setString(3, Gender);
+                preparedStatement.setDate(4, birtthdate);
+                preparedStatement.setDouble(5, salary);
+                preparedStatement.setBoolean(6, Isdelete);
+                preparedStatement.setInt(7, Id);
+                rs = preparedStatement.executeUpdate();
+            }
 
             if (rs > 0) {
                 result = true;
@@ -179,6 +226,5 @@ public class DAL_Employee extends DAL {
         }
         return result;
     }
-    
-    
+
 }
