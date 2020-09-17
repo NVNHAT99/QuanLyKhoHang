@@ -13,6 +13,8 @@ public class DTO_employee {
 	private double Salary;
 	private Date date;
 	private String Gender;
+        private boolean IsDelete;
+        
 	public int getId() {
 		return Id;
 	}
@@ -73,12 +75,20 @@ public class DTO_employee {
 	public void setGender(String gender) {
 		Gender = gender;
 	}
-	public boolean isIsDelete() {
-		return IsDelete;
-	}
-	public void setIsDelete(boolean isDelete) {
-		IsDelete = isDelete;
-	}
-	boolean	 IsDelete;
+
+    /**
+     * @return the IsDelete
+     */
+    public boolean getIsDelete() {
+        return IsDelete;
+    }
+
+    /**
+     * @param IsDelete the IsDelete to set
+     */
+    public void setIsDelete(boolean IsDelete) {
+        this.IsDelete = IsDelete;
+    }
+	
 	
 }

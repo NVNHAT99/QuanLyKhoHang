@@ -19,9 +19,11 @@ public class GUI_SignUp extends javax.swing.JFrame {
      * Creates new form GUI_SignUp
      */
     static BLL_Employee bLL_Employee = new BLL_Employee();
+    static GUI_Employee gUI_Employee = null;
 
-    public GUI_SignUp() {
+    public GUI_SignUp(GUI_Employee _gUI_Employee) {
         initComponents();
+        gUI_Employee = _gUI_Employee;
     }
 
     /**
@@ -69,6 +71,11 @@ public class GUI_SignUp extends javax.swing.JFrame {
         });
 
         btn_Cancel.setText("Cancel");
+        btn_Cancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_CancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -143,21 +150,28 @@ public class GUI_SignUp extends javax.swing.JFrame {
     private void btn_SignupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SignupActionPerformed
         // TODO add your handling code here:
         try {
-            int NewEmloyeeID = bLL_Employee.Insert(txt_UserName.getText(), String.valueOf(txt_Password.getPassword()), String.valueOf(txt_ConfirmPassWord.getPassword()), txt_Name.getText(), txt_Email.getText());
+            int NewEmloyeeID = bLL_Employee.Insert(txt_UserName.getText(), String.valueOf(txt_Password.getPassword()), String.valueOf(txt_ConfirmPassWord.getPassword()),
+                    txt_Name.getText(), txt_Email.getText(),gUI_Employee);
             if (NewEmloyeeID > 0) {
                 DTO_employee emloyee = new DTO_employee();
                 emloyee.setId(NewEmloyeeID);
                 emloyee.setName(txt_Name.getText());
                 emloyee.setUsername(txt_UserName.getText());
                 emloyee.setEmail(txt_Email.getText());
-                GUI_UpdateEmployee jframguiGUI_UpdateEmployee = new GUI_UpdateEmployee(emloyee,true);
+                GUI_UpdateEmployee jframguiGUI_UpdateEmployee = new GUI_UpdateEmployee(gUI_Employee,emloyee, true);
                 jframguiGUI_UpdateEmployee.pack();
+                jframguiGUI_UpdateEmployee.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                 jframguiGUI_UpdateEmployee.setLocationRelativeTo(null);
                 jframguiGUI_UpdateEmployee.setVisible(true);
             }
         } catch (Exception e) {
         }
     }//GEN-LAST:event_btn_SignupActionPerformed
+
+    private void btn_CancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CancelActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btn_CancelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -189,7 +203,7 @@ public class GUI_SignUp extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI_SignUp().setVisible(true);
+                new GUI_SignUp(gUI_Employee).setVisible(true);
             }
         });
     }

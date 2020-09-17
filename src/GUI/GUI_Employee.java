@@ -7,6 +7,7 @@ package GUI;
 
 import BLL.BLL_Employee;
 import DTO.DTO_employee;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -29,13 +30,13 @@ public class GUI_Employee extends javax.swing.JFrame {
 
     public GUI_Employee() throws SQLException {
         initComponents();
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         load();
     }
 
     public void load() throws SQLException {
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         ArrayList<DTO_employee> list_employee = bLL_Employee.GetAllEmloyee();
-        String[] columeNames = new String[]{"ID", "Username", "Email ", "Name", "PhoneNumber", "Salary", "Birthdate", "Gender", "IsDelete"};
+        String[] columeNames = new String[]{"ID", "Username", "Email ", "Name", "PhoneNumber", "Salary", "Birthdate", "Gender", "IsDelete","RoleId"};
         DefaultTableModel model = new DefaultTableModel(null, columeNames) {
 
             @Override
@@ -48,7 +49,8 @@ public class GUI_Employee extends javax.swing.JFrame {
             Object[] employee = new Object[]{
                 list_employee.get(i).getId(), list_employee.get(i).getUsername(), list_employee.get(i).getEmail(),
                 list_employee.get(i).getName(), list_employee.get(i).getPhoneNumber(), list_employee.get(i).getSalary(),
-                list_employee.get(i).getDate(), list_employee.get(i).getGender(), list_employee.get(i).isIsDelete()
+                list_employee.get(i).getDate(), list_employee.get(i).getGender(), list_employee.get(i).getIsDelete(),
+                list_employee.get(i).getRoleId()
             };
             model.addRow(employee);
         }
@@ -73,15 +75,15 @@ public class GUI_Employee extends javax.swing.JFrame {
                         } catch (Exception ef) {
                         }
                         try {
-                            Salary = Table_Employee.getValueAt(RowSelected, 4).toString();
+                            Salary = Table_Employee.getValueAt(RowSelected, 5).toString();
                         } catch (Exception ef) {
                         }
                         try {
-                            Birthdate = Table_Employee.getValueAt(RowSelected, 4).toString();
+                            Birthdate = Table_Employee.getValueAt(RowSelected, 6).toString();
                         } catch (Exception ef) {
                         }
                         try {
-                            Gender = Table_Employee.getValueAt(RowSelected, 4).toString();
+                            Gender = Table_Employee.getValueAt(RowSelected, 7).toString();
                         } catch (Exception ef) {
                         }
 
@@ -96,7 +98,7 @@ public class GUI_Employee extends javax.swing.JFrame {
                 }
             }
         });        // set selected row 
-        //Table_Employee.setRowSelectionInterval(0, 0);
+        Table_Employee.setRowSelectionInterval(0, 0);
 
     }
 
@@ -132,8 +134,6 @@ public class GUI_Employee extends javax.swing.JFrame {
         txt_Salary = new javax.swing.JTextField();
         txt_Name = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        txt_test = new javax.swing.JTextField();
         Isdelete = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -176,6 +176,11 @@ public class GUI_Employee extends javax.swing.JFrame {
         });
 
         btn_delete.setText("Delete");
+        btn_delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_deleteActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Gender:");
 
@@ -191,8 +196,6 @@ public class GUI_Employee extends javax.swing.JFrame {
         jLabel7.setText("Birthdate");
 
         jLabel9.setText("Name :");
-
-        jLabel10.setText("Isdelete");
 
         Isdelete.setText("Isdelete");
 
@@ -244,11 +247,7 @@ public class GUI_Employee extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel8)
                                         .addGap(18, 18, 18)
-                                        .addComponent(txt_Salary, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel10)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txt_test))))
+                                        .addComponent(txt_Salary, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGap(248, 248, 248)))))
         );
         layout.setVerticalGroup(
@@ -293,10 +292,6 @@ public class GUI_Employee extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
                             .addComponent(txt_Salary, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel10)
-                            .addComponent(txt_test, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(Isdelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -318,7 +313,7 @@ public class GUI_Employee extends javax.swing.JFrame {
 
     private void btn_SignupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SignupActionPerformed
         // TODO add your handling code here:
-        GUI_SignUp jframeGUI_SignUp = new GUI_SignUp();
+        GUI_SignUp jframeGUI_SignUp = new GUI_SignUp(this);
         jframeGUI_SignUp.pack();
         jframeGUI_SignUp.setLocationRelativeTo(null);
         jframeGUI_SignUp.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -329,14 +324,58 @@ public class GUI_Employee extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             int Rowslected = Table_Employee.getSelectedRow();
-            int Id_Emloyee_Update;
-//            GUI_UpdateEmployee jframguiGUI_UpdateEmployee = new GUI_UpdateEmployee(DTO_employee, false);
-//            jframguiGUI_UpdateEmployee.pack();
-//            jframguiGUI_UpdateEmployee.setLocationRelativeTo(null);
-//            jframguiGUI_UpdateEmployee.setVisible(true);
+            DTO_employee employee = new DTO_employee();
+            employee.setId(Integer.parseInt(Table_Employee.getValueAt(Rowslected,0).toString()));
+            employee.setUsername(Table_Employee.getValueAt(Rowslected,1).toString());
+            employee.setEmail(Table_Employee.getValueAt(Rowslected,2).toString());
+            try {
+                 employee.setName(Table_Employee.getValueAt(Rowslected,3).toString());
+            } catch (Exception e) {
+                 employee.setName("");
+            }
+            try {
+                 employee.setPhoneNumber(Table_Employee.getValueAt(Rowslected,4).toString());
+            } catch (Exception e) {
+                 employee.setPhoneNumber("");
+            }
+            
+            try {
+                employee.setSalary(Double.parseDouble(Table_Employee.getValueAt(Rowslected,5).toString()));
+            } catch (Exception e) {
+                employee.setSalary(0);
+            }
+            if(String.valueOf(Table_Employee.getValueAt(Rowslected,6)).equals("null")){
+                employee.setDate(null);
+            }else{
+                employee.setDate(Date.valueOf(String.valueOf(Table_Employee.getValueAt(Rowslected,6))));
+            }
+            try {
+                employee.setGender(String.valueOf(Table_Employee.getValueAt(Rowslected,7)));
+            } catch (Exception e) {
+                employee.setGender("");
+            }
+            employee.setIsDelete(Boolean.parseBoolean(Table_Employee.getValueAt(Rowslected,8).toString()));
+            employee.setRoleId(Integer.parseInt(Table_Employee.getValueAt(Rowslected,9).toString()));
+            
+            GUI_UpdateEmployee jframguiGUI_UpdateEmployee = new GUI_UpdateEmployee(this,employee, false);
+            jframguiGUI_UpdateEmployee.pack();
+            jframguiGUI_UpdateEmployee.setLocationRelativeTo(null);
+            jframguiGUI_UpdateEmployee.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            jframguiGUI_UpdateEmployee.setVisible(true);
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
         }
     }//GEN-LAST:event_btn_UpdateActionPerformed
+
+    private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
+        // TODO add your handling code here:
+        try {
+            int Rowslected = Table_Employee.getSelectedRow();
+            int Id_emloyee_delete = Integer.parseInt(Table_Employee.getValueAt(Rowslected,0).toString());
+            bLL_Employee.Delete(Id_emloyee_delete, this);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btn_deleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -385,7 +424,6 @@ public class GUI_Employee extends javax.swing.JFrame {
     private javax.swing.JButton btn_close;
     private javax.swing.JButton btn_delete;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -403,6 +441,5 @@ public class GUI_Employee extends javax.swing.JFrame {
     private javax.swing.JTextField txt_PhoneNumber;
     private javax.swing.JTextField txt_Salary;
     private javax.swing.JTextField txt_UserName;
-    private javax.swing.JTextField txt_test;
     // End of variables declaration//GEN-END:variables
 }

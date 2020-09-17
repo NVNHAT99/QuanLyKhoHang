@@ -7,6 +7,7 @@ package GUI;
 
 import BLL.BLL_Employee;
 import DTO.DTO_employee;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
@@ -28,25 +29,53 @@ public class GUI_UpdateEmployee extends javax.swing.JFrame {
     static BLL_Employee bLL_Employee = new BLL_Employee();
     static boolean UpdateAffterAddNew = false;
     static DTO_employee currentEmployee = new DTO_employee();
+    static GUI_Employee gUI_Employee = null;
 
-    public GUI_UpdateEmployee(DTO_employee employee, boolean _UpdateAffterAddNew) throws ParseException {
+    public GUI_UpdateEmployee(GUI_Employee _guiEmployee,DTO_employee employee, boolean _UpdateAffterAddNew) throws ParseException {
         initComponents();
+        
         UpdateAffterAddNew = _UpdateAffterAddNew;
         currentEmployee = employee;
-        if (_UpdateAffterAddNew) {
-            Checkbox_Isdelete.setEnabled(false);
-        }
-        txt_UserName.setText(employee.getUsername());
-        txt_Name.setText(employee.getName());
-        txt_Email.setText(employee.getEmail());
-        txt_UserName.setEnabled(false);
-
+        gUI_Employee = _guiEmployee;
+        Id_emloyeee_Update = employee.getId();
+        
+        cmb_Gender.removeAllItems();
         cmb_Gender.addItem("Male");
         cmb_Gender.addItem("Female");
 
         MaskFormatter PhoneNumber_maskFormatter = new MaskFormatter("### ### ####");
         DefaultFormatterFactory factory_Phonenumber = new DefaultFormatterFactory(PhoneNumber_maskFormatter);
         txt_PhoneNumber.setFormatterFactory(factory_Phonenumber);
+        
+        txt_UserName.setEditable(false);
+        txt_UserName.setText(employee.getUsername());
+        txt_Name.setText(employee.getName());
+        txt_Email.setText(employee.getEmail());
+        if (_UpdateAffterAddNew) {
+            Checkbox_Isdelete.setEnabled(false);
+        }else{
+            try {
+                txt_PhoneNumber.setValue(employee.getPhoneNumber());
+            } catch (Exception e) {
+                txt_PhoneNumber.setValue(null);
+            }
+            try {
+                txt_birthdate.setText(employee.getDate().toString());
+            } catch (Exception e) {
+                txt_birthdate.setText(null);
+            }
+            try {
+                txt_Salary.setText(String.valueOf(employee.getSalary()));
+            } catch (Exception e) {
+                txt_Salary.setText("");
+            }
+            try {
+                cmb_Gender.getModel().setSelectedItem(employee.getGender());
+            } catch (Exception e) {
+            }
+            Checkbox_Isdelete.setSelected(employee.getIsDelete());
+        }
+        
         
         
         
@@ -108,11 +137,16 @@ public class GUI_UpdateEmployee extends javax.swing.JFrame {
         });
 
         btn_Cancel.setText("Cancel");
+        btn_Cancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_CancelActionPerformed(evt);
+            }
+        });
 
         Checkbox_Isdelete.setText("IsDelete");
 
         try {
-            txt_birthdate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+            txt_birthdate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####-##-##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
@@ -210,17 +244,22 @@ public class GUI_UpdateEmployee extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             if (UpdateAffterAddNew) {
-                bLL_Employee.Update(Id_emloyeee_Update, txt_Name.getText(), txt_Email.getText(),
-                        txt_PhoneNumber.getText(), cmb_Gender.getSelectedItem().toString(), txt_PhoneNumber.getText(), txt_Salary.getText(),
-                        false);
+                bLL_Employee.Update(Id_emloyeee_Update, txt_Name.getText(),currentEmployee.getEmail(), txt_Email.getText(),
+                        txt_PhoneNumber.getText(), cmb_Gender.getSelectedItem().toString(), txt_birthdate.getText(), txt_Salary.getText(),
+                        false,gUI_Employee);
             } else {
-                bLL_Employee.Update(Id_emloyeee_Update, txt_Name.getText(), txt_Email.getText(),
-                        txt_PhoneNumber.getText(), cmb_Gender.getSelectedItem().toString(), txt_PhoneNumber.getText(), txt_Salary.getText(),
-                        Checkbox_Isdelete.isSelected());
+                bLL_Employee.Update(Id_emloyeee_Update, txt_Name.getText(),currentEmployee.getEmail(),txt_Email.getText(),
+                        txt_PhoneNumber.getText(), cmb_Gender.getSelectedItem().toString(), txt_birthdate.getText(), txt_Salary.getText(),
+                        Checkbox_Isdelete.isSelected(),gUI_Employee);
             }
         } catch (Exception e) {
         }
     }//GEN-LAST:event_btn_SaveActionPerformed
+
+    private void btn_CancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CancelActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btn_CancelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -254,7 +293,7 @@ public class GUI_UpdateEmployee extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new GUI_UpdateEmployee(currentEmployee, UpdateAffterAddNew).setVisible(true);
+                    new GUI_UpdateEmployee(gUI_Employee,currentEmployee, UpdateAffterAddNew).setVisible(true);
                 } catch (ParseException ex) {
                     Logger.getLogger(GUI_UpdateEmployee.class.getName()).log(Level.SEVERE, null, ex);
                 }

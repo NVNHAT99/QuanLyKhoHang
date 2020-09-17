@@ -163,30 +163,32 @@ public class DAL_Employee extends DAL {
             connection = dbUltils.Get_connection();
             int rs = -1;
             if (Isdelete == true) {
-                String sql = "update Employees set Name=?,PhoneNumber = ?, Gender = ?, Birthdate = ?, Salary = ?,Isdelete = ?, RoleId = ? where Id=? ";
+                String sql = "update Employees set Name=?,Email = ?,PhoneNumber = ?, Gender = ?, Birthdate = ?, Salary = ?,Isdelete = ?, RoleId = ? where Id = ? ";
                 preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
                 preparedStatement.setString(1, name);
-                preparedStatement.setString(2, phonenumber);
-                preparedStatement.setString(3, Gender);
-                preparedStatement.setDate(4, birtthdate);
-                preparedStatement.setDouble(5, salary);
-                preparedStatement.setBoolean(6, Isdelete);
+                preparedStatement.setString(2, email);
+                preparedStatement.setString(3, phonenumber);
+
+                preparedStatement.setString(4, Gender);
+                preparedStatement.setDate(5, birtthdate);
+                preparedStatement.setDouble(6, salary);
+                preparedStatement.setBoolean(7, Isdelete);
                 // if isdelete == true. set roleID =4/ this roleid for emloyee is deleted
-                preparedStatement.setInt(7, 4);
-                preparedStatement.setInt(8, Id);
+                preparedStatement.setInt(8, 4);
+                preparedStatement.setInt(9, Id);
                 rs = preparedStatement.executeUpdate();
             } else // if isdelete == false. not set roleIDz/ this roleid for emloyee new employee
             {
-                String sql = "update Employees set Name=?,PhoneNumber = ?, Gender = ?, Birthdate = ?, Salary = ?,Isdelete = ? where Id=? ";
+                String sql = "update Employees set Name = ?,Email = ?,PhoneNumber = ?, Gender = ?, Birthdate = ?, Salary = ? where Id = ? ";
                 preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
                 preparedStatement.setString(1, name);
-                preparedStatement.setString(2, phonenumber);
-                preparedStatement.setString(3, Gender);
-                preparedStatement.setDate(4, birtthdate);
-                preparedStatement.setDouble(5, salary);
-                preparedStatement.setBoolean(6, Isdelete);
+                preparedStatement.setString(2, email);
+                preparedStatement.setString(3, phonenumber);
+                preparedStatement.setString(4, Gender);
+                preparedStatement.setDate(5, birtthdate);
+                preparedStatement.setDouble(6, salary);
                 preparedStatement.setInt(7, Id);
                 rs = preparedStatement.executeUpdate();
             }
@@ -208,7 +210,7 @@ public class DAL_Employee extends DAL {
         boolean result = false;
         try {
             connection = dbUltils.Get_connection();
-            String sql = "Update categories SET IsDelete = 1 WHERE Id = ?";
+            String sql = "Update Employees SET IsDelete = 1 WHERE Id = ?";
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setInt(1, ID);
