@@ -114,6 +114,11 @@ public class GUI_Main extends javax.swing.JFrame {
         Tab_Model.add(btn_Employee);
 
         btn_Supplier.setText("Supplier");
+        btn_Supplier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_SupplierActionPerformed(evt);
+            }
+        });
         Tab_Model.add(btn_Supplier);
 
         btn_customer.setText("Customer");
@@ -190,6 +195,14 @@ public class GUI_Main extends javax.swing.JFrame {
             Logger.getLogger(GUI_Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btn_EmployeeActionPerformed
+
+    private void btn_SupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SupplierActionPerformed
+        // TODO add your handling code here:
+        GUI_Supplier jframeGUI_Supplier = new GUI_Supplier();
+        jframeGUI_Supplier.setLocationRelativeTo(null);
+        jframeGUI_Supplier.setVisible(true);
+        jframeGUI_Supplier.setVisible(true);
+    }//GEN-LAST:event_btn_SupplierActionPerformed
 
     /**
      * @param args the command line arguments

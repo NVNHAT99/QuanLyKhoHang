@@ -14,13 +14,9 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.regex.Pattern;
 
-public class BLL_Employee {
+public class BLL_Employee implements Interface_Constant{
 
     static DAL_Employee dal_Employee = new DAL_Employee();
-    private static final String EMAIL_PATTERN
-            = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    private static String PhoneNumber_pattern = "\\(?([0-9]{3})\\)?([ .-]?)([0-9]{3})\\2([0-9]{4})";
 
     public static ArrayList<DTO_employee> FindbyUserName(String UserName) throws SQLException {
         return dal_Employee.FindByUserName(UserName);

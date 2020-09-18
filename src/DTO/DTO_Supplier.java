@@ -15,7 +15,7 @@ public class DTO_Supplier {
   private String Name;
   private String Address;
   private String Email;
-
+  private boolean IsDelete;
     /**
      * @return the Id
      */
@@ -84,6 +84,20 @@ public class DTO_Supplier {
      */
     public void setEmail(String Email) {
         this.Email = Email;
+    }
+
+    /**
+     * @return the IsDelete
+     */
+    public boolean GetIsDelete() {
+        return IsDelete;
+    }
+
+    /**
+     * @param IsDelete the IsDelete to set
+     */
+    public void setIsDelete(boolean IsDelete) {
+        this.IsDelete = IsDelete;
     }
     
 }
