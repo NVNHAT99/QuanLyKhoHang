@@ -198,10 +198,13 @@ public class GUI_Main extends javax.swing.JFrame {
 
     private void btn_SupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SupplierActionPerformed
         // TODO add your handling code here:
-        GUI_Supplier jframeGUI_Supplier = new GUI_Supplier();
-        jframeGUI_Supplier.setLocationRelativeTo(null);
-        jframeGUI_Supplier.setVisible(true);
-        jframeGUI_Supplier.setVisible(true);
+        try {
+            GUI_Supplier jframeGUI_Supplier = new GUI_Supplier();
+            jframeGUI_Supplier.setLocationRelativeTo(null);
+            jframeGUI_Supplier.setVisible(true);
+            jframeGUI_Supplier.setVisible(true);
+        } catch (Exception e) {
+        }
     }//GEN-LAST:event_btn_SupplierActionPerformed
 
     /**

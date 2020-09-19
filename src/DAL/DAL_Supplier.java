@@ -42,6 +42,30 @@ public class DAL_Supplier extends DAL {
         }
         return result;
     }
+
+    public boolean CheckSupplierNameExist(int SupplierId, String SupplierName) throws SQLException {
+        boolean result = false;// not exist
+        try {
+            connection = dbUltils.Get_connection();
+            String sqlFind = "Select Id,Name from Suppliers where Name = ? And Id != ? And IsDelete !=1 ";
+            preparedStatement = connection.prepareStatement(sqlFind);
+
+            preparedStatement.setString(1, SupplierName);
+            preparedStatement.setInt(2, SupplierId);
+
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                result = true;
+            }
+        } catch (Exception e) {
+            JOptionPane.showInputDialog(e);
+
+        } finally {
+            connection.close();
+        }
+        return result;
+    }
+
     public ArrayList<DTO_Supplier> FindBySupplierEmail(String SupplierEmail) throws SQLException {
         ArrayList<DTO_Supplier> result = new ArrayList<DTO_Supplier>();
         try {
@@ -67,13 +91,36 @@ public class DAL_Supplier extends DAL {
         }
         return result;
     }
+    
+    public boolean CheckSupplierEmaiExist(int SupplierId, String SupplierEmail) throws SQLException {
+        boolean result = false;// not exist
+        try {
+            connection = dbUltils.Get_connection();
+            String sqlFind = "Select Id,Name from Suppliers where Email = ? And IsDelete!=1 and Id!= ?";
+            preparedStatement = connection.prepareStatement(sqlFind);
+
+            preparedStatement.setString(1, SupplierEmail);
+            preparedStatement.setInt(2, SupplierId);
+
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                result = true;
+            }
+        } catch (Exception e) {
+            JOptionPane.showInputDialog(e);
+
+        } finally {
+            connection.close();
+        }
+        return result;
+    }
 
     public ArrayList<DTO_Supplier> GetAllSuppliers() throws SQLException {
 
         ArrayList<DTO_Supplier> result = new ArrayList<DTO_Supplier>();
         try {
             connection = dbUltils.Get_connection();
-            String sqlFind = "Select * "
+            String sqlFind = "Select Id,Name,PhoneNumber,Email,Address "
                     + "from Suppliers where IsDelete != 1";
             preparedStatement = connection.prepareStatement(sqlFind);
 
@@ -81,21 +128,21 @@ public class DAL_Supplier extends DAL {
             while (resultSet.next()) {
                 DTO_Supplier supplier = new DTO_Supplier();
                 supplier.setId(resultSet.getInt(1));
-                supplier.setName(resultSet.getString(3));
-                supplier.setPhoneNumber(resultSet.getString(2));
+                supplier.setName(resultSet.getString(2));
+                supplier.setPhoneNumber(resultSet.getString(3));
                 supplier.setEmail(resultSet.getString(4));
                 supplier.setAddress(resultSet.getString(5));
                 result.add(supplier);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,e);
+            JOptionPane.showMessageDialog(null, e);
 
         } finally {
             connection.close();
         }
         return result;
     }
-    
+
     public ArrayList<DTO_Supplier> GetAllSuppliers_ID_Name() throws SQLException {
 
         ArrayList<DTO_Supplier> result = new ArrayList<DTO_Supplier>();
@@ -120,6 +167,7 @@ public class DAL_Supplier extends DAL {
         }
         return result;
     }
+
     public boolean Insert(String Name, String Address, String Email, String PhoneNumber) throws SQLException {
         boolean result = false;
         try {
@@ -147,21 +195,19 @@ public class DAL_Supplier extends DAL {
         return result;
     }
 
-    public boolean Update(int ID, String Name, double Price, int SupplierId, int CategoryId, String Unit, int UnitsInStock, String ImagePath) throws SQLException {
+    public boolean Update(int Id, String Name, String Address, String Email, String PhoneNumber) throws SQLException {
         boolean result = false;
         try {
             connection = dbUltils.Get_connection();
-            String sql = "Update products SET Name = ?,Price = ?,SupplierId = ?,CategoryId = ?,Unit = ?,UnitsInStock = ?,ImagePath = ? WHERE Id = ? ";
+            String sql = "Update suppliers SET Name = ?,Address = ?,Email = ?,PhoneNumber = ? WHERE Id = ? ";
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, Name);
-            preparedStatement.setDouble(2, Price);
-            preparedStatement.setInt(3, SupplierId);
-            preparedStatement.setInt(4, CategoryId);
-            preparedStatement.setString(5, Unit);
-            preparedStatement.setInt(6, UnitsInStock);
-            preparedStatement.setString(7, ImagePath);
-            preparedStatement.setInt(8, ID);
+            preparedStatement.setString(2, Address);
+            preparedStatement.setString(3, Email);
+            preparedStatement.setString(4, PhoneNumber);
+            preparedStatement.setInt(5, Id);
+
             int rs = preparedStatement.executeUpdate();
 
             if (rs > 0) {
@@ -176,15 +222,14 @@ public class DAL_Supplier extends DAL {
         }
         return result;
     }
-    
-    public boolean Delete(int ID) throws SQLException{
+
+    public boolean Delete(int ID) throws SQLException {
         boolean result = false;
         try {
             connection = dbUltils.Get_connection();
-            String sql = "Update products SET IsDelete = 1 WHERE Id = ?";
+            String sql = "Update suppliers SET IsDelete = 1 WHERE Id = ?";
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
-            
             preparedStatement.setInt(1, ID);
             int rs = preparedStatement.executeUpdate();
 

@@ -255,7 +255,7 @@ public class GUI_Product extends javax.swing.JFrame {
     private void btn_InsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_InsertActionPerformed
         try {
             // TODO add your handling code here:
-            GUI_Product_Insert_Update jfram_insert_product = new GUI_Product_Insert_Update(this);
+            GUI_Insert_Update_Product jfram_insert_product = new GUI_Insert_Update_Product(this);
             jfram_insert_product.pack();
             jfram_insert_product.setLocationRelativeTo(null);
             jfram_insert_product.setVisible(true);
@@ -279,7 +279,7 @@ public class GUI_Product extends javax.swing.JFrame {
             product.setUnitsInStock(Integer.parseInt(Table_Product.getModel().getValueAt(row, 6).toString()));
             product.setImagePath(Table_Product.getValueAt(row, 7).toString());
 
-            GUI_Product_Insert_Update jframe_UpdateProduct = new GUI_Product_Insert_Update(product, this);
+            GUI_Insert_Update_Product jframe_UpdateProduct = new GUI_Insert_Update_Product(product, this);
             jframe_UpdateProduct.pack();
             jframe_UpdateProduct.setLocationRelativeTo(null);
             jframe_UpdateProduct.setVisible(true);
@@ -308,8 +308,6 @@ public class GUI_Product extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public void Load() throws SQLException {
-
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         ArrayList<CustomDTO_Product> List_product_ModelTables = bll_product.GetAllProduct_ForProductTable();
         String[] columeNames = new String[]{"ID", "Name", "Price", "Supplier", "Category", "Unit", "UnitsInStock", "ImagePath"};

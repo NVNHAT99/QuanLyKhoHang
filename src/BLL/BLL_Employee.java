@@ -115,7 +115,6 @@ public class BLL_Employee implements Interface_Constant{
 
     public void Update(int ID, String name, String CurrentEmail, String Newemail, String phonenumber, String Gender, String birtthdate, String salary, Boolean Isdelete,
             GUI_Employee gUI_Employee) throws SQLException {
-        
         if (!((name.equals(null) || name.equals(""))
                 || (phonenumber.equals(null) || phonenumber.equals(""))
                 || (Gender.equals(null) || Gender.equals(""))

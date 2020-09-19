@@ -28,17 +28,19 @@ public class GUI_Supplier extends javax.swing.JFrame {
      * Creates new form GUI_Supplier
      */
     static BLL_Supplier bLL_Supplier = new BLL_Supplier();
+
     public GUI_Supplier() throws SQLException, ParseException {
         initComponents();
         Load();
     }
+
     public void Load() throws SQLException, ParseException {
         MaskFormatter PhoneNumber_maskFormatter = new MaskFormatter("### ### ####");
         DefaultFormatterFactory factory_Phonenumber = new DefaultFormatterFactory(PhoneNumber_maskFormatter);
         txt_PhoneNumber.setFormatterFactory(factory_Phonenumber);
 
         ArrayList<DTO_Supplier> List_supplier = bLL_Supplier.GetAllSuppliers();
-        String[] columeNames = new String[]{"ID", "Name", "Address","Email","PhoneNumber"};
+        String[] columeNames = new String[]{"ID", "Name", "Address", "Email", "PhoneNumber"};
         DefaultTableModel model = new DefaultTableModel(null, columeNames) {
 
             @Override
@@ -50,7 +52,7 @@ public class GUI_Supplier extends javax.swing.JFrame {
             // create object(is a row in table) 
             Object[] Supplier = new Object[]{
                 List_supplier.get(i).getId(), List_supplier.get(i).getName(), List_supplier.get(i).getAddress(),
-                List_supplier.get(i).getEmail(),List_supplier.get(i).getPhoneNumber()
+                List_supplier.get(i).getEmail(), List_supplier.get(i).getPhoneNumber()
             };
             model.addRow(Supplier);
         }
@@ -67,8 +69,6 @@ public class GUI_Supplier extends javax.swing.JFrame {
                     txt_Address.setText(Table_Supplier.getValueAt(RowSelected, 2).toString());
                     txt_Email.setText(Table_Supplier.getValueAt(RowSelected, 3).toString());
                     txt_PhoneNumber.setText(Table_Supplier.getValueAt(RowSelected, 4).toString());
-                    
-
                 }
             }
         });
@@ -124,10 +124,25 @@ public class GUI_Supplier extends javax.swing.JFrame {
         jScrollPane1.setViewportView(Table_Supplier);
 
         btn_Insert.setText("Insert");
+        btn_Insert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_InsertActionPerformed(evt);
+            }
+        });
 
         btn_Update.setText("Update");
+        btn_Update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_UpdateActionPerformed(evt);
+            }
+        });
 
         btn_delete.setText("Delete");
+        btn_delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_deleteActionPerformed(evt);
+            }
+        });
 
         btn_close.setText("CLose");
         btn_close.addActionListener(new java.awt.event.ActionListener() {
@@ -236,6 +251,49 @@ public class GUI_Supplier extends javax.swing.JFrame {
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_btn_closeActionPerformed
+
+    private void btn_InsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_InsertActionPerformed
+        // TODO add your handling code here:
+        try {
+            GUI_Inset_Update_Supplier jframeGUI_Inset_Supplier = new GUI_Inset_Update_Supplier(null, this);
+            jframeGUI_Inset_Supplier.pack();
+            jframeGUI_Inset_Supplier.setLocationRelativeTo(null);
+            jframeGUI_Inset_Supplier.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            jframeGUI_Inset_Supplier.setVisible(true);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btn_InsertActionPerformed
+
+    private void btn_UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_UpdateActionPerformed
+        // TODO add your handling code here:
+        try {
+            int Rowselectted = Table_Supplier.getSelectedRow();
+            DTO_Supplier supplier = new DTO_Supplier();
+            supplier.setId(Integer.parseInt(Table_Supplier.getValueAt(Rowselectted, 0).toString()));
+            supplier.setName(Table_Supplier.getValueAt(Rowselectted, 1).toString());
+            supplier.setAddress(Table_Supplier.getValueAt(Rowselectted, 2).toString());
+            supplier.setEmail(Table_Supplier.getValueAt(Rowselectted, 3).toString());
+            supplier.setPhoneNumber(Table_Supplier.getValueAt(Rowselectted, 4).toString());
+
+            GUI_Inset_Update_Supplier jframeGUI_Update_Supplier = new GUI_Inset_Update_Supplier(supplier, this);
+            jframeGUI_Update_Supplier.pack();
+            jframeGUI_Update_Supplier.setLocationRelativeTo(null);
+            jframeGUI_Update_Supplier.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            jframeGUI_Update_Supplier.setVisible(true);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btn_UpdateActionPerformed
+
+    private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
+        // TODO add your handling code here:
+        try {
+            int Rowselectted = Table_Supplier.getSelectedRow();
+            int supplierID = Integer.parseInt(Table_Supplier.getValueAt(Rowselectted, 0).toString());
+            bLL_Supplier.Delete(supplierID, this);
+            
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btn_deleteActionPerformed
 
     /**
      * @param args the command line arguments

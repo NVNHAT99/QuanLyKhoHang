@@ -13,15 +13,15 @@ import javax.swing.JOptionPane;
  *
  * @author Administrator
  */
-public class GUI_Category_Insert_Update extends javax.swing.JFrame {
+public class GUI_Insert_Update_Category extends javax.swing.JFrame {
 
     /**
-     * Creates new form GUI_Category_Insert_Update
+     * Creates new form GUI_Insert_Update_Category
      */
     static BLL_Category bLL_Category = new BLL_Category();
     static DTO_Category curent_Category = null;
     static GUI_Category jframGUI_Category = null;
-    public GUI_Category_Insert_Update(GUI_Category _jframGuiCategory) {
+    public GUI_Insert_Update_Category(GUI_Category _jframGuiCategory) {
         initComponents();
         try {
             jframGUI_Category = _jframGuiCategory;
@@ -29,7 +29,7 @@ public class GUI_Category_Insert_Update extends javax.swing.JFrame {
         }
     }
 
-    public GUI_Category_Insert_Update(DTO_Category _category,GUI_Category _jframGuiCategory) {
+    public GUI_Insert_Update_Category(DTO_Category _category,GUI_Category _jframGuiCategory) {
         initComponents();
         try {
             jframGUI_Category = _jframGuiCategory;
@@ -183,20 +183,21 @@ public class GUI_Category_Insert_Update extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GUI_Category_Insert_Update.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_Insert_Update_Category.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GUI_Category_Insert_Update.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_Insert_Update_Category.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GUI_Category_Insert_Update.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_Insert_Update_Category.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GUI_Category_Insert_Update.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_Insert_Update_Category.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI_Category_Insert_Update(jframGUI_Category).setVisible(true);
+                new GUI_Insert_Update_Category(jframGUI_Category).setVisible(true);
             }
         });
     }

@@ -55,7 +55,7 @@ public class GUI_UpdateEmployee extends javax.swing.JFrame {
             Checkbox_Isdelete.setEnabled(false);
         }else{
             try {
-                txt_PhoneNumber.setValue(employee.getPhoneNumber());
+                txt_PhoneNumber.setText(employee.getPhoneNumber());
             } catch (Exception e) {
                 txt_PhoneNumber.setValue(null);
             }

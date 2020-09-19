@@ -237,7 +237,7 @@ public class GUI_Category extends javax.swing.JFrame {
 
     private void btn_InsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_InsertActionPerformed
         // TODO add your handling code here:
-        GUI_Category_Insert_Update jframGUI_Category_Insert_Update = new GUI_Category_Insert_Update(this);
+        GUI_Insert_Update_Category jframGUI_Category_Insert_Update = new GUI_Insert_Update_Category(this);
         jframGUI_Category_Insert_Update.pack();
         jframGUI_Category_Insert_Update.setLocationRelativeTo(null);
         jframGUI_Category_Insert_Update.setVisible(true);
@@ -258,7 +258,7 @@ public class GUI_Category extends javax.swing.JFrame {
 
             }
             category.setDescription(Description);
-            GUI_Category_Insert_Update jframUpdate_category = new GUI_Category_Insert_Update(category,this);
+            GUI_Insert_Update_Category jframUpdate_category = new GUI_Insert_Update_Category(category,this);
             jframUpdate_category.pack();
             jframUpdate_category.setLocationRelativeTo(null);
             jframUpdate_category.setVisible(true);

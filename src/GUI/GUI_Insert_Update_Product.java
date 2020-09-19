@@ -38,7 +38,7 @@ import ultils.CustomCombo;
  *
  * @author Administrator
  */
-public class GUI_Product_Insert_Update extends javax.swing.JFrame {
+public class GUI_Insert_Update_Product extends javax.swing.JFrame {
 
     static BLL_Product bll_product = new BLL_Product();
     static BLL_Supplier bLL_Supplier = new BLL_Supplier();
@@ -50,13 +50,13 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
     /**
      * Creates new form GUI_Product_Insert_Update
      */
-    public GUI_Product_Insert_Update(GUI_Product gUI_Product) throws SQLException {
+    public GUI_Insert_Update_Product(GUI_Product gUI_Product) throws SQLException {
         initComponents();
         Load();
         GuiProduct = gUI_Product;
     }
 
-    public GUI_Product_Insert_Update(CustomDTO_Product product, GUI_Product gUI_Product) throws SQLException {
+    public GUI_Insert_Update_Product(CustomDTO_Product product, GUI_Product gUI_Product) throws SQLException {
         initComponents();
         Load();
         Current_Product = product;
@@ -281,7 +281,7 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "sam pham da ton tai");
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(GUI_Product_Insert_Update.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GUI_Insert_Update_Product.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             //update
@@ -299,7 +299,7 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
                     bll_product.Update(Current_Product.getId(), txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(), txt_UnitStock.getText(), txt_ImagePath.getText(), GuiProduct);
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(GUI_Product_Insert_Update.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GUI_Insert_Update_Product.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btn_SaveActionPerformed
@@ -359,23 +359,24 @@ public class GUI_Product_Insert_Update extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GUI_Product_Insert_Update.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_Insert_Update_Product.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GUI_Product_Insert_Update.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_Insert_Update_Product.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GUI_Product_Insert_Update.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_Insert_Update_Product.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GUI_Product_Insert_Update.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_Insert_Update_Product.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new GUI_Product_Insert_Update(GuiProduct).setVisible(true);
+                    new GUI_Insert_Update_Product(GuiProduct).setVisible(true);
                 } catch (SQLException ex) {
-                    Logger.getLogger(GUI_Product_Insert_Update.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(GUI_Insert_Update_Product.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
