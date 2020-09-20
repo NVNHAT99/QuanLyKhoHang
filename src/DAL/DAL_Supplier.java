@@ -58,7 +58,7 @@ public class DAL_Supplier extends DAL {
                 result = true;
             }
         } catch (Exception e) {
-            JOptionPane.showInputDialog(e);
+            //JOptionPane.showInputDialog(e);
 
         } finally {
             connection.close();
@@ -84,7 +84,7 @@ public class DAL_Supplier extends DAL {
                 result.add(supplier);
             }
         } catch (Exception e) {
-            JOptionPane.showInputDialog(e);
+            //JOptionPane.showInputDialog(e);
 
         } finally {
             connection.close();
@@ -107,7 +107,7 @@ public class DAL_Supplier extends DAL {
                 result = true;
             }
         } catch (Exception e) {
-            JOptionPane.showInputDialog(e);
+            //JOptionPane.showInputDialog(e);
 
         } finally {
             connection.close();

@@ -46,19 +46,20 @@ public class DAL_Product extends DAL {
         return result;
     }
 
-    public boolean CheckProductNameExist(String ProductName) throws SQLException {
+    public boolean CheckProductNameExist(int ProductId,String ProductName) throws SQLException {
         try {
             connection = dbUltils.Get_connection();
             String sqlFind = "Select Id,Name,Price,SupplierId,CategoryId,Unit,UnitsInStock,ImagePath "
-                    + "from products where Name = ?";
+                    + "from products where Name = ? and Id != ? ";
             preparedStatement = connection.prepareStatement(sqlFind);
             preparedStatement.setString(1, ProductName);
+            preparedStatement.setInt(2, ProductId);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 return true;
             }
         } catch (Exception e) {
-            JOptionPane.showInputDialog(e);
+            //JOptionPane.showInputDialog(e);
 
         } finally {
             connection.close();

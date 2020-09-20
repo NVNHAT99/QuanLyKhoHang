@@ -25,6 +25,10 @@ public class BLL_Product {
         return dal_product.FindByProductName(UserName);
     }
 
+    public boolean CheckProductNameExist(int ProductId, String ProductName) throws SQLException {
+        return dal_product.CheckProductNameExist(ProductId, ProductName);
+    }
+
     public ArrayList<DTO_Product> GetAllProductsNotDelete() throws SQLException {
         return dal_product.GetAllProductsNotDelete();
     }
@@ -36,15 +40,21 @@ public class BLL_Product {
                 || (Unit.equals(null) || Unit.equals(""))) {
             JOptionPane.showMessageDialog(null, "co du lieu de trong moi kiem tra lai");
         } else {
-            try {
-                if (dal_product.Insert(Name, Float.parseFloat(Price), SupplierId, CategoryId, Unit,
-                        Integer.parseInt(UnitStock), ImagePath)) {
-                    gUI_Product.Load();
-                    JOptionPane.showMessageDialog(null, "Them san pham thanh cong");
+            if (!CheckProductNameExist(SupplierId, Name)) {
+                try {
+                    if (dal_product.Insert(Name, Float.parseFloat(Price), SupplierId, CategoryId, Unit,
+                            Integer.parseInt(UnitStock), ImagePath)) {
+                        gUI_Product.Load();
+                        JOptionPane.showMessageDialog(null, "Them san pham thanh cong");
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "co du lieu khong dung dinh dang moi kiem tra lai");
                 }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "co du lieu khong dung dinh dang moi kiem tra lai");
+
+            }else{
+                JOptionPane.showMessageDialog(null, "Ten San pham da ton tai");
             }
+
         }
     }
 
@@ -63,21 +73,22 @@ public class BLL_Product {
                     JOptionPane.showMessageDialog(null, "cap nhap that bai");
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null,e);
+                JOptionPane.showMessageDialog(null, e);
             }
         }
     }
-    public void Delete(int ID,GUI_Product gUI_Product) throws SQLException{
+
+    public void Delete(int ID, GUI_Product gUI_Product) throws SQLException {
         try {
-                if (dal_product.Delete(ID)) {
-                    JOptionPane.showMessageDialog(null, "Xoa San pham thanh cong");
-                    gUI_Product.Load();
-                } else {
-                    JOptionPane.showMessageDialog(null, "xoa that bai that bai");
-                }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null,e);
+            if (dal_product.Delete(ID)) {
+                JOptionPane.showMessageDialog(null, "Xoa San pham thanh cong");
+                gUI_Product.Load();
+            } else {
+                JOptionPane.showMessageDialog(null, "xoa that bai that bai");
             }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
     }
 
     public ArrayList<CustomDTO_Product> GetAllProduct_ForProductTable() throws SQLException {
@@ -85,7 +96,4 @@ public class BLL_Product {
         return dal_product.GetAllProduct_ForProductTable();
     }
 
-    public boolean CheckProductNameExist(String ProductName) throws SQLException {
-        return dal_product.CheckProductNameExist(ProductName);
-    }
 }

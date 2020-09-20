@@ -30,12 +30,12 @@ public class BLL_Category {
         return dal_catgory.GetAllCategory_ID_Name();
     }
 
-    public boolean CheckCategoryNameExist(String CategoryName) throws SQLException {
-        return dal_catgory.CheckCategoryNameExist(CategoryName);
+    public boolean CheckCategoryNameExist(int Id, String CategoryName) throws SQLException {
+        return dal_catgory.CheckCategoryNameExist(Id, CategoryName);
     }
 
-    public void Insert(String Name, String Description,GUI_Category jframeGUI_Category) throws SQLException {
-        if (!CheckCategoryNameExist(Name)) {
+    public void Insert(String Name, String Description, GUI_Category jframeGUI_Category) throws SQLException {
+        if (!CheckCategoryNameExist(-1, Name)) {
             try {
                 if (dal_catgory.Insert(Name, Description)) {
                     jframeGUI_Category.Load();
@@ -50,19 +50,28 @@ public class BLL_Category {
         }
     }
 
-    public void Update(int Id, String Name, String Description,GUI_Category jframeGUI_Category) throws SQLException {
+    public void Update(int Id, String Name, String Description, GUI_Category jframeGUI_Category) throws SQLException {
         try {
-            if (dal_catgory.Update(Id, Name, Description)) {
-                jframeGUI_Category.Load();
-                JOptionPane.showMessageDialog(null, "Cap Nhap Loai san pham thanh cong");
+            if ((Name.equals(null) || Name.equals("")) || Description.equals(null) || Description.equals("")) {
+                JOptionPane.showMessageDialog(null, "co du lieu con trong moi kiem tra lai");
             } else {
-                JOptionPane.showMessageDialog(null, "Cap Nhap Loai san pham that bai");
+                if (CheckCategoryNameExist(Id, Name)) {
+                    JOptionPane.showMessageDialog(null, "Ten Loai San Pham Da Ton Tai");
+                } else {
+                    if (dal_catgory.Update(Id, Name, Description)) {
+                        jframeGUI_Category.Load();
+                        JOptionPane.showMessageDialog(null, "Cap Nhap Loai san pham thanh cong");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Cap Nhap Loai san pham that bai");
+                    }
+                }
             }
+
         } catch (Exception e) {
         }
     }
 
-    public void Delete(int ID,GUI_Category jframeGUI_Category) throws SQLException {
+    public void Delete(int ID, GUI_Category jframeGUI_Category) throws SQLException {
         try {
             if (dal_catgory.Delete(ID)) {
                 jframeGUI_Category.Load();

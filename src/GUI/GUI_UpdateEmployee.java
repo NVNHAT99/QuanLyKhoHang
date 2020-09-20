@@ -244,11 +244,11 @@ public class GUI_UpdateEmployee extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             if (UpdateAffterAddNew) {
-                bLL_Employee.Update(Id_emloyeee_Update, txt_Name.getText(),currentEmployee.getEmail(), txt_Email.getText(),
+                bLL_Employee.Update(Id_emloyeee_Update, txt_Name.getText(), txt_Email.getText(),
                         txt_PhoneNumber.getText(), cmb_Gender.getSelectedItem().toString(), txt_birthdate.getText(), txt_Salary.getText(),
                         false,gUI_Employee);
             } else {
-                bLL_Employee.Update(Id_emloyeee_Update, txt_Name.getText(),currentEmployee.getEmail(),txt_Email.getText(),
+                bLL_Employee.Update(Id_emloyeee_Update, txt_Name.getText(),txt_Email.getText(),
                         txt_PhoneNumber.getText(), cmb_Gender.getSelectedItem().toString(), txt_birthdate.getText(), txt_Salary.getText(),
                         Checkbox_Isdelete.isSelected(),gUI_Employee);
             }

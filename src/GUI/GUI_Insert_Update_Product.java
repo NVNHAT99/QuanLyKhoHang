@@ -64,12 +64,14 @@ public class GUI_Insert_Update_Product extends javax.swing.JFrame {
         txt_Name.setText(product.getName());
         txt_price.setText(String.valueOf(product.getPrice()));
         txt_unit.setText(String.valueOf(product.getUnit()));
+        txt_UnitStock.setText(String.valueOf(product.getUnitsInStock()));
         txt_ImagePath.setText(product.getImagePath());
         ImageIcon img_productIcon = new ImageIcon(new ImageIcon(product.getImagePath()).getImage().getScaledInstance(Img_Product.getWidth(), Img_Product.getHeight(), Image.SCALE_DEFAULT));
         Img_Product.setIcon(img_productIcon);
         cmb_Supplier.getModel().setSelectedItem(product.getSupplier());
         cmb_Category.getModel().setSelectedItem(product.getCategory());
         label_Header.setText("Update Product");
+        
     }
 
     /**
@@ -197,7 +199,7 @@ public class GUI_Insert_Update_Product extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(label_Header, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                .addComponent(label_Header, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
@@ -238,7 +240,7 @@ public class GUI_Insert_Update_Product extends javax.swing.JFrame {
                     .addComponent(Img_Product, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_Save, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
+                    .addComponent(btn_Save, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btn_Close, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(58, 58, 58))
         );
@@ -275,11 +277,7 @@ public class GUI_Insert_Update_Product extends javax.swing.JFrame {
             int Supplier_ID = ((CustomCombo) cmb_Supplier.getSelectedItem()).getID();
             int category_ID = ((CustomCombo) cmb_Category.getSelectedItem()).getID();
             try {
-                if (!bll_product.CheckProductNameExist(txt_Name.getText())) {
-                    bll_product.Insert(txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(), txt_UnitStock.getText(), txt_ImagePath.getText(), GuiProduct);
-                } else {
-                    JOptionPane.showMessageDialog(null, "sam pham da ton tai");
-                }
+                bll_product.Insert(txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(), txt_UnitStock.getText(), txt_ImagePath.getText(), GuiProduct);
             } catch (SQLException ex) {
                 Logger.getLogger(GUI_Insert_Update_Product.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -288,16 +286,8 @@ public class GUI_Insert_Update_Product extends javax.swing.JFrame {
             int Supplier_ID = ((CustomCombo) cmb_Supplier.getSelectedItem()).getID();
             int category_ID = ((CustomCombo) cmb_Category.getSelectedItem()).getID();
             try {
-                if (!Current_Product.getName().equals(txt_Name.getText())) {
-                    if (!bll_product.CheckProductNameExist(txt_Name.getText())) {
-                        bll_product.Update(Current_Product.getId(), txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(), txt_UnitStock.getText(), txt_ImagePath.getText(),
+                bll_product.Update(Current_Product.getId(), txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(), txt_UnitStock.getText(), txt_ImagePath.getText(),
                                 GuiProduct);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "sam pham da ton tai");
-                    }
-                } else {
-                    bll_product.Update(Current_Product.getId(), txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(), txt_UnitStock.getText(), txt_ImagePath.getText(), GuiProduct);
-                }
             } catch (SQLException ex) {
                 Logger.getLogger(GUI_Insert_Update_Product.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -339,7 +329,7 @@ public class GUI_Insert_Update_Product extends javax.swing.JFrame {
         formatter_unit.setAllowsInvalid(false);
 
         txt_UnitStock.setFormatterFactory(new DefaultFormatterFactory(formatter_unit));
-        txt_UnitStock.setValue(1);
+        txt_UnitStock.setText("1");
     }
 
     /**

@@ -129,14 +129,14 @@ public class BLL_Supplier implements Interface_Constant {
     }
     public void Delete(int ID,GUI_Supplier gUI_Suppliert) throws SQLException{
         try {
-                if (dAL_Supplier.Delete(ID)) {
-                    JOptionPane.showMessageDialog(null, "Xoa nha cung cap thanh cong");
-                    gUI_Suppliert.Load();
-                } else {
-                    JOptionPane.showMessageDialog(null, "xoa nha cung cap that bai");
-                }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null,e);
+            if (dAL_Supplier.Delete(ID)) {
+                JOptionPane.showMessageDialog(null, "Xoa nha cung cap thanh cong");
+                gUI_Suppliert.Load();
+            } else {
+                JOptionPane.showMessageDialog(null, "xoa nha cung cap that bai");
             }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
     }
 }

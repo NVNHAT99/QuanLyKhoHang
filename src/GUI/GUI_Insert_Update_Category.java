@@ -141,18 +141,7 @@ public class GUI_Insert_Update_Category extends javax.swing.JFrame {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, e);
                 }
-                // check user change Category Name or not
-                if (!curent_Category.getName().equals(txt_Name.getText())) {
-                    // if changed, check New Category Name exist
-                    if (!bLL_Category.CheckCategoryNameExist(txt_Name.getText())) {
-                        // if not exist , Update
-                        bLL_Category.Update(curent_Category.getId(), txt_Name.getText(), Description,jframGUI_Category);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Ten Loai San Pham Da Ton Tai");
-                    }
-                } else{
-                    bLL_Category.Update(curent_Category.getId(), txt_Name.getText(),Description,jframGUI_Category);
-                }
+                bLL_Category.Update(curent_Category.getId(), txt_Name.getText(), Description, jframGUI_Category);
 
             } else {
                 bLL_Category.Insert(txt_Name.getText(), txt_Description.getText(),jframGUI_Category);

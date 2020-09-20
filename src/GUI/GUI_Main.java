@@ -122,6 +122,11 @@ public class GUI_Main extends javax.swing.JFrame {
         Tab_Model.add(btn_Supplier);
 
         btn_customer.setText("Customer");
+        btn_customer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_customerActionPerformed(evt);
+            }
+        });
         Tab_Model.add(btn_customer);
 
         tabbedPane_Main.addTab("Model", Tab_Model);
@@ -206,6 +211,18 @@ public class GUI_Main extends javax.swing.JFrame {
         } catch (Exception e) {
         }
     }//GEN-LAST:event_btn_SupplierActionPerformed
+
+    private void btn_customerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_customerActionPerformed
+        // TODO add your handling code here:
+        try {
+            GUI_Customer jframeGUI_Customer = new GUI_Customer();
+            jframeGUI_Customer.setLocationRelativeTo(null);
+            jframeGUI_Customer.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            jframeGUI_Customer.setVisible(true);
+            jframeGUI_Customer.setVisible(true);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btn_customerActionPerformed
 
     /**
      * @param args the command line arguments

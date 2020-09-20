@@ -14,7 +14,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.regex.Pattern;
 
-public class BLL_Employee implements Interface_Constant{
+public class BLL_Employee implements Interface_Constant {
 
     static DAL_Employee dal_Employee = new DAL_Employee();
 
@@ -24,6 +24,10 @@ public class BLL_Employee implements Interface_Constant{
 
     public static ArrayList<DTO_employee> FindbyEmail(String Email) throws SQLException {
         return dal_Employee.FindByEmail(Email);
+    }
+
+    public boolean CheckEmployeeEmailExist(int EmployeeId, String EmployeeEmail) throws SQLException {
+        return dal_Employee.CheckEmployeeEmailExist(EmployeeId, EmployeeEmail);
     }
 
     public ArrayList<DTO_employee> GetAllEmloyee() throws SQLException {
@@ -78,7 +82,7 @@ public class BLL_Employee implements Interface_Constant{
         return false;
     }
 
-    public int Insert(String username, String PassWord, String ConfirmPassWord, String name, String email,GUI_Employee gUI_Employee) throws SQLException {
+    public int Insert(String username, String PassWord, String ConfirmPassWord, String name, String email, GUI_Employee gUI_Employee) throws SQLException {
         int rs = -1;
         if (!((username.equals(null) || username.equals(""))
                 || (PassWord.equals(null) || PassWord.equals(""))
@@ -113,49 +117,24 @@ public class BLL_Employee implements Interface_Constant{
         return rs;
     }
 
-    public void Update(int ID, String name, String CurrentEmail, String Newemail, String phonenumber, String Gender, String birtthdate, String salary, Boolean Isdelete,
+    public void Update(int ID, String name, String Email, String phonenumber, String Gender, String birtthdate, String salary, Boolean Isdelete,
             GUI_Employee gUI_Employee) throws SQLException {
         if (!((name.equals(null) || name.equals(""))
                 || (phonenumber.equals(null) || phonenumber.equals(""))
                 || (Gender.equals(null) || Gender.equals(""))
                 || (birtthdate.equals(null) || birtthdate.equals(""))
                 || (salary.equals(null) || salary.equals(""))
-                || (Newemail.equals(null) || Newemail.equals("")))) {
+                || (Email.equals(null) || Email.equals("")))) {
 
             try {
-                if (Newemail.matches(EMAIL_PATTERN)) {
-                    
-                    if (!CurrentEmail.equals(Newemail)) {
-                        // if current email changed do this
-                        if (FindbyEmail(Newemail).size() <= 0) {
-                            if (phonenumber.matches(PhoneNumber_pattern)) {
-                                try {
-                                    if (dal_Employee.Update(ID, name, Newemail, phonenumber, Gender, Date.valueOf(birtthdate), Double.parseDouble(salary), Isdelete)) {
-                                        gUI_Employee.load();
-                                        JOptionPane.showMessageDialog(null, "Cap Nhap Thong Tin Nhan Vien Thanh Cong");
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "Cap Nhap Thong Tin Nhan Vien That Bai");
-                                    }
-                                } catch (Exception e) {
-                                    JOptionPane.showMessageDialog(null, "co du lieu khong dung dinh dang moi kiem tra lai");
-                                }
-
-                            } else {
-                                JOptionPane.showMessageDialog(null, "So Dien Thoai Khong Dung Dinh Dang");
-                            }
-
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Email nay da duoc su dung boi nhan vien khac");
-                        }
-                    } else {
-                        // if current email dont changed dont check email exist
+                if (Email.matches(EMAIL_PATTERN)) {
+                    if (!CheckEmployeeEmailExist(ID, Email)) {
                         if (phonenumber.matches(PhoneNumber_pattern)) {
                             try {
-                                if (dal_Employee.Update(ID, name, Newemail, phonenumber, Gender, Date.valueOf(birtthdate), Double.parseDouble(salary), Isdelete)) {
+                                if (dal_Employee.Update(ID, name, Email, phonenumber, Gender, Date.valueOf(birtthdate), Double.parseDouble(salary), Isdelete)) {
                                     gUI_Employee.load();
                                     JOptionPane.showMessageDialog(null, "Cap Nhap Thong Tin Nhan Vien Thanh Cong");
                                 } else {
-                                    
                                     JOptionPane.showMessageDialog(null, "Cap Nhap Thong Tin Nhan Vien That Bai");
                                 }
                             } catch (Exception e) {
@@ -166,11 +145,12 @@ public class BLL_Employee implements Interface_Constant{
                             JOptionPane.showMessageDialog(null, "So Dien Thoai Khong Dung Dinh Dang");
                         }
 
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Email da duoc su dung");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Email khong dung dinh dang");
+                    JOptionPane.showMessageDialog(null, "Email Khong Dung Dinh Dang");
                 }
-
             } catch (Exception e) {
             }
 
@@ -178,8 +158,8 @@ public class BLL_Employee implements Interface_Constant{
             JOptionPane.showMessageDialog(null, " co du lieu con trong moi kiem tra lai");
         }
     }
-    
-    public void Delete(int ID,GUI_Employee jframeGUI_Employee) throws SQLException {
+
+    public void Delete(int ID, GUI_Employee jframeGUI_Employee) throws SQLException {
         try {
             if (dal_Employee.Delete(ID)) {
                 jframeGUI_Employee.load();

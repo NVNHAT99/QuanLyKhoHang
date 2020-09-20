@@ -46,19 +46,20 @@ public class DAL_Category extends DAL {
         return result;
     }
 
-    public boolean CheckCategoryNameExist(String CategoryName) throws SQLException {
+    public boolean CheckCategoryNameExist(int Id,String CategoryName) throws SQLException {
         try {
             connection = dbUltils.Get_connection();
             String sqlFind = "Select id,Name,Description "
-                    + "from categories where Name = ?";
+                    + "from categories where Name = ? and Id!=? And IsDelete !=1 ";
             preparedStatement = connection.prepareStatement(sqlFind);
             preparedStatement.setString(1, CategoryName);
+            preparedStatement.setInt(Id, Id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 return true;
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            //JOptionPane.showMessageDialog(null, e);
 
         } finally {
             connection.close();
@@ -83,7 +84,7 @@ public class DAL_Category extends DAL {
             }
 
         } catch (Exception e) {
-            JOptionPane.showInputDialog(e);
+            //JOptionPane.showInputDialog(e);
 
         } finally {
             connection.close();
