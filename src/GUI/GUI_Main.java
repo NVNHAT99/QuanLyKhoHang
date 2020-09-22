@@ -48,6 +48,12 @@ public class GUI_Main extends javax.swing.JFrame {
         btn_Employee = new javax.swing.JButton();
         btn_Supplier = new javax.swing.JButton();
         btn_customer = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        btn_BuyProduct = new javax.swing.JButton();
+        btn_SellProduct = new javax.swing.JButton();
+        btn_CollectMoney = new javax.swing.JButton();
+        btn_paymoney = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addHierarchyBoundsListener(new java.awt.event.HierarchyBoundsListener() {
@@ -131,15 +137,46 @@ public class GUI_Main extends javax.swing.JFrame {
 
         tabbedPane_Main.addTab("Model", Tab_Model);
 
+        jPanel2.setLayout(new java.awt.GridLayout(1, 0, 5, 5));
+
+        btn_BuyProduct.setText("Buy Product");
+        jPanel2.add(btn_BuyProduct);
+
+        btn_SellProduct.setText("Sell Product");
+        jPanel2.add(btn_SellProduct);
+
+        btn_CollectMoney.setText("Collect Money");
+        jPanel2.add(btn_CollectMoney);
+
+        btn_paymoney.setText("Pay Money");
+        jPanel2.add(btn_paymoney);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 126, Short.MAX_VALUE))
+        );
+
+        tabbedPane_Main.addTab("Fuction", jPanel1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPane_Main, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+            .addComponent(tabbedPane_Main)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPane_Main, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(tabbedPane_Main, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -262,16 +299,22 @@ public class GUI_Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Tab_Model;
     private javax.swing.JPanel Tab_System;
+    private javax.swing.JButton btn_BuyProduct;
     private javax.swing.JButton btn_Catgories;
     private javax.swing.JButton btn_ChangePassword;
+    private javax.swing.JButton btn_CollectMoney;
     private javax.swing.JButton btn_Employee;
     private javax.swing.JButton btn_Exit;
     private javax.swing.JButton btn_Infomation;
     private javax.swing.JButton btn_Product;
     private javax.swing.JButton btn_Role;
+    private javax.swing.JButton btn_SellProduct;
     private javax.swing.JButton btn_Supplier;
     private javax.swing.JButton btn_SystemLog;
     private javax.swing.JButton btn_customer;
+    private javax.swing.JButton btn_paymoney;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JTabbedPane tabbedPane_Main;
     // End of variables declaration//GEN-END:variables
 }
