@@ -140,6 +140,11 @@ public class GUI_Main extends javax.swing.JFrame {
         jPanel2.setLayout(new java.awt.GridLayout(1, 0, 5, 5));
 
         btn_BuyProduct.setText("Buy Product");
+        btn_BuyProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_BuyProductActionPerformed(evt);
+            }
+        });
         jPanel2.add(btn_BuyProduct);
 
         btn_SellProduct.setText("Sell Product");
@@ -260,6 +265,18 @@ public class GUI_Main extends javax.swing.JFrame {
         } catch (Exception e) {
         }
     }//GEN-LAST:event_btn_customerActionPerformed
+
+    private void btn_BuyProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuyProductActionPerformed
+        // TODO add your handling code here:
+        try {
+            GUI_BuyProduct jframeGUI_BuyProduct = new GUI_BuyProduct();
+            jframeGUI_BuyProduct.setLocationRelativeTo(null);
+            jframeGUI_BuyProduct.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            jframeGUI_BuyProduct.setVisible(true);
+            jframeGUI_BuyProduct.setVisible(true);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btn_BuyProductActionPerformed
 
     /**
      * @param args the command line arguments

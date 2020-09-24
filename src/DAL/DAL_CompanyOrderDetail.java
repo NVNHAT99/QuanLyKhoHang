@@ -53,7 +53,6 @@ public class DAL_CompanyOrderDetail extends DAL {
         int result = -1;
         try {
             connection = dbUltils.Get_connection();
-            // default  RoleId for New Employeer
             String sql = "insert into CompanyOrderDetails(CompanyOrderId,ProductId,ProductUnit,Quantity,Cost,Description) VALUES (?,?,?,?,?,?)";
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
