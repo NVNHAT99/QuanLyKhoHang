@@ -8,6 +8,7 @@ package GUI;
 import BLL.BLL_Product;
 import DTO.DTO_Product;
 import java.awt.CardLayout;
+import java.awt.List;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -15,6 +16,12 @@ import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumnModel;
 import ultils.CustomCombo;
 
@@ -28,27 +35,86 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
      * Creates new form GUI_BuyProduct
      */
     static BLL_Product bLL_Product = new BLL_Product();
+    ArrayList<DTO_Product> list_product = bLL_Product.GetAllProductsNotDelete();
+
+    DefaultComboBoxModel mod_cmb_ProductID = new DefaultComboBoxModel();
+    DefaultComboBoxModel mod_cmb_ProductName = new DefaultComboBoxModel();
+
     public GUI_BuyProduct() throws SQLException {
         initComponents();
         LoadData_ForTable();
     }
-    
-    public void LoadData_ForTable() throws SQLException{
+
+    public void LoadData_ForTable() throws SQLException {
+
+        //create jtable ;
         // create 2 combox colum. combobox SupplierId and SupplierName
-        ArrayList<DTO_Product> list_product = bLL_Product.GetAllProductsNotDelete();
-        DefaultComboBoxModel mod_cmb_Product = new DefaultComboBoxModel();
+        String[] columeNames = new String[]{"Product Id", "Product Name", "Unit", "Quantity", "into money", "Note"};
+
+        DefaultTableModel model = new DefaultTableModel(null, columeNames);
         for (int i = 0; i < list_product.size(); i++) {
             // create object(is a row in table) 
-            Object items_Product = new CustomCombo(list_product.get(i).getId(), list_product.get(i).getName());
-            mod_cmb_Product.addElement(items_Product);
+            Object items_cmbProductName = new CustomCombo(list_product.get(i).getId(), list_product.get(i).getName());
+            mod_cmb_ProductName.addElement(items_cmbProductName);
+
+            Object item_cmbProductId = list_product.get(i).getId();
+            mod_cmb_ProductID.addElement(item_cmbProductId);
+
         }
-        
+        Table_Order_Detail.setModel(model);
+        // create combobox colum
         TableColumnModel columnModel = Table_Order_Detail.getColumnModel();
-        columnModel.getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox(mod_cmb_Product)));
-//        CardLayout cardLayout = (CardLayout)jPanel2.getLayout();
-//        cardLayout.show(jPanel2,"card2");
-        
+        columnModel.getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox(mod_cmb_ProductID)));
+        columnModel.getColumn(1).setCellEditor(new DefaultCellEditor(new JComboBox(mod_cmb_ProductName)));
+        //add new blank row
+        DefaultTableModel get_model = (DefaultTableModel) Table_Order_Detail.getModel();
+        get_model.insertRow(Table_Order_Detail.getRowCount(), new Object[]{"", "",
+            "", "", "", "", ""});
+
+        // show card in card layout
+        CardLayout cardLayout = (CardLayout) jPanel2.getLayout();
+        cardLayout.show(jPanel2, "card2");
+
+        Table_Order_Detail.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+
+                try {
+                    if (e.getFirstRow() >= 0) {
+                        if (e.getColumn() == 1) {
+                            CustomCombo product_Id_Name = (CustomCombo) Table_Order_Detail.getValueAt(e.getFirstRow(), e.getColumn());
+                            if (!Table_Order_Detail.getValueAt(e.getFirstRow(), 0).equals(product_Id_Name.getID())) {
+                                // set valut for colum product Id
+                                Table_Order_Detail.setValueAt(product_Id_Name.getID(), e.getFirstRow(), 0);
+                            }
+                        } else if (e.getColumn() == 0) {
+
+                            int productId = Integer.parseInt(Table_Order_Detail.getValueAt(e.getFirstRow(), e.getColumn()).toString());
+                            CustomCombo product_nameCombo = (CustomCombo) mod_cmb_ProductName.getElementAt(mod_cmb_ProductID.getIndexOf(productId));
+                            if(!Table_Order_Detail.getValueAt(e.getFirstRow(), 1).equals(product_nameCombo)){
+                                Table_Order_Detail.setValueAt(product_nameCombo, e.getFirstRow(), 1);
+                            }
+
+                        }
+                    }
+                } catch (Exception err) {
+                    JOptionPane.showMessageDialog(null, err);
+                }
+                if ((e.getLastRow() + 1) == Table_Order_Detail.getRowCount()) {
+                    try {
+                        if (!(Table_Order_Detail.getValueAt(e.getLastRow(), 0).equals(null)
+                                || Table_Order_Detail.getValueAt(e.getLastRow(), 0).equals(""))) {
+                            DefaultTableModel model = (DefaultTableModel) Table_Order_Detail.getModel();
+                            model.insertRow(Table_Order_Detail.getRowCount(), new Object[]{"", "",
+                                "", "", "", "", ""});
+                        }
+                    } catch (Exception err) {
+                    }
+                }
+            }
+        });
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -70,7 +136,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         btn_Update = new javax.swing.JButton();
         btn_Delete = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        a2 = new javax.swing.JPanel();
+        jPane_CompanyOrder = new javax.swing.JPanel();
         jPanel_Group_information_Order = new javax.swing.JPanel();
         jPanel_Information1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -190,7 +256,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
 
         jPanel2.add(a1, "card3");
 
-        jPanel_Group_information_Order.setLayout(new java.awt.GridLayout());
+        jPanel_Group_information_Order.setLayout(new java.awt.GridLayout(1, 0));
 
         jLabel3.setText("Supplier: ");
 
@@ -239,9 +305,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                     .addComponent(txt_Address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel_Information1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel_Information1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel6)
                     .addComponent(jScrollPane1))
                 .addGap(3, 3, 3))
         );
@@ -355,23 +419,23 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                 .addGap(0, 79, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout a2Layout = new javax.swing.GroupLayout(a2);
-        a2.setLayout(a2Layout);
-        a2Layout.setHorizontalGroup(
-            a2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout jPane_CompanyOrderLayout = new javax.swing.GroupLayout(jPane_CompanyOrder);
+        jPane_CompanyOrder.setLayout(jPane_CompanyOrderLayout);
+        jPane_CompanyOrderLayout.setHorizontalGroup(
+            jPane_CompanyOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel_Group_information_Order, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        a2Layout.setVerticalGroup(
-            a2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(a2Layout.createSequentialGroup()
+        jPane_CompanyOrderLayout.setVerticalGroup(
+            jPane_CompanyOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPane_CompanyOrderLayout.createSequentialGroup()
                 .addComponent(jPanel_Group_information_Order, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(213, 213, 213))
         );
 
-        jPanel2.add(a2, "card2");
+        jPanel2.add(jPane_CompanyOrder, "card2");
 
         jLabel1.setText("Buy Product");
 
@@ -404,9 +468,9 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
 
     private void btn_CompanyOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CompanyOrderActionPerformed
         // TODO add your handling code here:
-        
-        CardLayout cardLayout = (CardLayout)jPanel2.getLayout();
-        cardLayout.show(jPanel2,"card2");
+
+        CardLayout cardLayout = (CardLayout) jPanel2.getLayout();
+        cardLayout.show(jPanel2, "card2");
     }//GEN-LAST:event_btn_CompanyOrderActionPerformed
 
     /**
@@ -452,7 +516,6 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
     private javax.swing.JTable Table_ListCompanyOrder;
     private javax.swing.JTable Table_Order_Detail;
     private javax.swing.JPanel a1;
-    private javax.swing.JPanel a2;
     private javax.swing.JButton btn_CompanyOrder;
     private javax.swing.JButton btn_CreateNew;
     private javax.swing.JButton btn_Delete;
@@ -472,6 +535,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPane_CompanyOrder;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel7;

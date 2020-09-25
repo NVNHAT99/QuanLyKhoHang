@@ -342,8 +342,8 @@ public class GUI_Product extends javax.swing.JFrame {
                     txt_Category.setText(Table_Product.getValueAt(RowSelected, 4).toString());
                     txt_Unit.setText(Table_Product.getValueAt(RowSelected, 5).toString());
                     txt_UnitStock.setText(Table_Product.getValueAt(RowSelected, 6).toString());
-                    ImageIcon img_productIcon = new ImageIcon(Table_Product.getValueAt(RowSelected, 7).toString());
-                    Img_Product.setIcon(img_productIcon);
+                    //ImageIcon img_productIcon = new ImageIcon(Table_Product.getValueAt(RowSelected, 7).toString());
+                    //Img_Product.setIcon(img_productIcon);
                 }
             }
         });
