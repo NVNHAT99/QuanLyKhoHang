@@ -6,6 +6,8 @@
 package DAL;
 
 import DTO.DTO_CompanyOrder;
+import DTO.DTO_CompanyOrderDetail;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,8 +19,9 @@ import javax.swing.JOptionPane;
  *
  * @author Administrator
  */
-public class DAL_CompanyOrder extends DAL{
-    
+public class DAL_CompanyOrder extends DAL {
+
+    static DAL_CompanyOrderDetail dAL_CompanyOrderDetail = new DAL_CompanyOrderDetail();
     public ArrayList<DTO_CompanyOrder> GetAllCompaneyOder() throws SQLException {
 
         ArrayList<DTO_CompanyOrder> result = new ArrayList<DTO_CompanyOrder>();
@@ -53,12 +56,11 @@ public class DAL_CompanyOrder extends DAL{
         }
         return result;
     }
-    
-    public int Insert(int SupplierId, int EmployeeId, Date TimeStamp, String Description,float VAT,float CK,double TotalMoney,double StillOwe) throws SQLException {
-        int result = -1;
-        try {
-            connection = dbUltils.Get_connection();
-            // default  RoleId for New Employeer
+
+    public void Insert(int SupplierId, int EmployeeId, Date TimeStamp, String Description, double VAT, double CK, 
+            double TotalMoney, double StillOwe,Connection _Connection) throws SQLException {
+        connection = _Connection;
+        // default  RoleId for New Employeer
             String sql = "insert into CompanyOrders(SupplierId,EmployeeId,TimeStamp,VAT,CK,TotalMoney,Description,StillOwe) VALUES (?,?,?,?,?,?,?,?)";
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -66,27 +68,35 @@ public class DAL_CompanyOrder extends DAL{
             preparedStatement.setInt(2, EmployeeId);
             preparedStatement.setDate(3, TimeStamp);
             preparedStatement.setString(4, Description);
-            preparedStatement.setFloat(5, VAT);
-            preparedStatement.setFloat(6, CK);
+            preparedStatement.setDouble(5, VAT);
+            preparedStatement.setDouble(6, CK);
             preparedStatement.setDouble(7, TotalMoney);
             preparedStatement.setDouble(8, StillOwe);
 
-            int rs = preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
+        
+    }
 
-            if (rs > 0) {
-                ResultSet key = preparedStatement.getGeneratedKeys();
-                if (key.next()) {
-                    result = key.getInt(1);
-
-                }
+    public boolean Insert_CompanyOrderWithDetail(DTO_CompanyOrder companyOrder, ArrayList<DTO_CompanyOrderDetail> companyOrderDetails) throws SQLException {
+        try {
+            connection = dbUltils.Get_connection();
+            connection.setAutoCommit(false);
+            Insert(companyOrder.getSupplierId(), companyOrder.getEmployeeId(), companyOrder.getTimeStamp(),
+                 companyOrder.getDescription(), companyOrder.getVAT(), companyOrder.getCK(),
+                 companyOrder.getTotalMoney(), companyOrder.getTotalMoney(),connection);
+            for(int i = 0;i < companyOrderDetails.size();i++){
+                dAL_CompanyOrderDetail.Insert(companyOrderDetails.get(i).getCompanyOrderId(),companyOrderDetails.get(i).getProductId()
+                        , companyOrderDetails.get(i).getQuantity(), companyOrderDetails.get(i).getCost()
+                        ,companyOrderDetails.get(i).getDescription(),companyOrderDetails.get(i).getProductUnit(), connection);
             }
-
+            connection.commit();
         } catch (Exception e) {
-            JOptionPane.showInputDialog(e);
-
-        } finally {
+            JOptionPane.showMessageDialog(null, e);
+            connection.rollback();
+            return false;
+        }finally{
             connection.close();
         }
-        return result;
+        return true;
     }
 }

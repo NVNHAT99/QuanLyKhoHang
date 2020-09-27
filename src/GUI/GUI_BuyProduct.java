@@ -5,9 +5,11 @@
  */
 package GUI;
 
+import BLL.BLL_CompanyOrder;
 import BLL.BLL_Employee;
 import BLL.BLL_Product;
 import BLL.BLL_Supplier;
+import DTO.DTO_CompanyOrder;
 import DTO.DTO_CompanyOrderDetail;
 import DTO.DTO_Product;
 import DTO.DTO_Supplier;
@@ -33,6 +35,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -54,6 +58,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
     static BLL_Product bLL_Product = new BLL_Product();
     static BLL_Supplier bLL_Supplier = new BLL_Supplier();
     static BLL_Employee bLL_Employee = new BLL_Employee();
+    static BLL_CompanyOrder bLL_CompanyOrder = new BLL_CompanyOrder();
 
     ArrayList<DTO_Product> list_product = bLL_Product.GetAllProductsNotDelete();
 
@@ -69,11 +74,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         jPanel_showListOrderOrCreateOrder.setBorder(BorderFactory.createLineBorder(Color.black));
         LoadSupplierEmployeeForCombobox();
         LoadData_ForTableOrder();
-        //set local date to day create order
-        LocalDate DateNow = LocalDate.now();
-        txt_DateCreateOrder.setText(DateNow.toString());
-        txt_DateCreateOrder.setEditable(false);
-        LoadInformationSupplier(0);
+        AddEventForVAT_CK();
         // create a format for displaying percentages (with %-sign)
         NumberFormat percentDisplayFormat = NumberFormat.getPercentInstance();
 
@@ -111,8 +112,59 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         percentEditFormatter.setAllowsInvalid(false);
 
         txt_VAT.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(percentDisplayFormat),
-        new NumberFormatter(percentDisplayFormat),
-        percentEditFormatter));
+                new NumberFormatter(percentDisplayFormat),
+                percentEditFormatter));
+
+        txt_CK.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(percentDisplayFormat),
+                new NumberFormatter(percentDisplayFormat),
+                percentEditFormatter));
+        txt_VAT.setValue(0D);
+        txt_CK.setValue(0D);
+        txt_Total.setText("0");
+        LoadCreateOrder();
+
+    }
+
+    public boolean CheckProductOrderExist(int ProductId, int Column, int RowChange) {
+        for (int i = 0; i < Table_Order_Detail.getRowCount(); i++) {
+            if (RowChange == i) {
+                continue;
+            }
+            int Id = -1;
+            try {
+                if (Column == 0) {
+                    Id = Integer.parseInt(Table_Order_Detail.getValueAt(i, 0).toString());
+                } else if (Column == 1) {
+                    Id = ((CustomCombo)(Table_Order_Detail.getValueAt(i, 1))).getID();
+                }
+            } catch (Exception e) {
+            }
+            if (Id == ProductId) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+    public double SumTo_TotalMoey() {
+        double Sum = 0;
+        for (int i = 0; i < Table_Order_Detail.getRowCount(); i++) {
+            double EachIntoMoney = 0;
+            try {
+                EachIntoMoney = Double.parseDouble(Table_Order_Detail.getValueAt(i,5).toString());
+            } catch (Exception e) {
+            }
+            Sum+= EachIntoMoney;
+        }
+        return Sum;
+    }
+
+    public void LoadCreateOrder() {
+        //set local date to day create order
+        LocalDate DateNow = LocalDate.now();
+        txt_DateCreateOrder.setText(DateNow.toString());
+        txt_DateCreateOrder.setEditable(false);
+        LoadInformationSupplier(0);
     }
 
     public void LoadData_ForTableOrder() throws SQLException {
@@ -121,7 +173,16 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         // create 2 combox colum. combobox SupplierId and SupplierName
         String[] columeNames = new String[]{"Product Id", "Product Name", "Unit", "Quantity", "cost", "into money", "Note"};
 
-        DefaultTableModel model = new DefaultTableModel(null, columeNames);
+        DefaultTableModel model = new DefaultTableModel(null, columeNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (column == 5) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        };
         for (int i = 0; i < list_product.size(); i++) {
             // create object(is a row in table) 
             Object items_cmbProductName = new CustomCombo(list_product.get(i).getId(), list_product.get(i).getName());
@@ -155,27 +216,72 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                             case 0:
                                 int productId = Integer.parseInt(Table_Order_Detail.getValueAt(e.getFirstRow(), e.getColumn()).toString());
                                 CustomCombo product_nameCombo = (CustomCombo) mod_cmb_ProductName.getElementAt(mod_cmb_ProductID.getIndexOf(productId));
-                                if (!Table_Order_Detail.getValueAt(e.getFirstRow(), 1).equals(product_nameCombo)) {
+                                if (!Table_Order_Detail.getValueAt(e.getFirstRow(), 1).equals(product_nameCombo.getID())) {
+
                                     // get index of product in list_produt
                                     int index_product = mod_cmb_ProductID.getIndexOf(productId);
                                     //set value for another column
 
-                                    Table_Order_Detail.setValueAt(product_nameCombo, e.getFirstRow(), 1);
-                                    //JOptionPane.showMessageDialog(null, index_product);
-                                    Table_Order_Detail.setValueAt(list_product.get(index_product).getUnit(), e.getFirstRow(), 2);
-                                }
-                            case 1:
-                                if (!Table_Order_Detail.getValueAt(e.getFirstRow(), 1).toString().equals("")) {
-                                    CustomCombo product_Id_Name = (CustomCombo) Table_Order_Detail.getValueAt(e.getFirstRow(), 1);
+                                    if (CheckProductOrderExist(productId, e.getColumn(),e.getFirstRow())) {
+                                        JOptionPane.showMessageDialog(null, "san pham nay da co trong gio hang, ban co the chinh lai so luon muon mua");
+                                        try {
+                                            int rowselectted = e.getFirstRow();
+                                            if (rowselectted != -1) {
+                                                int modelIndex = Table_Order_Detail.convertRowIndexToModel(rowselectted); // converts the row index in the view to the appropriate index in the model
+                                                DefaultTableModel model = (DefaultTableModel) Table_Order_Detail.getModel();
+                                                model.removeRow(modelIndex);
+                                                model.insertRow(Table_Order_Detail.getRowCount(), new Object[]{"", "",
+                                                    "", "", "", "", "", ""});
 
+                                            }
+                                        } catch (Exception err) {
+
+                                        }
+                                    } else {
+                                        Table_Order_Detail.setValueAt(product_nameCombo, e.getFirstRow(), 1);
+                                        //JOptionPane.showMessageDialog(null, index_product);
+                                        Table_Order_Detail.setValueAt(list_product.get(index_product).getUnit(), e.getFirstRow(), 2);
+
+                                        Table_Order_Detail.setValueAt(0, e.getFirstRow(), 5);
+                                    }
+
+                                }
+
+                                break;
+                            case 1:
+                                CustomCombo product_Id_Name = (CustomCombo) Table_Order_Detail.getValueAt(e.getFirstRow(), 1);
+                                if (!Table_Order_Detail.getValueAt(e.getFirstRow(), 1).toString().equals("")) {
                                     if (!Table_Order_Detail.getValueAt(e.getFirstRow(), 0).equals(product_Id_Name.getID())) {
                                         // get index of product in list_produt
                                         int index_product = mod_cmb_ProductName.getIndexOf(product_Id_Name);
-                                        //   setvalue for another column with product Id
-                                        Table_Order_Detail.setValueAt(product_Id_Name.getID(), e.getFirstRow(), 0);
-                                        Table_Order_Detail.setValueAt(list_product.get(index_product).getUnit(), e.getFirstRow(), 2);
+                                        // check if product in this row change exist in list we delete row, else add that id to list
+                                        if (CheckProductOrderExist(product_Id_Name.getID(), e.getColumn(),e.getFirstRow())) {
+                                            JOptionPane.showMessageDialog(null, "san pham nay da co trong gio hang, ban co the chinh lai so luon muon mua");
+                                            try {
+                                                int rowselectted = e.getFirstRow();
+                                                if (rowselectted != -1) {
+                                                    int modelIndex = Table_Order_Detail.convertRowIndexToModel(rowselectted); // converts the row index in the view to the appropriate index in the model
+                                                    DefaultTableModel model = (DefaultTableModel) Table_Order_Detail.getModel();
+                                                    model.removeRow(modelIndex);
+                                                    model.insertRow(Table_Order_Detail.getRowCount(), new Object[]{"", "",
+                                                        "", "", "", "", "", ""});
+                                                }
+                                            } catch (Exception err) {
+
+                                            }
+
+                                        } else {
+                                            //   setvalue for another column with product Id
+                                            Table_Order_Detail.setValueAt(product_Id_Name.getID(), e.getFirstRow(), 0);
+                                            Table_Order_Detail.setValueAt(list_product.get(index_product).getUnit(), e.getFirstRow(), 2);
+
+                                            Table_Order_Detail.setValueAt(0, e.getFirstRow(), 5);
+                                        }
+
                                     }
                                 }
+
+                                break;
 
                             case 3:
                                 try {
@@ -188,13 +294,17 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                                                 Table_Order_Detail.setValueAt(0, e.getFirstRow(), 4);
                                                 Cost = "0";
                                             }
-                                            Table_Order_Detail.setValueAt(Quantity * (Double.parseDouble(Cost)), e.getFirstRow(), 5);
+                                            NumberFormat f = NumberFormat.getInstance();
+                                            f.setGroupingUsed(false);
+                                            String total = f.format((Quantity * (Double.parseDouble(Cost))));
+                                            Table_Order_Detail.setValueAt(total, e.getFirstRow(), 5);
                                         } catch (Exception err) {
                                             JOptionPane.showMessageDialog(null, "du lieu so luong san pham khong hop le");
                                         }
                                     }
                                 } catch (Exception err) {
                                 }
+                                break;
                             case 4:
                                 try {
                                     String valueCost = Table_Order_Detail.getValueAt(e.getFirstRow(), 4).toString();
@@ -208,21 +318,30 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                                             }
                                             NumberFormat f = NumberFormat.getInstance();
                                             f.setGroupingUsed(false);
-                                            String a = f.format((Cost * (Double.parseDouble(Quantity))));
-                                            Table_Order_Detail.setValueAt(a, e.getFirstRow(), 5);
+                                            String total = f.format((Cost * (Double.parseDouble(Quantity))));
+                                            Table_Order_Detail.setValueAt(total, e.getFirstRow(), 5);
                                         } catch (Exception err) {
                                             JOptionPane.showMessageDialog(null, "du lieu so luong san pham khong hop le");
                                         }
                                     }
                                 } catch (Exception err) {
                                 }
-
+                                break;
+                            case 6:
+                                String IntoMoney = "";
+                                try {
+                                    IntoMoney = Table_Order_Detail.getValueAt(e.getFirstRow(), 5).toString();
+                                } catch (Exception err) {
+                                }
+                                if (IntoMoney.equals("") || IntoMoney.equals(null)) {
+                                    Table_Order_Detail.setValueAt(0, e.getFirstRow(), 5);
+                                }
                             default:
                                 break;
                         }
                     }
                 } catch (Exception err) {
-                    JOptionPane.showMessageDialog(null, err);
+                    //JOptionPane.showMessageDialog(null, err);
                 }
                 if ((e.getLastRow() + 1) == Table_Order_Detail.getRowCount()) {
                     try {
@@ -235,6 +354,91 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                     } catch (Exception err) {
                     }
                 }
+                
+                try {
+                        double NewTotalMoney = SumTo_TotalMoey();
+                        NumberFormat f = NumberFormat.getInstance();
+                        f.setGroupingUsed(false);
+                        String StringewTotalMoney = f.format(NewTotalMoney);
+                        txt_Total.setText(StringewTotalMoney);
+                    } catch (Exception err) {
+                        //JOptionPane.showMessageDialog(null, err);
+                    }
+
+            }
+        });
+
+    }
+
+    public void AddEventForVAT_CK() {
+        txt_CK.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                String StringCurrentTotalMoney = "";
+                try {
+                    StringCurrentTotalMoney = txt_Total.getText();
+
+                } catch (Exception err) {
+
+                }
+                try {
+                    double CurrenttotalMoney = SumTo_TotalMoey();
+                    double VAT = Double.parseDouble(txt_VAT.getValue().toString());
+                    double CK = Double.parseDouble(txt_CK.getValue().toString());
+                    double NewTotalMoney = CurrenttotalMoney + (VAT * CurrenttotalMoney) - (CK * CurrenttotalMoney);
+                    NumberFormat f = NumberFormat.getInstance();
+                    f.setGroupingUsed(false);
+                    String StringewTotalMoney = f.format(NewTotalMoney);
+                    txt_Total.setText(StringewTotalMoney);
+
+                } catch (Exception err) {
+                }
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+        });
+        txt_VAT.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                String StringCurrentTotalMoney = "";
+                try {
+                    StringCurrentTotalMoney = txt_Total.getText();
+
+                } catch (Exception err) {
+
+                }
+                try {
+                    double CurrenttotalMoney = SumTo_TotalMoey();
+                    double VAT = Double.parseDouble(txt_VAT.getValue().toString());
+                    double CK = Double.parseDouble(txt_CK.getValue().toString());
+                    double NewTotalMoney = CurrenttotalMoney + (VAT * CurrenttotalMoney) - (CK * CurrenttotalMoney);
+                    NumberFormat f = NumberFormat.getInstance();
+                    f.setGroupingUsed(false);
+                    String StringewTotalMoney = f.format(NewTotalMoney);
+                    txt_Total.setText(StringewTotalMoney);
+
+                } catch (Exception err) {
+                }
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changedUpdate(e);
             }
         });
     }
@@ -317,7 +521,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         btn_ListCompanyOrder = new javax.swing.JButton();
         btn_CompanyOrder = new javax.swing.JButton();
         jPanel_showListOrderOrCreateOrder = new javax.swing.JPanel();
-        a1 = new javax.swing.JPanel();
+        JPane_ListCompanyOrder = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         Table_ListCompanyOrder = new javax.swing.JTable();
         btn_CreateNew = new javax.swing.JButton();
@@ -341,6 +545,9 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         cmb_Employee = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
         txt_DateCreateOrder = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txt_Note = new javax.swing.JTextArea();
+        jLabel13 = new javax.swing.JLabel();
         jPanelTableListBuyProduct = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         Table_Order_Detail = new javax.swing.JTable();
@@ -355,6 +562,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         jPanel_TotalMoney = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         txt_Total = new javax.swing.JTextField();
+        btn_DeleteRow = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         jLabel4.setText("jLabel4");
@@ -362,6 +570,11 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btn_ListCompanyOrder.setText("<html> <p>List Company Order<p>  </html>");
+        btn_ListCompanyOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ListCompanyOrderActionPerformed(evt);
+            }
+        });
 
         btn_CompanyOrder.setText("<html> <p>Company Order<p></html>");
         btn_CompanyOrder.addActionListener(new java.awt.event.ActionListener() {
@@ -414,12 +627,12 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
 
         jLabel2.setText("List Company Order");
 
-        javax.swing.GroupLayout a1Layout = new javax.swing.GroupLayout(a1);
-        a1.setLayout(a1Layout);
-        a1Layout.setHorizontalGroup(
-            a1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout JPane_ListCompanyOrderLayout = new javax.swing.GroupLayout(JPane_ListCompanyOrder);
+        JPane_ListCompanyOrder.setLayout(JPane_ListCompanyOrderLayout);
+        JPane_ListCompanyOrderLayout.setHorizontalGroup(
+            JPane_ListCompanyOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 693, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, a1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPane_ListCompanyOrderLayout.createSequentialGroup()
                 .addContainerGap(353, Short.MAX_VALUE)
                 .addComponent(btn_CreateNew)
                 .addGap(18, 18, 18)
@@ -427,26 +640,26 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btn_Delete)
                 .addGap(85, 85, 85))
-            .addGroup(a1Layout.createSequentialGroup()
+            .addGroup(JPane_ListCompanyOrderLayout.createSequentialGroup()
                 .addComponent(jLabel2)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        a1Layout.setVerticalGroup(
-            a1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(a1Layout.createSequentialGroup()
+        JPane_ListCompanyOrderLayout.setVerticalGroup(
+            JPane_ListCompanyOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPane_ListCompanyOrderLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addGroup(a1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(JPane_ListCompanyOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_CreateNew)
                     .addComponent(btn_Update)
                     .addComponent(btn_Delete))
                 .addGap(32, 32, 32))
         );
 
-        jPanel_showListOrderOrCreateOrder.add(a1, "card3");
+        jPanel_showListOrderOrCreateOrder.add(JPane_ListCompanyOrder, "card3");
 
         jPanel_Group_information_Order.setLayout(new java.awt.GridLayout(1, 0));
 
@@ -480,11 +693,11 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                 .addGroup(jPanel_Information1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(cmb_SupplierName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel_Information1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(txt_Address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(55, Short.MAX_VALUE))
         );
 
         jPanel_Group_information_Order.add(jPanel_Information1);
@@ -534,6 +747,12 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
 
         jLabel12.setText("Date");
 
+        txt_Note.setColumns(20);
+        txt_Note.setRows(5);
+        jScrollPane1.setViewportView(txt_Note);
+
+        jLabel13.setText("Note");
+
         javax.swing.GroupLayout jPanel_Information3Layout = new javax.swing.GroupLayout(jPanel_Information3);
         jPanel_Information3.setLayout(jPanel_Information3Layout);
         jPanel_Information3Layout.setHorizontalGroup(
@@ -541,12 +760,18 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
             .addGroup(jPanel_Information3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel_Information3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel12))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel_Information3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cmb_Employee, 0, 165, Short.MAX_VALUE)
-                    .addComponent(txt_DateCreateOrder)))
+                    .addGroup(jPanel_Information3Layout.createSequentialGroup()
+                        .addGroup(jPanel_Information3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel12))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel_Information3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmb_Employee, 0, 165, Short.MAX_VALUE)
+                            .addComponent(txt_DateCreateOrder)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_Information3Layout.createSequentialGroup()
+                        .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         jPanel_Information3Layout.setVerticalGroup(
             jPanel_Information3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -555,11 +780,15 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                 .addGroup(jPanel_Information3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
                     .addComponent(txt_DateCreateOrder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel_Information3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(cmb_Employee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel_Information3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         jPanel_Group_information_Order.add(jPanel_Information3);
@@ -584,7 +813,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
             }
         });
 
-        jPanel_CK_VAT.setLayout(new java.awt.GridLayout());
+        jPanel_CK_VAT.setLayout(new java.awt.GridLayout(1, 0));
 
         jPanel_CK.setLayout(new java.awt.BorderLayout());
 
@@ -616,26 +845,38 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
 
         jPanel_CK_VAT.add(jPanel_TotalMoney);
 
+        btn_DeleteRow.setText("Delete Row");
+        btn_DeleteRow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_DeleteRowActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelTableListBuyProductLayout = new javax.swing.GroupLayout(jPanelTableListBuyProduct);
         jPanelTableListBuyProduct.setLayout(jPanelTableListBuyProductLayout);
         jPanelTableListBuyProductLayout.setHorizontalGroup(
             jPanelTableListBuyProductLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane3)
-            .addGroup(jPanelTableListBuyProductLayout.createSequentialGroup()
-                .addGap(301, 301, 301)
-                .addComponent(btn_Save, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel_CK_VAT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelTableListBuyProductLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_Save, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_DeleteRow)
+                .addGap(257, 257, 257))
         );
         jPanelTableListBuyProductLayout.setVerticalGroup(
             jPanelTableListBuyProductLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelTableListBuyProductLayout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel_CK_VAT, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_Save, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(77, 77, 77))
+                .addGap(30, 30, 30)
+                .addGroup(jPanelTableListBuyProductLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_Save, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_DeleteRow))
+                .addGap(53, 53, 53))
         );
 
         javax.swing.GroupLayout jPane_CompanyOrderLayout = new javax.swing.GroupLayout(jPane_CompanyOrder);
@@ -648,10 +889,10 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         jPane_CompanyOrderLayout.setVerticalGroup(
             jPane_CompanyOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPane_CompanyOrderLayout.createSequentialGroup()
-                .addComponent(jPanel_Group_information_Order, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelTableListBuyProduct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(186, 186, 186))
+                .addComponent(jPanel_Group_information_Order, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanelTableListBuyProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(134, 134, 134))
         );
 
         jPanel_showListOrderOrCreateOrder.add(jPane_CompanyOrder, "card2");
@@ -678,9 +919,10 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel_groupButtonFuction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel_showListOrderOrCreateOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 483, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel_showListOrderOrCreateOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 483, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addComponent(jPanel_groupButtonFuction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         pack();
@@ -693,17 +935,114 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         cardLayout.show(jPanel_showListOrderOrCreateOrder, "card2");
     }//GEN-LAST:event_btn_CompanyOrderActionPerformed
 
+    private void btn_ListCompanyOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ListCompanyOrderActionPerformed
+        // TODO add your handling code here:
+        CardLayout cardLayout = (CardLayout) jPanel_showListOrderOrCreateOrder.getLayout();
+        cardLayout.show(jPanel_showListOrderOrCreateOrder, "card3");
+    }//GEN-LAST:event_btn_ListCompanyOrderActionPerformed
+
     private void btn_SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SaveActionPerformed
         // TODO add your handling code here:
+        //String[] columeNames = new String[]{"Product Id", "Product Name", "Unit", "Quantity", "cost", "into money", "Note"};
         ArrayList<DTO_CompanyOrderDetail> listProductBuy = new ArrayList<DTO_CompanyOrderDetail>();
-        for (int i = 0; i < Table_Order_Detail.getRowCount(); i++) {
-            int ProductId = Integer.parseInt(Table_Order_Detail.getValueAt(i, 0).toString());
-            String ProductUnit = String.valueOf(Table_Order_Detail.getValueAt(i, 0));
-//            double Quantity = 
-//            DTO_CompanyOrderDetail companyOrderDetail = new DTO_CompanyOrderDetail();
-//            companyOrderDetail.set(Integer.parseInt(Table_Order_Detail.getValueAt(i,0).toString()));
+        DTO_CompanyOrder companyOder = null;
+        try {
+            int SupplierId = Integer.parseInt(cmb_SupplierId.getSelectedItem().toString());
+            int EmployeeId = ((CustomCombo) (cmb_Employee.getSelectedItem())).getID();
+            String DateCreate = txt_DateCreateOrder.getText();
+
+            double VAT = Double.parseDouble(txt_VAT.getValue().toString());
+            double CK = Double.parseDouble(txt_CK.getValue().toString());
+            double TotalMoney = Double.parseDouble(txt_Total.getText().toString());
+            String Description = "";
+            try {
+                Description = txt_Note.getText().toString();
+            } catch (Exception e) {
+
+            }
+            companyOder = new DTO_CompanyOrder(SupplierId, EmployeeId, DateCreate, VAT, CK, TotalMoney, Description);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
         }
+        for (int i = 0; i < Table_Order_Detail.getRowCount(); i++) {
+            int ProductId = -1;
+            String Unit = "";
+            double Quantity = -1;
+            double Cost = -1;
+            double intoMoney = -1;
+            String Note = "";
+            try {
+                ProductId = Integer.parseInt(Table_Order_Detail.getValueAt(i, 0).toString());
+
+            } catch (Exception e) {
+
+            }
+            try {
+                Unit = String.valueOf(Table_Order_Detail.getValueAt(i, 2));
+
+            } catch (Exception e) {
+            }
+            try {
+                Quantity = Double.parseDouble(Table_Order_Detail.getValueAt(i, 3).toString());
+
+            } catch (Exception e) {
+            }
+            try {
+                Cost = Double.parseDouble(Table_Order_Detail.getValueAt(i, 4).toString());
+
+            } catch (Exception e) {
+            }
+            try {
+                intoMoney = Double.parseDouble(Table_Order_Detail.getValueAt(i, 5).toString());
+
+            } catch (Exception e) {
+            }
+            try {
+                Note = String.valueOf(Table_Order_Detail.getValueAt(i, 6));
+            } catch (Exception e) {
+            }
+            //if all the variable is default value when create that is blank row
+            // if one of those is default value show mess
+            if ((ProductId == -1 && Quantity == -1 && Cost == -1 && intoMoney == -1 && Unit.equals(""))) {
+                JOptionPane.showMessageDialog(null, "da vao day");
+                // if this row is blank row and is the last row we to ignore this row
+                // else we show mess error
+                if ((i + 1) == Table_Order_Detail.getRowCount()) {
+                    break;
+                } else {
+                    JOptionPane.showMessageDialog(null, "co san pham khong day du thong tin vui long xoa hoac dien day du thong tin");
+                    break;
+                }
+            } else if ((ProductId == -1 || Quantity == -1 || Cost == -1 || intoMoney == -1 || Unit.equals(""))) {
+                JOptionPane.showMessageDialog(null, "co san pham khong day du thong tin vui long xoa hoac dien day du thong tin");
+                break;
+            }
+            int supplierId = Integer.parseInt(cmb_SupplierId.getSelectedItem().toString());
+            DTO_CompanyOrderDetail companyOrderDetail = new DTO_CompanyOrderDetail(ProductId, Unit, Quantity, Cost, Note);
+            listProductBuy.add(companyOrderDetail);
+        }
+
+        try {
+            bLL_CompanyOrder.Insert(companyOder, listProductBuy);
+        } catch (SQLException ex) {
+            Logger.getLogger(GUI_BuyProduct.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_btn_SaveActionPerformed
+
+    private void btn_DeleteRowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_DeleteRowActionPerformed
+        // TODO add your handling code here:
+        try {
+            int rowselectted = Table_Order_Detail.getSelectedRow();
+            if (rowselectted != -1) {
+                int modelIndex = Table_Order_Detail.convertRowIndexToModel(rowselectted); // converts the row index in the view to the appropriate index in the model
+                DefaultTableModel model = (DefaultTableModel) Table_Order_Detail.getModel();
+                model.removeRow(modelIndex);
+            }
+        } catch (Exception e) {
+
+        }
+    }//GEN-LAST:event_btn_DeleteRowActionPerformed
 
     /**
      * @param args the command line arguments
@@ -745,12 +1084,13 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel JPane_ListCompanyOrder;
     private javax.swing.JTable Table_ListCompanyOrder;
     private javax.swing.JTable Table_Order_Detail;
-    private javax.swing.JPanel a1;
     private javax.swing.JButton btn_CompanyOrder;
     private javax.swing.JButton btn_CreateNew;
     private javax.swing.JButton btn_Delete;
+    private javax.swing.JButton btn_DeleteRow;
     private javax.swing.JButton btn_ListCompanyOrder;
     private javax.swing.JButton btn_Save;
     private javax.swing.JButton btn_Update;
@@ -761,6 +1101,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -781,11 +1122,13 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel_VAT;
     private javax.swing.JPanel jPanel_groupButtonFuction;
     private javax.swing.JPanel jPanel_showListOrderOrCreateOrder;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField txt_Address;
     private javax.swing.JFormattedTextField txt_CK;
     private javax.swing.JTextField txt_DateCreateOrder;
+    private javax.swing.JTextArea txt_Note;
     private javax.swing.JTextField txt_PhoneNumber;
     private javax.swing.JTextField txt_Total;
     private javax.swing.JFormattedTextField txt_VAT;

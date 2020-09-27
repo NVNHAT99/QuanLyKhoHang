@@ -13,10 +13,25 @@ public class DTO_CompanyOrderDetail {
 
     private int CompanyOrderId;
     private int ProductId;
-    private int Quantity;
-    private int ProductUnit;
+    private double Quantity;
+    private String ProductUnit;
     private double Cost;
     private String Description;
+
+    public DTO_CompanyOrderDetail( int ProductId, String Unit, double Quantity, double Cost, String Note) {
+        this.ProductId = ProductId;
+        this.ProductUnit = Unit;
+        this.Quantity = Quantity;
+        this.Cost = Cost;
+        this.Description = Note;
+    }
+    public DTO_CompanyOrderDetail() {
+        this.ProductId = -1;
+        this.ProductUnit = "";
+        this.Quantity = -1;
+        this.Cost = -1;
+        this.Description = "";
+    }
 
     /**
      * @return the CompanyOrderId
@@ -49,28 +64,28 @@ public class DTO_CompanyOrderDetail {
     /**
      * @return the Quantity
      */
-    public int getQuantity() {
+    public double getQuantity() {
         return Quantity;
     }
 
     /**
      * @param Quantity the Quantity to set
      */
-    public void setQuantity(int Quantity) {
+    public void setQuantity(double Quantity) {
         this.Quantity = Quantity;
     }
 
     /**
      * @return the ProductUnit
      */
-    public int getProductUnit() {
+    public String getProductUnit() {
         return ProductUnit;
     }
 
     /**
      * @param ProductUnit the ProductUnit to set
      */
-    public void setProductUnit(int ProductUnit) {
+    public void setProductUnit(String ProductUnit) {
         this.ProductUnit = ProductUnit;
     }
 

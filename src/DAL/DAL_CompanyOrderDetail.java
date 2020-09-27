@@ -6,6 +6,7 @@
 package DAL;
 
 import DTO.DTO_CompanyOrderDetail;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,14 +35,14 @@ public class DAL_CompanyOrderDetail extends DAL {
                 DTO_CompanyOrderDetail companyOrder = new DTO_CompanyOrderDetail();
                 companyOrder.setCompanyOrderId(resultSet.getInt(1));
                 companyOrder.setProductId(resultSet.getInt(2));
-                companyOrder.setProductUnit(resultSet.getInt(3));
+                companyOrder.setProductUnit(resultSet.getString(3));
                 companyOrder.setQuantity(resultSet.getInt(4));
                 companyOrder.setCost(resultSet.getDouble(5));
                 companyOrder.setDescription(resultSet.getString(6));
                 result.add(companyOrder);
             }
         } catch (Exception e) {
-            JOptionPane.showInputDialog(e);
+            JOptionPane.showMessageDialog(null,e);
 
         } finally {
             connection.close();
@@ -49,36 +50,19 @@ public class DAL_CompanyOrderDetail extends DAL {
         return result;
     }
 
-    public int Insert(int CompanyOrderId, int ProductId, int Quantity, double Cost, String Description,int ProductUnit) throws SQLException {
-        int result = -1;
-        try {
-            connection = dbUltils.Get_connection();
-            String sql = "insert into CompanyOrderDetails(CompanyOrderId,ProductId,ProductUnit,Quantity,Cost,Description) VALUES (?,?,?,?,?,?)";
-            preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+    public void Insert(int CompanyOrderId, int ProductId, double Quantity, double Cost,
+            String Description, String ProductUnit, Connection _Connection) throws SQLException {
+        connection = _Connection;
+        String sql = "insert into CompanyOrderDetails(CompanyOrderId,ProductId,ProductUnit,Quantity,Cost,Description) VALUES (?,?,?,?,?,?)";
+        preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
-            preparedStatement.setInt(1, CompanyOrderId);
-            preparedStatement.setInt(2, ProductId);
-            preparedStatement.setInt(3, ProductUnit);
-            preparedStatement.setInt(4, Quantity);
-            preparedStatement.setDouble(5, Cost);
-            preparedStatement.setString(6, Description);
-            int rs = preparedStatement.executeUpdate();
-
-            if (rs > 0) {
-                ResultSet key = preparedStatement.getGeneratedKeys();
-                if (key.next()) {
-                    result = key.getInt(1);
-
-                }
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showInputDialog(e);
-
-        } finally {
-            connection.close();
-        }
-        return result;
+        preparedStatement.setInt(1, CompanyOrderId);
+        preparedStatement.setInt(2, ProductId);
+        preparedStatement.setString(3, ProductUnit);
+        preparedStatement.setDouble(4, Quantity);
+        preparedStatement.setDouble(5, Cost);
+        preparedStatement.setString(6, Description);
+        preparedStatement.executeUpdate();
+        
     }
-
 }

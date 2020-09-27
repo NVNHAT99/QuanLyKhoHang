@@ -17,14 +17,43 @@ public class DTO_CompanyOrder {
     private int SupplierId;
     private int EmployeeId;
     private Date TimeStamp;
-    private float VAT;
-    private float CK;
+    private double VAT;
+    private double CK;
     private double TotalMoney ;
     private double HavePaid ;
     private double StillOwe ;
-    private boolean Status ;// 0 la chua thanh toan het, 1 la da thanh toan
+    private boolean Status ;// flase is this buid Still Owe
     private String Description ;
     private boolean IsDelete ;
+
+    public DTO_CompanyOrder(int SupplierId, int EmployeeId, String DateCreate, double VAT, double CK, double TotalMoney, String Description) {
+        this.Id = -1;
+        this.SupplierId = SupplierId;
+        this.EmployeeId = EmployeeId;
+        this.TimeStamp = Date.valueOf(DateCreate);
+        this.VAT = VAT;
+        this.CK = CK;
+        this.TotalMoney = TotalMoney;
+        this.HavePaid = 0;
+        this.StillOwe = TotalMoney;
+        this.Status = false;
+        this.Description = Description;
+        this.IsDelete = false;
+    }
+    
+    public DTO_CompanyOrder() {
+        this.Id = -1;
+        this.SupplierId = -1;
+        this.EmployeeId = -1;
+        this.TimeStamp = null;
+        this.VAT = 0;
+        this.TotalMoney = 0;
+        this.HavePaid = 0;
+        this.StillOwe = 0;
+        this.Status = false;
+        this.Description = "";
+        this.IsDelete = false;
+    }
 
     /**
      * @return the Id
@@ -85,28 +114,28 @@ public class DTO_CompanyOrder {
     /**
      * @return the VAT
      */
-    public float getVAT() {
+    public double getVAT() {
         return VAT;
     }
 
     /**
      * @param VAT the VAT to set
      */
-    public void setVAT(float VAT) {
+    public void setVAT(double VAT) {
         this.VAT = VAT;
     }
 
     /**
      * @return the CK
      */
-    public float getCK() {
+    public double getCK() {
         return CK;
     }
 
     /**
      * @param CK the CK to set
      */
-    public void setCK(float CK) {
+    public void setCK(double CK) {
         this.CK = CK;
     }
 
