@@ -27,9 +27,9 @@ public class DAL_CompanyOrderDetail extends DAL {
         try {
             connection = dbUltils.Get_connection();
             String sqlFind = "Select * "
-                    + "from companyorderdetails where IsDelete!=1 and ";
+                    + " from companyorderdetails where CompanyOrderId=? ";
             preparedStatement = connection.prepareStatement(sqlFind);
-
+            preparedStatement.setInt(1, CompanyOderId);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 DTO_CompanyOrderDetail companyOrder = new DTO_CompanyOrderDetail();
@@ -42,7 +42,7 @@ public class DAL_CompanyOrderDetail extends DAL {
                 result.add(companyOrder);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,e);
+            JOptionPane.showMessageDialog(null, e);
 
         } finally {
             connection.close();
@@ -52,9 +52,9 @@ public class DAL_CompanyOrderDetail extends DAL {
 
     public void Insert(int CompanyOrderId, int ProductId, double Quantity, double Cost,
             String Description, String ProductUnit, Connection _Connection) throws SQLException {
-        connection = _Connection;
+        Connection Cnn = _Connection;
         String sql = "insert into CompanyOrderDetails(CompanyOrderId,ProductId,ProductUnit,Quantity,Cost,Description) VALUES (?,?,?,?,?,?)";
-        preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        preparedStatement = Cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
         preparedStatement.setInt(1, CompanyOrderId);
         preparedStatement.setInt(2, ProductId);
@@ -63,6 +63,54 @@ public class DAL_CompanyOrderDetail extends DAL {
         preparedStatement.setDouble(5, Cost);
         preparedStatement.setString(6, Description);
         preparedStatement.executeUpdate();
-        
+
+    }
+
+    public double Getquantity(int CompanyOderId) throws SQLException {
+        int result = 0;
+        try {
+            connection = dbUltils.Get_connection();
+            String sqlFind = "Select  Quantity "
+                    + " from companyorderdetails where CompanyOrderId = ? ";
+            preparedStatement = connection.prepareStatement(sqlFind);
+            preparedStatement.setInt(1, CompanyOderId);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+
+        } finally {
+            connection.close();
+        }
+        return result;
+    }
+
+    public void Update(int CompanyOrderId, int ProductId, double NewQuantity, double Cost,
+            String Description, String ProductUnit, Connection _Connection) throws SQLException {
+        Connection Cnn = _Connection;
+        String sql = "Update CompanyOrderDetails SET ProductUnit = ?,Quantity = ?, Cost = ?, Description = ? Where CompanyOrderId =? and ProductId = ?";
+        preparedStatement = Cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        preparedStatement.setString(1, ProductUnit);
+        preparedStatement.setDouble(2, NewQuantity);
+        preparedStatement.setDouble(3, Cost);
+        preparedStatement.setString(4, Description);
+        preparedStatement.setInt(5, CompanyOrderId);
+        preparedStatement.setInt(6, ProductId);
+        preparedStatement.executeUpdate();
+
+    }
+
+    public void Delete(int CompanyOrderId, int ProductId, Connection _Connection) throws SQLException {
+        Connection Cnn = _Connection;
+        String sql = "DELETE FROM CompanyOrderDetails Where CompanyOrderId =? and ProductId = ?";
+        preparedStatement = Cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        preparedStatement.setInt(1, CompanyOrderId);
+        preparedStatement.setInt(2, ProductId);
+        preparedStatement.executeUpdate();
+
     }
 }

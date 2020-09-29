@@ -33,7 +33,9 @@ public class BLL_Employee implements Interface_Constant {
     public ArrayList<DTO_employee> GetAllEmloyee() throws SQLException {
         return dal_Employee.GetAllEmloyee();
     }
-
+    public DTO_employee GetById(int EmloyeeId) throws SQLException {
+        return  dal_Employee.GetById(EmloyeeId);
+    }
     public static boolean Login(String UserName, String PassWord) throws SQLException {
         ArrayList<DTO_employee> rs = BLL_Employee.FindbyUserName(UserName);
         if (rs.size() == 0 || rs == null) {

@@ -19,12 +19,12 @@ public class DTO_CompanyOrder {
     private Date TimeStamp;
     private double VAT;
     private double CK;
-    private double TotalMoney ;
-    private double HavePaid ;
-    private double StillOwe ;
-    private boolean Status ;// flase is this buid Still Owe
-    private String Description ;
-    private boolean IsDelete ;
+    private double TotalMoney;
+    private double HavePaid;
+    private double StillOwe;
+    private boolean Status;// flase is this buid Still Owe
+    private String Description;
+    private boolean IsDelete;
 
     public DTO_CompanyOrder(int SupplierId, int EmployeeId, String DateCreate, double VAT, double CK, double TotalMoney, String Description) {
         this.Id = -1;
@@ -40,7 +40,7 @@ public class DTO_CompanyOrder {
         this.Description = Description;
         this.IsDelete = false;
     }
-    
+
     public DTO_CompanyOrder() {
         this.Id = -1;
         this.SupplierId = -1;
@@ -52,6 +52,36 @@ public class DTO_CompanyOrder {
         this.StillOwe = 0;
         this.Status = false;
         this.Description = "";
+        this.IsDelete = false;
+    }
+
+    public DTO_CompanyOrder(int SupplierId, int EmployeeId, String TimeStamp, double VAT, double CK, double TotalMoney, double havePaid, String Description) {
+        this.Id = -1;
+        this.SupplierId = SupplierId;
+        this.EmployeeId = EmployeeId;
+        this.TimeStamp = Date.valueOf(TimeStamp);
+        this.VAT = VAT;
+        this.CK = CK;
+        this.TotalMoney = TotalMoney;
+        this.HavePaid = havePaid;
+        this.StillOwe = TotalMoney;
+        this.Status = false;
+        this.Description = Description;
+        this.IsDelete = false;
+    }
+
+    public DTO_CompanyOrder(int CompanyOrderId, int SupplierId, int EmployeeId, String DateCreate, double VAT, double CK, double TotalMoney, double HavePaid, String Description) {
+        this.Id = CompanyOrderId;
+        this.SupplierId = SupplierId;
+        this.EmployeeId = EmployeeId;
+        this.TimeStamp = Date.valueOf(DateCreate);
+        this.VAT = VAT;
+        this.CK = CK;
+        this.TotalMoney = TotalMoney;
+        this.HavePaid = HavePaid;
+        this.StillOwe = TotalMoney;
+        this.Status = false;
+        this.Description = Description;
         this.IsDelete = false;
     }
 
@@ -223,5 +253,4 @@ public class DTO_CompanyOrder {
         this.IsDelete = IsDelete;
     }
 
-    
 }

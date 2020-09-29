@@ -8,6 +8,7 @@ package DAL;
 import DTO.Custom_DTO.CustomDTO_Product;
 import DTO.DTO_Product;
 import DTO.DTO_employee;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -46,7 +47,7 @@ public class DAL_Product extends DAL {
         return result;
     }
 
-    public boolean CheckProductNameExist(int ProductId,String ProductName) throws SQLException {
+    public boolean CheckProductNameExist(int ProductId, String ProductName) throws SQLException {
         try {
             connection = dbUltils.Get_connection();
             String sqlFind = "Select Id,Name,Price,SupplierId,CategoryId,Unit,UnitsInStock,ImagePath "
@@ -191,15 +192,54 @@ public class DAL_Product extends DAL {
         }
         return result;
     }
-    
-    public boolean Delete(int ID) throws SQLException{
+
+    public double GetUnitsInStock(int Id,Connection _Connection) throws SQLException {
+        double rs = 0;
+        Connection cnn = _Connection;
+        try {
+            String sqlFind = "Select UnitsInStock "
+                    + " from products where IsDelete != 1 And Id = ?";
+            preparedStatement =_Connection.prepareStatement(sqlFind);
+            preparedStatement.setInt(1, Id);
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                rs = resultSet.getDouble(1);
+            }
+        } catch (Exception e) {
+        }
+        return rs;
+    }
+
+    public boolean Update_ByCompanyOrder(int ID, double Quantity, Connection _Connection) throws SQLException {
+        boolean result = false;
+        try {
+            Connection cnn = _Connection;
+            double NewUnitInStock = GetUnitsInStock(ID,cnn)+Quantity;
+            String sql = "Update products SET UnitsInStock = ?  WHERE Id = ? ";
+            preparedStatement = cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            
+            preparedStatement.setDouble(1,NewUnitInStock);
+            preparedStatement.setInt(2, ID);
+            int rs = preparedStatement.executeUpdate();
+
+            if (rs > 0) {
+                result = true;
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,e);
+
+        }
+        return result;
+    }
+
+    public boolean Delete(int ID) throws SQLException {
         boolean result = false;
         try {
             connection = dbUltils.Get_connection();
             String sql = "Update products SET IsDelete = 1 WHERE Id = ?";
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
-            
             preparedStatement.setInt(1, ID);
             int rs = preparedStatement.executeUpdate();
 

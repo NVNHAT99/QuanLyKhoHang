@@ -17,7 +17,7 @@ public class DTO_Product {
   private int SupplierId;
   private int CategoryId;
   private String Unit;
-  private int UnitsInStock;
+  private double UnitsInStock;
   private String ImagePath;
 
     /**
@@ -107,14 +107,14 @@ public class DTO_Product {
     /**
      * @return the UnitsInStock
      */
-    public int getUnitsInStock() {
+    public double getUnitsInStock() {
         return UnitsInStock;
     }
 
     /**
      * @param UnitsInStock the UnitsInStock to set
      */
-    public void setUnitsInStock(int UnitsInStock) {
+    public void setUnitsInStock(double UnitsInStock) {
         this.UnitsInStock = UnitsInStock;
     }
 

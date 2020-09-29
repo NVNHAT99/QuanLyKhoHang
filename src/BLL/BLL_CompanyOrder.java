@@ -37,4 +37,15 @@ public class BLL_CompanyOrder {
         }
     }
     
+    public void Update_CompanyOrderWithDetail(DTO_CompanyOrder companyOrder,
+            ArrayList<DTO_CompanyOrderDetail> NewCompanyOrderDetails) throws SQLException {
+         if(dAL_CompanyOrder.Update_CompanyOrderWithDetail(companyOrder, NewCompanyOrderDetails)){
+             JOptionPane.showMessageDialog(null,"Cap Nhap Hoa Don Mua Hang Thanh Cong");
+         }else
+         {
+             JOptionPane.showMessageDialog(null,"Cap Nhap Hoa Don Mua Hang That Bai");
+         }
+         
+    }
+    
 }

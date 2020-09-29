@@ -73,6 +73,29 @@ public class DAL_Employee extends DAL {
         }
         return result;
     }
+    public DTO_employee GetById(int EmloyeeId) throws SQLException {
+        DTO_employee result = new DTO_employee();
+        try {
+            connection = dbUltils.Get_connection();
+            String sqlFind = "Select Id,Username from employees where Id = ? and IsDelete!=1";
+            preparedStatement = connection.prepareStatement(sqlFind);
+
+            preparedStatement.setInt(1, EmloyeeId);
+
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                result.setId(resultSet.getInt(1));
+                result.setUsername(resultSet.getString(2));
+                
+            }
+        } catch (Exception e) {
+            JOptionPane.showInputDialog(e);
+
+        } finally {
+            connection.close();
+        }
+        return result;
+    }
     public boolean CheckEmployeeEmailExist(int EmployeeId, String EmployeeEmail) throws SQLException {
         boolean result = false;// not exist
         try {

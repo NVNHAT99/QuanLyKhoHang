@@ -4,12 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_BuyProduct.java</file>
-            <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/ultils/CustomCombo.java</file>
-            <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_Product.java</file>
-            <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/BLL/BLL_CompanyOrder.java</file>
-            <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_Insert_Update_Product.java</file>
-            <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/DAL/DAL_CompanyOrder.java</file>
+            <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/BLL/BLL_Employee.java</file>
+            <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/DAL/DAL_Employee.java</file>
+            <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_PayOrCollectMoney.java</file>
             <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/DAL/DAL_CompanyOrderDetail.java</file>
+            <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/DTO/DTO_CompanyOrderDetail.java</file>
         </group>
     </open-files>
 </project-private>

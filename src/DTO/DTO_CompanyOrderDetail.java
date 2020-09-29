@@ -5,6 +5,8 @@
  */
 package DTO;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Administrator
@@ -18,13 +20,15 @@ public class DTO_CompanyOrderDetail {
     private double Cost;
     private String Description;
 
-    public DTO_CompanyOrderDetail( int ProductId, String Unit, double Quantity, double Cost, String Note) {
+    public DTO_CompanyOrderDetail(int CompanyOrderId, int ProductId, String Unit, double Quantity, double Cost, String Note) {
+        this.CompanyOrderId = CompanyOrderId;
         this.ProductId = ProductId;
         this.ProductUnit = Unit;
         this.Quantity = Quantity;
         this.Cost = Cost;
         this.Description = Note;
     }
+
     public DTO_CompanyOrderDetail() {
         this.ProductId = -1;
         this.ProductUnit = "";
@@ -115,6 +119,29 @@ public class DTO_CompanyOrderDetail {
      */
     public void setDescription(String Description) {
         this.Description = Description;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        final DTO_CompanyOrderDetail other = (DTO_CompanyOrderDetail) obj;
+        if ((this.CompanyOrderId != other.getCompanyOrderId()) || (this.Description != other.getDescription())
+                || (this.ProductId != other.getProductId())
+                || (this.ProductUnit != other.getProductUnit())
+                || (this.Quantity != other.getQuantity())
+                || (this.Cost != other.getCost())) {
+            return false;
+
+        }
+
+        return true;
     }
 
 }

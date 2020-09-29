@@ -6,6 +6,7 @@
 package GUI;
 
 import BLL.BLL_CompanyOrder;
+import BLL.BLL_CompanyOrderDetail;
 import BLL.BLL_Employee;
 import BLL.BLL_Product;
 import BLL.BLL_Supplier;
@@ -59,6 +60,10 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
     static BLL_Supplier bLL_Supplier = new BLL_Supplier();
     static BLL_Employee bLL_Employee = new BLL_Employee();
     static BLL_CompanyOrder bLL_CompanyOrder = new BLL_CompanyOrder();
+    static BLL_CompanyOrderDetail bLL_CompanyOrderDetail = new BLL_CompanyOrderDetail();
+    static boolean Update = false;
+    static int CompanyOrderId_Update = -1;// for update
+    static int IndexRowInListCompanyOrder = -1;
 
     ArrayList<DTO_Product> list_product = bLL_Product.GetAllProductsNotDelete();
 
@@ -74,6 +79,12 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         jPanel_showListOrderOrCreateOrder.setBorder(BorderFactory.createLineBorder(Color.black));
         LoadSupplierEmployeeForCombobox();
         LoadData_ForTableOrder();
+        if (!Update) {
+            //add new blank row
+            DefaultTableModel get_model = (DefaultTableModel) Table_Order_Detail.getModel();
+            get_model.insertRow(Table_Order_Detail.getRowCount(), new Object[]{"", "", "",
+                "", "", "", "", ""});
+        }
         AddEventForVAT_CK();
         // create a format for displaying percentages (with %-sign)
         NumberFormat percentDisplayFormat = NumberFormat.getPercentInstance();
@@ -135,7 +146,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                 if (Column == 0) {
                     Id = Integer.parseInt(Table_Order_Detail.getValueAt(i, 0).toString());
                 } else if (Column == 1) {
-                    Id = ((CustomCombo)(Table_Order_Detail.getValueAt(i, 1))).getID();
+                    Id = ((CustomCombo) (Table_Order_Detail.getValueAt(i, 1))).getID();
                 }
             } catch (Exception e) {
             }
@@ -146,15 +157,16 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         return false;
 
     }
+
     public double SumTo_TotalMoey() {
         double Sum = 0;
         for (int i = 0; i < Table_Order_Detail.getRowCount(); i++) {
             double EachIntoMoney = 0;
             try {
-                EachIntoMoney = Double.parseDouble(Table_Order_Detail.getValueAt(i,5).toString());
+                EachIntoMoney = Double.parseDouble(Table_Order_Detail.getValueAt(i, 5).toString());
             } catch (Exception e) {
             }
-            Sum+= EachIntoMoney;
+            Sum += EachIntoMoney;
         }
         return Sum;
     }
@@ -197,10 +209,6 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         TableColumnModel columnModel = Table_Order_Detail.getColumnModel();
         columnModel.getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox(mod_cmb_ProductID)));
         columnModel.getColumn(1).setCellEditor(new DefaultCellEditor(new JComboBox(mod_cmb_ProductName)));
-        //add new blank row
-        DefaultTableModel get_model = (DefaultTableModel) Table_Order_Detail.getModel();
-        get_model.insertRow(Table_Order_Detail.getRowCount(), new Object[]{"", "", "",
-            "", "", "", "", ""});
 
         // show card in card layout
         CardLayout cardLayout = (CardLayout) jPanel_showListOrderOrCreateOrder.getLayout();
@@ -222,7 +230,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                                     int index_product = mod_cmb_ProductID.getIndexOf(productId);
                                     //set value for another column
 
-                                    if (CheckProductOrderExist(productId, e.getColumn(),e.getFirstRow())) {
+                                    if (CheckProductOrderExist(productId, e.getColumn(), e.getFirstRow())) {
                                         JOptionPane.showMessageDialog(null, "san pham nay da co trong gio hang, ban co the chinh lai so luon muon mua");
                                         try {
                                             int rowselectted = e.getFirstRow();
@@ -255,7 +263,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                                         // get index of product in list_produt
                                         int index_product = mod_cmb_ProductName.getIndexOf(product_Id_Name);
                                         // check if product in this row change exist in list we delete row, else add that id to list
-                                        if (CheckProductOrderExist(product_Id_Name.getID(), e.getColumn(),e.getFirstRow())) {
+                                        if (CheckProductOrderExist(product_Id_Name.getID(), e.getColumn(), e.getFirstRow())) {
                                             JOptionPane.showMessageDialog(null, "san pham nay da co trong gio hang, ban co the chinh lai so luon muon mua");
                                             try {
                                                 int rowselectted = e.getFirstRow();
@@ -296,8 +304,8 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                                             }
                                             NumberFormat f = NumberFormat.getInstance();
                                             f.setGroupingUsed(false);
-                                            String total = f.format((Quantity * (Double.parseDouble(Cost))));
-                                            Table_Order_Detail.setValueAt(total, e.getFirstRow(), 5);
+                                            String intoMoney = f.format((Quantity * (Double.parseDouble(Cost))));
+                                            Table_Order_Detail.setValueAt(intoMoney, e.getFirstRow(), 5);
                                         } catch (Exception err) {
                                             JOptionPane.showMessageDialog(null, "du lieu so luong san pham khong hop le");
                                         }
@@ -354,16 +362,18 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                     } catch (Exception err) {
                     }
                 }
-                
+
                 try {
-                        double NewTotalMoney = SumTo_TotalMoey();
-                        NumberFormat f = NumberFormat.getInstance();
-                        f.setGroupingUsed(false);
-                        String StringewTotalMoney = f.format(NewTotalMoney);
-                        txt_Total.setText(StringewTotalMoney);
-                    } catch (Exception err) {
-                        //JOptionPane.showMessageDialog(null, err);
-                    }
+                    double VAT = Double.parseDouble(txt_VAT.getValue().toString());
+                    double CK = Double.parseDouble(txt_CK.getValue().toString());
+                    double NewTotalMoney = SumTo_TotalMoey() + SumTo_TotalMoey()*VAT - SumTo_TotalMoey()*CK;
+                    NumberFormat f = NumberFormat.getInstance();
+                    f.setGroupingUsed(false);
+                    String StringewTotalMoney = f.format(NewTotalMoney);
+                    txt_Total.setText(StringewTotalMoney);
+                } catch (Exception err) {
+                    //JOptionPane.showMessageDialog(null, err);
+                }
 
             }
         });
@@ -507,6 +517,42 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         txt_PhoneNumber.setText(list_Suppliers.get(Index_SelectSupplierCmbox).getPhoneNumber());
     }
 
+    public void LoadForListCompanyOrder() throws SQLException, SQLException {
+
+        ArrayList<DTO_CompanyOrder> List_CompanyOrder = bLL_CompanyOrder.GetAllCompaneyOder();
+        String[] columeNames = new String[]{"ID", "Supplier Id ", "Employee Id", "TimeStamp ", "VAT", "CK", "TotalMoney", "HavePaid", "Still Owe", "Status", "Description"};
+        DefaultTableModel model = new DefaultTableModel(null, columeNames) {
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // or a condition at your choice with row and column
+            }
+        };
+        for (int i = 0; i < List_CompanyOrder.size(); i++) {
+            // create object(is a row in table) 
+            Object[] product = new Object[]{
+                List_CompanyOrder.get(i).getId(), List_CompanyOrder.get(i).getSupplierId(), List_CompanyOrder.get(i).getEmployeeId(),
+                List_CompanyOrder.get(i).getTimeStamp(),
+                List_CompanyOrder.get(i).getVAT(), List_CompanyOrder.get(i).getCK(), List_CompanyOrder.get(i).getTotalMoney(),
+                List_CompanyOrder.get(i).getHavePaid(), List_CompanyOrder.get(i).getStillOwe(),
+                List_CompanyOrder.get(i).isStatus(), List_CompanyOrder.get(i).getDescription()};
+            model.addRow(product);
+        }
+        Table_ListCompanyOrder.setModel(model);
+    }
+
+    public void ClearCompanyInput() {
+        cmb_SupplierId.setSelectedIndex(0);
+        cmb_Employee.setSelectedIndex(0);
+        DefaultTableModel model = (DefaultTableModel) Table_Order_Detail.getModel();
+        model.setRowCount(0);
+        model.insertRow(Table_Order_Detail.getRowCount(), new Object[]{"", "",
+                                "", "", "", "", "", ""});
+        txt_VAT.setValue(0D);
+        txt_CK.setValue(0D);
+        txt_Total.setText("0");
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -528,6 +574,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         btn_Update = new javax.swing.JButton();
         btn_Delete = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        btn_PayMoney = new javax.swing.JButton();
         jPane_CompanyOrder = new javax.swing.JPanel();
         jPanel_Group_information_Order = new javax.swing.JPanel();
         jPanel_Information1 = new javax.swing.JPanel();
@@ -563,6 +610,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         txt_Total = new javax.swing.JTextField();
         btn_DeleteRow = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         jLabel4.setText("jLabel4");
@@ -620,12 +668,29 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         jScrollPane2.setViewportView(Table_ListCompanyOrder);
 
         btn_CreateNew.setText("Create New");
+        btn_CreateNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_CreateNewActionPerformed(evt);
+            }
+        });
 
         btn_Update.setText("Update");
+        btn_Update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_UpdateActionPerformed(evt);
+            }
+        });
 
         btn_Delete.setText("Delete");
 
         jLabel2.setText("List Company Order");
+
+        btn_PayMoney.setText("Pay Money");
+        btn_PayMoney.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_PayMoneyActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout JPane_ListCompanyOrderLayout = new javax.swing.GroupLayout(JPane_ListCompanyOrder);
         JPane_ListCompanyOrder.setLayout(JPane_ListCompanyOrderLayout);
@@ -633,13 +698,15 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
             JPane_ListCompanyOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 693, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPane_ListCompanyOrderLayout.createSequentialGroup()
-                .addContainerGap(353, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_CreateNew)
-                .addGap(18, 18, 18)
-                .addComponent(btn_Update)
-                .addGap(18, 18, 18)
-                .addComponent(btn_Delete)
-                .addGap(85, 85, 85))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_PayMoney)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_Update, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_Delete, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(170, 170, 170))
             .addGroup(JPane_ListCompanyOrderLayout.createSequentialGroup()
                 .addComponent(jLabel2)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -655,7 +722,8 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                 .addGroup(JPane_ListCompanyOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_CreateNew)
                     .addComponent(btn_Update)
-                    .addComponent(btn_Delete))
+                    .addComponent(btn_Delete)
+                    .addComponent(btn_PayMoney))
                 .addGap(32, 32, 32))
         );
 
@@ -852,6 +920,13 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Refresh");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelTableListBuyProductLayout = new javax.swing.GroupLayout(jPanelTableListBuyProduct);
         jPanelTableListBuyProduct.setLayout(jPanelTableListBuyProductLayout);
         jPanelTableListBuyProductLayout.setHorizontalGroup(
@@ -863,7 +938,9 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                 .addComponent(btn_Save, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btn_DeleteRow)
-                .addGap(257, 257, 257))
+                .addGap(18, 18, 18)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(155, 155, 155))
         );
         jPanelTableListBuyProductLayout.setVerticalGroup(
             jPanelTableListBuyProductLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -874,8 +951,9 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                 .addComponent(jPanel_CK_VAT, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addGroup(jPanelTableListBuyProductLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_Save, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_DeleteRow))
+                    .addComponent(btn_Save)
+                    .addComponent(btn_DeleteRow)
+                    .addComponent(jButton1))
                 .addGap(53, 53, 53))
         );
 
@@ -930,13 +1008,24 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
 
     private void btn_CompanyOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CompanyOrderActionPerformed
         // TODO add your handling code here:
-
+        if (!Update) {
+            DefaultTableModel model = (DefaultTableModel) Table_Order_Detail.getModel();
+            model.setRowCount(0);
+            model.insertRow(Table_Order_Detail.getRowCount(), new Object[]{"", "",
+                "", "", "", "", "", ""});
+        }
         CardLayout cardLayout = (CardLayout) jPanel_showListOrderOrCreateOrder.getLayout();
         cardLayout.show(jPanel_showListOrderOrCreateOrder, "card2");
     }//GEN-LAST:event_btn_CompanyOrderActionPerformed
 
     private void btn_ListCompanyOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ListCompanyOrderActionPerformed
         // TODO add your handling code here:
+        Table_ListCompanyOrder.removeAll();
+        try {
+            LoadForListCompanyOrder();
+        } catch (SQLException ex) {
+            Logger.getLogger(GUI_BuyProduct.class.getName()).log(Level.SEVERE, null, ex);
+        }
         CardLayout cardLayout = (CardLayout) jPanel_showListOrderOrCreateOrder.getLayout();
         cardLayout.show(jPanel_showListOrderOrCreateOrder, "card3");
     }//GEN-LAST:event_btn_ListCompanyOrderActionPerformed
@@ -960,7 +1049,13 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
             } catch (Exception e) {
 
             }
-            companyOder = new DTO_CompanyOrder(SupplierId, EmployeeId, DateCreate, VAT, CK, TotalMoney, Description);
+            if (!Update) {
+                companyOder = new DTO_CompanyOrder(SupplierId, EmployeeId, DateCreate, VAT, CK, TotalMoney, Description);
+            } else {
+                //String[] columeNames = new String[]{"ID", "Supplier Id ", "Employee Id", "TimeStamp ", "VAT", "CK", "TotalMoney", "HavePaid", "Still Owe", "Status", "Description"};
+                double HavePaid = Double.parseDouble(Table_ListCompanyOrder.getValueAt(IndexRowInListCompanyOrder, 7).toString());
+                companyOder = new DTO_CompanyOrder(CompanyOrderId_Update, SupplierId, EmployeeId, DateCreate, VAT, CK, TotalMoney, HavePaid, Description);
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -1018,17 +1113,29 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                 break;
             }
             int supplierId = Integer.parseInt(cmb_SupplierId.getSelectedItem().toString());
-            DTO_CompanyOrderDetail companyOrderDetail = new DTO_CompanyOrderDetail(ProductId, Unit, Quantity, Cost, Note);
+            // CompanyOrderId_Update is trash dose not make any sense
+            DTO_CompanyOrderDetail companyOrderDetail = new DTO_CompanyOrderDetail(CompanyOrderId_Update,ProductId, Unit, Quantity, Cost, Note);
             listProductBuy.add(companyOrderDetail);
         }
 
         try {
-            bLL_CompanyOrder.Insert(companyOder, listProductBuy);
+            if (listProductBuy.size() > 0) {
+                if (!Update) {
+                    bLL_CompanyOrder.Insert(companyOder, listProductBuy);
+                } else {
+                    bLL_CompanyOrder.Update_CompanyOrderWithDetail(companyOder, listProductBuy);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, " Hoa don khong co san pham nao");
+            }
         } catch (SQLException ex) {
             Logger.getLogger(GUI_BuyProduct.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_btn_SaveActionPerformed
+//    public void LoadDataCompanyOrderForUpdate(int CompanyOderId) {
+//
+//    }
 
     private void btn_DeleteRowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_DeleteRowActionPerformed
         // TODO add your handling code here:
@@ -1043,6 +1150,88 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_btn_DeleteRowActionPerformed
+
+    private void btn_CreateNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CreateNewActionPerformed
+        // TODO add your handling code here:
+        btn_CompanyOrderActionPerformed(evt);
+    }//GEN-LAST:event_btn_CreateNewActionPerformed
+
+    private void btn_UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_UpdateActionPerformed
+        // TODO add your handling code here:
+        
+        try {
+
+            int IndexRowSelected = Table_ListCompanyOrder.getSelectedRow();
+            int CompanyOrderId = -1;
+            
+            try {
+                
+                CompanyOrderId = Integer.parseInt(Table_ListCompanyOrder.getValueAt(IndexRowSelected, 0).toString());
+                
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+            if (CompanyOrderId != -1) {
+                
+                // get CompanyOrder
+                //String[] columeNames = new String[]{"ID", "Supplier Id ", "Employee Id", "TimeStamp ", "VAT", "CK", "TotalMoney", "HavePaid", "Still Owe", "Status", "Description"};
+                int SupplierId = Integer.parseInt(Table_ListCompanyOrder.getValueAt(IndexRowSelected, 1).toString());
+                int EmployeeId = Integer.parseInt(Table_ListCompanyOrder.getValueAt(IndexRowSelected, 2).toString());
+                String TimeStamp = Table_ListCompanyOrder.getValueAt(IndexRowSelected, 3).toString();
+                double VAT = Double.parseDouble(Table_ListCompanyOrder.getValueAt(IndexRowSelected, 4).toString());
+                double CK = Double.parseDouble(Table_ListCompanyOrder.getValueAt(IndexRowSelected, 5).toString());
+
+                double TotalMoney = Double.parseDouble(Table_ListCompanyOrder.getValueAt(IndexRowSelected, 6).toString());
+                double havePaid = Double.parseDouble(Table_ListCompanyOrder.getValueAt(IndexRowSelected, 7).toString());
+                String Description = Table_ListCompanyOrder.getValueAt(IndexRowSelected, 10).toString();
+                // set for companyUpdate
+                cmb_SupplierId.getModel().setSelectedItem(SupplierId);
+                DTO_employee employee = bLL_Employee.GetById(EmployeeId);
+                CustomCombo ItemCombo_Employee = new CustomCombo(employee.getId(), employee.getName());
+                cmb_Employee.setSelectedItem(ItemCombo_Employee);
+                // get list product buy in CompanyOder buy ID
+                ArrayList<DTO_CompanyOrderDetail> companyOrderDetails = bLL_CompanyOrderDetail.GetCompanyOrderDetailById(CompanyOrderId);
+                DefaultTableModel model = (DefaultTableModel) Table_Order_Detail.getModel();
+                NumberFormat f = NumberFormat.getInstance();
+                        f.setGroupingUsed(false);
+                if (companyOrderDetails.size() > 0) {
+                    model.setRowCount(0);
+                    for (int i = 0; i < companyOrderDetails.size(); i++) {
+                        double Quantity = companyOrderDetails.get(i).getQuantity();
+                        double Cost = companyOrderDetails.get(i).getCost();
+                        double IntoMoney = Quantity * Cost;
+                        
+                        model.insertRow(i, new Object[]{"",
+                            "",
+                            companyOrderDetails.get(i).getProductUnit(), Quantity,
+                            Cost, f.format(IntoMoney), companyOrderDetails.get(i).getDescription()});
+                        Table_Order_Detail.setValueAt(companyOrderDetails.get(i).getProductId(), i, 0);
+                        Table_Order_Detail.setValueAt(f.format(IntoMoney), i, 5);
+                    }
+                    Update = true;
+                    txt_VAT.setValue(VAT);
+                    txt_CK.setValue(CK);
+                    txt_Total.setText(f.format(TotalMoney).toString());
+                    CompanyOrderId_Update = CompanyOrderId;
+                    IndexRowInListCompanyOrder = IndexRowSelected;
+                    btn_CompanyOrderActionPerformed(evt);
+                }
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }//GEN-LAST:event_btn_UpdateActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Update = false;
+        ClearCompanyInput();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btn_PayMoneyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PayMoneyActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_PayMoneyActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1092,11 +1281,13 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
     private javax.swing.JButton btn_Delete;
     private javax.swing.JButton btn_DeleteRow;
     private javax.swing.JButton btn_ListCompanyOrder;
+    private javax.swing.JButton btn_PayMoney;
     private javax.swing.JButton btn_Save;
     private javax.swing.JButton btn_Update;
     private javax.swing.JComboBox<String> cmb_Employee;
     private javax.swing.JComboBox<String> cmb_SupplierId;
     private javax.swing.JComboBox<String> cmb_SupplierName;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
