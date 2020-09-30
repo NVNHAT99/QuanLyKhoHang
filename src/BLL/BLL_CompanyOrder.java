@@ -24,6 +24,9 @@ public class BLL_CompanyOrder {
     public ArrayList<DTO_CompanyOrder> GetAllCompaneyOder() throws SQLException {
         return  dAL_CompanyOrder.GetAllCompaneyOder();
     }
+    public DTO_CompanyOrder GetById(int CompanyOrerId) throws SQLException {
+        return dAL_CompanyOrder.GetById(CompanyOrerId);
+    }
     public void Insert(DTO_CompanyOrder companyOrder,ArrayList<DTO_CompanyOrderDetail> companyOrderDetails) throws SQLException {
         try {
             if(dAL_CompanyOrder.Insert_CompanyOrderWithDetail(companyOrder, companyOrderDetails)){
@@ -37,6 +40,8 @@ public class BLL_CompanyOrder {
         }
     }
     
+    
+    
     public void Update_CompanyOrderWithDetail(DTO_CompanyOrder companyOrder,
             ArrayList<DTO_CompanyOrderDetail> NewCompanyOrderDetails) throws SQLException {
          if(dAL_CompanyOrder.Update_CompanyOrderWithDetail(companyOrder, NewCompanyOrderDetails)){
@@ -47,5 +52,22 @@ public class BLL_CompanyOrder {
          }
          
     }
+    
+     public void Update_WithPayMoney(DTO_CompanyOrder companyOrder,int EmployeeId,int SupplierId,
+            double  PayMoney,String TimeStamp,String Description) throws SQLException {
+         if(dAL_CompanyOrder.Update_WithPayMoney(companyOrder, EmployeeId, SupplierId, PayMoney, TimeStamp, Description)){
+             JOptionPane.showMessageDialog(null, "Tra Tien Mua Hang Thanh Cong");
+         }else{
+             JOptionPane.showMessageDialog(null, "Tra Tien Mua Hang That Bai");
+         }
+     }
+     public void Delete(int CompanyOrderId) throws SQLException {
+         
+         if(dAL_CompanyOrder.Delete(CompanyOrderId)){
+             JOptionPane.showMessageDialog(null, "Xoa Don Mua Hang Thanh Cong");
+         }else{
+             JOptionPane.showMessageDialog(null, "Xoa Don Mua Hang That Bai");
+         }
+     }
     
 }

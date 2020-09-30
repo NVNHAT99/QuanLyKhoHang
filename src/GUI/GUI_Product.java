@@ -12,6 +12,7 @@ import DTO.Custom_DTO.CustomDTO_Product;
 import DTO.DTO_Category;
 import DTO.DTO_Product;
 import DTO.DTO_Supplier;
+import java.awt.Image;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -342,8 +343,12 @@ public class GUI_Product extends javax.swing.JFrame {
                     txt_Category.setText(Table_Product.getValueAt(RowSelected, 4).toString());
                     txt_Unit.setText(Table_Product.getValueAt(RowSelected, 5).toString());
                     txt_UnitStock.setText(Table_Product.getValueAt(RowSelected, 6).toString());
-                    //ImageIcon img_productIcon = new ImageIcon(Table_Product.getValueAt(RowSelected, 7).toString());
-                    //Img_Product.setIcon(img_productIcon);
+                    try {
+                        ImageIcon img_productIcon = new ImageIcon(new ImageIcon(Table_Product.getValueAt(RowSelected, 7).toString()).getImage().getScaledInstance(Img_Product.getWidth(), Img_Product.getHeight(), Image.SCALE_DEFAULT));
+//                        ImageIcon img_productIcon = new ImageIcon(Table_Product.getValueAt(RowSelected, 7).toString());
+                        Img_Product.setIcon(img_productIcon);
+                    } catch (Exception err) {
+                    }
                 }
             }
         });

@@ -23,6 +23,7 @@ public class DAL_CompanyOrder extends DAL {
 
     static DAL_CompanyOrderDetail dAL_CompanyOrderDetail = new DAL_CompanyOrderDetail();
     static DAL_Product dAL_Product = new DAL_Product();
+    static DAL_PayMoney dAL_PayMoney = new DAL_PayMoney();
 
     public ArrayList<DTO_CompanyOrder> GetAllCompaneyOder() throws SQLException {
 
@@ -49,6 +50,40 @@ public class DAL_CompanyOrder extends DAL {
                 companyOrder.setDescription(resultSet.getString(11));
                 companyOrder.setIsDelete(resultSet.getBoolean(12));
                 result.add(companyOrder);
+            }
+        } catch (Exception e) {
+            JOptionPane.showInputDialog(e);
+
+        } finally {
+            connection.close();
+        }
+        return result;
+    }
+
+    public DTO_CompanyOrder GetById(int CompanyOrerId) throws SQLException {
+
+        DTO_CompanyOrder result = new DTO_CompanyOrder();
+        try {
+            connection = dbUltils.Get_connection();
+            String sqlFind = "Select * "
+                    + "from CompanyOrders where IsDelete!=1 and Id=?";
+            preparedStatement = connection.prepareStatement(sqlFind);
+            preparedStatement.setInt(1, CompanyOrerId);
+
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                result.setId(resultSet.getInt(1));
+                result.setSupplierId(resultSet.getInt(2));
+                result.setEmployeeId(resultSet.getInt(3));
+                result.setTimeStamp(resultSet.getDate(4));
+                result.setVAT(resultSet.getFloat(5));
+                result.setCK(resultSet.getFloat(6));
+                result.setTotalMoney(resultSet.getDouble(7));
+                result.setHavePaid(resultSet.getDouble(8));
+                result.setStillOwe(resultSet.getDouble(9));
+                result.setStatus(resultSet.getBoolean(10));
+                result.setDescription(resultSet.getString(11));
+                result.setIsDelete(resultSet.getBoolean(12));
             }
         } catch (Exception e) {
             JOptionPane.showInputDialog(e);
@@ -134,34 +169,87 @@ public class DAL_CompanyOrder extends DAL {
         // default  RoleId for New Employeer
         try {
             String sql = "Update CompanyOrders SET SupplierId = ?, EmployeeId = ?,TimeStamp=?,VAT=?,CK=?,"
-                + " TotalMoney=?,StillOwe=?,Description=?,Status=?  where Id=?";
-        preparedStatement = cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+                    + " TotalMoney=?,StillOwe=?,Description=?,Status=?  where Id=?";
+            preparedStatement = cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
-        boolean Status = false;
-        if (StillOwe <= 0) {
-            Status = true;
-            StillOwe = 0;
-        }
+            boolean Status = false;
+            if (StillOwe <= 0) {
+                Status = true;
+                StillOwe = 0;
+            }
 
-        preparedStatement.setInt(1, SupplierId);
-        preparedStatement.setInt(2, EmployeeId);
-        preparedStatement.setDate(3, TimeStamp);
-        preparedStatement.setDouble(4, VAT);
-        preparedStatement.setDouble(5, CK);
-        preparedStatement.setDouble(6, TotalMoney);
-        preparedStatement.setDouble(7, StillOwe);
-        preparedStatement.setString(8, Description);
+            preparedStatement.setInt(1, SupplierId);
+            preparedStatement.setInt(2, EmployeeId);
+            preparedStatement.setDate(3, TimeStamp);
+            preparedStatement.setDouble(4, VAT);
+            preparedStatement.setDouble(5, CK);
+            preparedStatement.setDouble(6, TotalMoney);
+            preparedStatement.setDouble(7, StillOwe);
+            preparedStatement.setString(8, Description);
 
-        preparedStatement.setBoolean(9, Status);
-        preparedStatement.setInt(10, Id);
+            preparedStatement.setBoolean(9, Status);
+            preparedStatement.setInt(10, Id);
 
-        int rs = preparedStatement.executeUpdate();
-        if(rs>0)
-            return  true;
+            int rs = preparedStatement.executeUpdate();
+            if (rs > 0) {
+                return true;
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, TimeStamp);
         }
         return false;
+    }
+
+    public boolean UpdatePayMoney(int Id, double HavePaid, double StillOwe, Connection _Connection) throws SQLException {
+        Connection cnn = _Connection;
+        try {
+            String sql = "Update CompanyOrders SET  "
+                    + " HavePaid=?,StillOwe=?,Status=?  where Id=?";
+            preparedStatement = cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+            boolean Status = false;
+            if (StillOwe <= 0.9 && StillOwe >= 0) {
+                Status = true;
+                StillOwe = 0;
+            }
+
+            preparedStatement.setDouble(1, HavePaid);
+            preparedStatement.setDouble(2, StillOwe);
+            preparedStatement.setBoolean(3, Status);
+            preparedStatement.setInt(4, Id);
+
+            int rs = preparedStatement.executeUpdate();
+            if (rs > 0) {
+                return true;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        return false;
+    }
+
+    public boolean Update_WithPayMoney(DTO_CompanyOrder companyOrder, int EmployeeId, int SupplierId,
+            double PayMoney, String TimeStamp, String Description) throws SQLException {
+        // need get all Old CompanyOrder Detail
+        // ListProductDeleteFromOder is productId in oder detail
+        connection = dbUltils.Get_connection();
+        if (connection != null) {
+
+            try {
+                connection.setAutoCommit(false);
+                dAL_PayMoney.Insert(companyOrder.getId(), EmployeeId, TimeStamp, SupplierId, PayMoney, Description, connection);
+                UpdatePayMoney(companyOrder.getId(), companyOrder.getHavePaid(), companyOrder.getStillOwe(), connection);
+                connection.commit();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+                connection.rollback();
+                return false;
+            } finally {
+                connection.close();
+            }
+        }
+
+        return true;
     }
 
     public boolean Update_CompanyOrderWithDetail(DTO_CompanyOrder companyOrder,
@@ -182,7 +270,7 @@ public class DAL_CompanyOrder extends DAL {
                 for (int i = 0; i < OldCompanyOrderDetails.size(); i++) {
                     int checkExist = CheckExistInList(OldCompanyOrderDetails.get(i), NewCompanyOrderDetails);
                     // if not exist delete
-                    if(checkExist < 0){
+                    if (checkExist < 0) {
                         dAL_CompanyOrderDetail.Delete(companyOrder.getId(),
                                 OldCompanyOrderDetails.get(i).getProductId(),
                                 connection);
@@ -195,7 +283,7 @@ public class DAL_CompanyOrder extends DAL {
                 for (int j = 0; j < NewCompanyOrderDetails.size(); j++) {
                     int checkExist = CheckExistInList(NewCompanyOrderDetails.get(j), OldCompanyOrderDetails);
                     // if exist check to need update or not
-                    if (checkExist >= 0){
+                    if (checkExist >= 0) {
                         // if 2 DTO_CompanyOrderDetail not the same, update
                         if (!NewCompanyOrderDetails.get(j).equals(OldCompanyOrderDetails.get(checkExist))) {
 
@@ -209,15 +297,15 @@ public class DAL_CompanyOrder extends DAL {
                             // update Unit in stock
                             dAL_Product.Update_ByCompanyOrder(NewCompanyOrderDetails.get(j).getProductId(), SubQuantity, connection);
                         }
-                    }else {
-                            // insert New
-                            dAL_CompanyOrderDetail.Insert(companyOrder.getId(), NewCompanyOrderDetails.get(j).getProductId(),
-                            NewCompanyOrderDetails.get(j).getQuantity(),NewCompanyOrderDetails.get(j).getCost(),
-                            NewCompanyOrderDetails.get(j).getDescription(), NewCompanyOrderDetails.get(j).getProductUnit(), connection);
-                            // update Unit in stock
-                            dAL_Product.Update_ByCompanyOrder(NewCompanyOrderDetails.get(j).getProductId(),
-                                    NewCompanyOrderDetails.get(j).getQuantity(), connection);
-                        }
+                    } else {
+                        // insert New
+                        dAL_CompanyOrderDetail.Insert(companyOrder.getId(), NewCompanyOrderDetails.get(j).getProductId(),
+                                NewCompanyOrderDetails.get(j).getQuantity(), NewCompanyOrderDetails.get(j).getCost(),
+                                NewCompanyOrderDetails.get(j).getDescription(), NewCompanyOrderDetails.get(j).getProductUnit(), connection);
+                        // update Unit in stock
+                        dAL_Product.Update_ByCompanyOrder(NewCompanyOrderDetails.get(j).getProductId(),
+                                NewCompanyOrderDetails.get(j).getQuantity(), connection);
+                    }
                 }
                 connection.commit();
             } catch (Exception e) {
@@ -228,11 +316,38 @@ public class DAL_CompanyOrder extends DAL {
                 connection.close();
             }
         }
-        
+
         return true;
     }
 
-    public void Delete(int CompanyOrderId) throws SQLException {
+    public boolean Delete(int CompanyOrderId) throws SQLException {
+        connection = dbUltils.Get_connection();
+        if (connection != null) {
+            try {
+                ArrayList<DTO_CompanyOrderDetail> CompanyOrderDetails = dAL_CompanyOrderDetail.GetCompanyOrderDetailById(CompanyOrderId);
+                connection.setAutoCommit(false);
+                String sql_delete = "Update companyorders SET IsDelete = 1 WHERE Id = ?";
+                preparedStatement = connection.prepareStatement(sql_delete, PreparedStatement.RETURN_GENERATED_KEYS);
+                for (int i = 0; i < CompanyOrderDetails.size(); i++) {
 
+                    // update unit instok
+                    double Quanity = 0 - CompanyOrderDetails.get(i).getQuantity();
+                    dAL_Product.Update_ByCompanyOrder(CompanyOrderDetails.get(i).getProductId(), Quanity, connection);
+                }
+                preparedStatement.setInt(1, CompanyOrderId);
+                preparedStatement.executeUpdate();
+                connection.commit();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+                connection.rollback();
+                return false;
+            } finally {
+                connection.close();
+            }
+
+        } else {
+            return false;
+        }
+        return true;
     }
 }

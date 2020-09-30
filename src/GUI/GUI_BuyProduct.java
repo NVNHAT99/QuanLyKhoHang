@@ -366,7 +366,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                 try {
                     double VAT = Double.parseDouble(txt_VAT.getValue().toString());
                     double CK = Double.parseDouble(txt_CK.getValue().toString());
-                    double NewTotalMoney = SumTo_TotalMoey() + SumTo_TotalMoey()*VAT - SumTo_TotalMoey()*CK;
+                    double NewTotalMoney = SumTo_TotalMoey() + SumTo_TotalMoey() * VAT - SumTo_TotalMoey() * CK;
                     NumberFormat f = NumberFormat.getInstance();
                     f.setGroupingUsed(false);
                     String StringewTotalMoney = f.format(NewTotalMoney);
@@ -547,7 +547,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) Table_Order_Detail.getModel();
         model.setRowCount(0);
         model.insertRow(Table_Order_Detail.getRowCount(), new Object[]{"", "",
-                                "", "", "", "", "", ""});
+            "", "", "", "", "", ""});
         txt_VAT.setValue(0D);
         txt_CK.setValue(0D);
         txt_Total.setText("0");
@@ -682,6 +682,11 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         });
 
         btn_Delete.setText("Delete");
+        btn_Delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_DeleteActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("List Company Order");
 
@@ -1114,7 +1119,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
             }
             int supplierId = Integer.parseInt(cmb_SupplierId.getSelectedItem().toString());
             // CompanyOrderId_Update is trash dose not make any sense
-            DTO_CompanyOrderDetail companyOrderDetail = new DTO_CompanyOrderDetail(CompanyOrderId_Update,ProductId, Unit, Quantity, Cost, Note);
+            DTO_CompanyOrderDetail companyOrderDetail = new DTO_CompanyOrderDetail(CompanyOrderId_Update, ProductId, Unit, Quantity, Cost, Note);
             listProductBuy.add(companyOrderDetail);
         }
 
@@ -1158,21 +1163,21 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
 
     private void btn_UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_UpdateActionPerformed
         // TODO add your handling code here:
-        
+
         try {
 
             int IndexRowSelected = Table_ListCompanyOrder.getSelectedRow();
             int CompanyOrderId = -1;
-            
+
             try {
-                
+
                 CompanyOrderId = Integer.parseInt(Table_ListCompanyOrder.getValueAt(IndexRowSelected, 0).toString());
-                
+
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
             if (CompanyOrderId != -1) {
-                
+
                 // get CompanyOrder
                 //String[] columeNames = new String[]{"ID", "Supplier Id ", "Employee Id", "TimeStamp ", "VAT", "CK", "TotalMoney", "HavePaid", "Still Owe", "Status", "Description"};
                 int SupplierId = Integer.parseInt(Table_ListCompanyOrder.getValueAt(IndexRowSelected, 1).toString());
@@ -1193,14 +1198,14 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
                 ArrayList<DTO_CompanyOrderDetail> companyOrderDetails = bLL_CompanyOrderDetail.GetCompanyOrderDetailById(CompanyOrderId);
                 DefaultTableModel model = (DefaultTableModel) Table_Order_Detail.getModel();
                 NumberFormat f = NumberFormat.getInstance();
-                        f.setGroupingUsed(false);
+                f.setGroupingUsed(false);
                 if (companyOrderDetails.size() > 0) {
                     model.setRowCount(0);
                     for (int i = 0; i < companyOrderDetails.size(); i++) {
                         double Quantity = companyOrderDetails.get(i).getQuantity();
                         double Cost = companyOrderDetails.get(i).getCost();
                         double IntoMoney = Quantity * Cost;
-                        
+
                         model.insertRow(i, new Object[]{"",
                             "",
                             companyOrderDetails.get(i).getProductUnit(), Quantity,
@@ -1231,7 +1236,48 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
 
     private void btn_PayMoneyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PayMoneyActionPerformed
         // TODO add your handling code here:
+        try {
+            int IndexRowSelected = Table_ListCompanyOrder.getSelectedRow();
+            int CompanyOrderId = -1;
+            try {
+
+                CompanyOrderId = Integer.parseInt(Table_ListCompanyOrder.getValueAt(IndexRowSelected, 0).toString());
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+            int SupplierId = Integer.parseInt(Table_ListCompanyOrder.getValueAt(IndexRowSelected, 1).toString());
+            int EmployeeId = Integer.parseInt(Table_ListCompanyOrder.getValueAt(IndexRowSelected, 2).toString());
+            String DateCreate = Table_ListCompanyOrder.getValueAt(IndexRowSelected, 3).toString();
+            if (CompanyOrderId != -1) {
+                GUI_PayMoney jframeGUI_PayMoney = new GUI_PayMoney(SupplierId,CompanyOrderId,EmployeeId,DateCreate);
+                jframeGUI_PayMoney.setLocationRelativeTo(null);
+                jframeGUI_PayMoney.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                jframeGUI_PayMoney.setVisible(true);
+                jframeGUI_PayMoney.setVisible(true);
+            }
+
+        } catch (Exception e) {
+            int IndexRowSelected = Table_ListCompanyOrder.getSelectedRow();
+        }
     }//GEN-LAST:event_btn_PayMoneyActionPerformed
+
+    private void btn_DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_DeleteActionPerformed
+        // TODO add your handling code here:
+        try {
+            int IndexRowSelected = Table_ListCompanyOrder.getSelectedRow();
+            int CompanyOrderId = -1;
+            try {
+
+                CompanyOrderId = Integer.parseInt(Table_ListCompanyOrder.getValueAt(IndexRowSelected, 0).toString());
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+            bLL_CompanyOrder.Delete(CompanyOrderId);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btn_DeleteActionPerformed
 
     /**
      * @param args the command line arguments
