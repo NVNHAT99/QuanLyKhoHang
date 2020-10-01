@@ -4,9 +4,7 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_BuyProduct.java</file>
-            <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/BLL/BLL_CompanyOrder.java</file>
-            <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/DAL/DAL_CompanyOrder.java</file>
-            <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/DAL/DAL_Product.java</file>
+            <file>file:/C:/Users/Nhat/Documents/GitHub/QuanLyKhoHang/src/GUI/GUI_SellProduct.java</file>
         </group>
     </open-files>
 </project-private>

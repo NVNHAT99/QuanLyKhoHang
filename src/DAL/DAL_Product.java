@@ -232,6 +232,32 @@ public class DAL_Product extends DAL {
         }
         return result;
     }
+    
+    public boolean Update_ByCustomerOrder(int ID, double Quantity, Connection _Connection) throws SQLException {
+        boolean result = false;
+        Connection cnn = _Connection;
+        double NewUnitInStock = GetUnitsInStock(ID,cnn) - Quantity;
+        try {
+            String sql = "Update products SET UnitsInStock = ?  WHERE Id = ? ";
+            preparedStatement = cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            
+            preparedStatement.setDouble(1,NewUnitInStock);
+            preparedStatement.setInt(2, ID);
+            int rs = preparedStatement.executeUpdate();
+
+            if (rs > 0) {
+                result = true;
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,e);
+
+        }
+        if(NewUnitInStock < 0){
+            JOptionPane.showMessageDialog(null,"So luong San Pham Khong Du : so ton du: " + GetUnitsInStock(ID,cnn));
+        }
+        return result;
+    }
 
     public boolean Delete(int ID) throws SQLException {
         boolean result = false;
