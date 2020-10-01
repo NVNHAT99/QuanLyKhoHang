@@ -148,6 +148,11 @@ public class GUI_Main extends javax.swing.JFrame {
         jPanel2.add(btn_BuyProduct);
 
         btn_SellProduct.setText("Sell Product");
+        btn_SellProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_SellProductActionPerformed(evt);
+            }
+        });
         jPanel2.add(btn_SellProduct);
 
         btn_CollectMoney.setText("Collect Money");
@@ -210,7 +215,8 @@ public class GUI_Main extends javax.swing.JFrame {
             // TODO add your handling code here:
             GUI_Product gUI_Product = new GUI_Product();
             gUI_Product.setLocationRelativeTo(null);
-            gUI_Product.setVisible(true);
+            gUI_Product.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            gUI_Product.setLocationRelativeTo(null);
             gUI_Product.setVisible(true);
 
         } catch (SQLException ex) {
@@ -223,7 +229,7 @@ public class GUI_Main extends javax.swing.JFrame {
             // TODO add your handling code here:
             GUI_Category jframeGUI_Category = new GUI_Category();
             jframeGUI_Category.setLocationRelativeTo(null);
-            jframeGUI_Category.setVisible(true);
+            jframeGUI_Category.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             jframeGUI_Category.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(GUI_Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -236,7 +242,7 @@ public class GUI_Main extends javax.swing.JFrame {
             // TODO add your handling code here:
             GUI_Employee jframeGUI_Employee = new GUI_Employee();
             jframeGUI_Employee.setLocationRelativeTo(null);
-            jframeGUI_Employee.setVisible(true);
+            jframeGUI_Employee.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             jframeGUI_Employee.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(GUI_Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -248,7 +254,7 @@ public class GUI_Main extends javax.swing.JFrame {
         try {
             GUI_Supplier jframeGUI_Supplier = new GUI_Supplier();
             jframeGUI_Supplier.setLocationRelativeTo(null);
-            jframeGUI_Supplier.setVisible(true);
+            jframeGUI_Supplier.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             jframeGUI_Supplier.setVisible(true);
         } catch (Exception e) {
         }
@@ -261,7 +267,6 @@ public class GUI_Main extends javax.swing.JFrame {
             jframeGUI_Customer.setLocationRelativeTo(null);
             jframeGUI_Customer.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             jframeGUI_Customer.setVisible(true);
-            jframeGUI_Customer.setVisible(true);
         } catch (Exception e) {
         }
     }//GEN-LAST:event_btn_customerActionPerformed
@@ -272,11 +277,21 @@ public class GUI_Main extends javax.swing.JFrame {
             GUI_BuyProduct jframeGUI_BuyProduct = new GUI_BuyProduct();
             jframeGUI_BuyProduct.setLocationRelativeTo(null);
             jframeGUI_BuyProduct.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            jframeGUI_BuyProduct.setVisible(true);
-            jframeGUI_BuyProduct.setVisible(true);
+            jframeGUI_BuyProduct.setVisible(true);;
         } catch (Exception e) {
         }
     }//GEN-LAST:event_btn_BuyProductActionPerformed
+
+    private void btn_SellProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SellProductActionPerformed
+        // TODO add your handling code here:
+        try {
+            GUI_SellProduct jframeGUI_SellProduct = new GUI_SellProduct();
+            jframeGUI_SellProduct.setLocationRelativeTo(null);
+            jframeGUI_SellProduct.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            jframeGUI_SellProduct.setVisible(true);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btn_SellProductActionPerformed
 
     /**
      * @param args the command line arguments

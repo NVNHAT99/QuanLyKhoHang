@@ -17,6 +17,23 @@ public class DTO_CustomerOrderDetail {
     private String ProductUnit;
     private double Cost;
     private String Description;
+
+    public DTO_CustomerOrderDetail(int CustomerOrderId, int ProductId, String Unit, double Quantity, double Cost, String Note) {
+        this.CustomerOrderId = CustomerOrderId;
+        this.ProductId = ProductId;
+        this.ProductUnit = Unit;
+        this.Quantity = Quantity;
+        this.Cost = Cost;
+        this.Description = Note;
+    }
+    public DTO_CustomerOrderDetail() {
+        this.ProductId = -1;
+        this.ProductUnit = "";
+        this.Quantity = -1;
+        this.Cost = -1;
+        this.Description = "";
+    }
+
     /**
      * @return the CustomerOrderId
      */

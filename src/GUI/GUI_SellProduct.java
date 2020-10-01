@@ -16,12 +16,17 @@ import DTO.DTO_CustomerOrder;
 import DTO.DTO_Product;
 import DTO.DTO_Supplier;
 import DTO.DTO_employee;
+import static GUI.GUI_BuyProduct.Update;
 import static GUI.GUI_BuyProduct.bLL_Supplier;
 import com.sun.istack.internal.logging.Logger;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import javax.swing.BorderFactory;
@@ -29,10 +34,14 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 import ultils.CustomCombo;
 
 /**
@@ -65,9 +74,65 @@ public class GUI_SellProduct extends javax.swing.JFrame {
         initComponents();
         jPanel_groupButtonFuction.setBorder(BorderFactory.createLineBorder(Color.black));
         jPanel_showListOrderOrCreateOrder.setBorder(BorderFactory.createLineBorder(Color.black));
+        LoadCustomerEmployeeForCombobox();
+        LoadData_ForTableOrder();
+        if (!Update) {
+            //add new blank row
+            DefaultTableModel get_model = (DefaultTableModel) Table_Order_Detail.getModel();
+            get_model.insertRow(Table_Order_Detail.getRowCount(), new Object[]{"", "", "",
+                "", "", "", "", ""});
+        }
+        AddEventForVAT_CK();
+        // create a format for displaying percentages (with %-sign)
+        NumberFormat percentDisplayFormat = NumberFormat.getPercentInstance();
+
+        // create a format for editing percentages (without %-sign)
+        NumberFormat percentEditFormat = NumberFormat.getNumberInstance();
+
+        // create a formatter for editing percentages - input will be transformed to percentages (eg. 50 -> 0.5)
+        NumberFormatter percentEditFormatter = new NumberFormatter(percentEditFormat) {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public String valueToString(Object o) throws ParseException {
+                Number number = (Number) o;
+                if (number != null) {
+                    double d = number.doubleValue() * 100.0;
+                    number = new Double(d);
+                }
+                return super.valueToString(number);
+            }
+
+            @Override
+            public Object stringToValue(String s) throws ParseException {
+                Number number = (Number) super.stringToValue(s);
+                if (number != null) {
+                    double d = number.doubleValue() / 100.0;
+                    number = new Double(d);
+                }
+                return number;
+            }
+        };
+
+        // set allowed range
+        percentEditFormatter.setMinimum(0D);
+        percentEditFormatter.setMaximum(100D);
+        percentEditFormatter.setAllowsInvalid(false);
+
+        txt_VAT.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(percentDisplayFormat),
+                new NumberFormatter(percentDisplayFormat),
+                percentEditFormatter));
+
+        txt_CK.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(percentDisplayFormat),
+                new NumberFormatter(percentDisplayFormat),
+                percentEditFormatter));
+        txt_VAT.setValue(0D);
+        txt_CK.setValue(0D);
+        txt_Total.setText("0");
+        LoadCreateOrder();
 
     }
-    
+
     public boolean CheckProductOrderExist(int ProductId, int Column, int RowChange) {
         for (int i = 0; i < Table_Order_Detail.getRowCount(); i++) {
             if (RowChange == i) {
@@ -89,6 +154,7 @@ public class GUI_SellProduct extends javax.swing.JFrame {
         return false;
 
     }
+
     public double SumTo_TotalMoey() {
         double Sum = 0;
         for (int i = 0; i < Table_Order_Detail.getRowCount(); i++) {
@@ -302,7 +368,7 @@ public class GUI_SellProduct extends javax.swing.JFrame {
         });
 
     }
-    
+
     public void LoadForListCustomerOrder() throws SQLException, SQLException {
 
         ArrayList<DTO_CustomerOrder> List_CustomerOrder = bLL_CustomerOder.GetAllCustomerOder();
@@ -326,7 +392,7 @@ public class GUI_SellProduct extends javax.swing.JFrame {
         }
         Table_ListCustomerOrder.setModel(model);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -347,7 +413,7 @@ public class GUI_SellProduct extends javax.swing.JFrame {
         btn_Update = new javax.swing.JButton();
         btn_Delete = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        btn_PayMoney = new javax.swing.JButton();
+        btn_CollectMoney = new javax.swing.JButton();
         jPane_CompanyOrder = new javax.swing.JPanel();
         jPanel_Group_information_Order = new javax.swing.JPanel();
         jPanel_Information1 = new javax.swing.JPanel();
@@ -461,10 +527,10 @@ public class GUI_SellProduct extends javax.swing.JFrame {
 
         jLabel2.setText("List Customer Order");
 
-        btn_PayMoney.setText("Pay Money");
-        btn_PayMoney.addActionListener(new java.awt.event.ActionListener() {
+        btn_CollectMoney.setText("Collect Money");
+        btn_CollectMoney.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_PayMoneyActionPerformed(evt);
+                btn_CollectMoneyActionPerformed(evt);
             }
         });
 
@@ -477,7 +543,7 @@ public class GUI_SellProduct extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_CreateNew)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btn_PayMoney)
+                .addComponent(btn_CollectMoney)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btn_Update, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -499,7 +565,7 @@ public class GUI_SellProduct extends javax.swing.JFrame {
                     .addComponent(btn_CreateNew)
                     .addComponent(btn_Update)
                     .addComponent(btn_Delete)
-                    .addComponent(btn_PayMoney))
+                    .addComponent(btn_CollectMoney))
                 .addGap(32, 32, 32))
         );
 
@@ -788,7 +854,7 @@ public class GUI_SellProduct extends javax.swing.JFrame {
         try {
             LoadForListCustomerOrder();
         } catch (SQLException ex) {
-            
+
         }
         CardLayout cardLayout = (CardLayout) jPanel_showListOrderOrCreateOrder.getLayout();
         cardLayout.show(jPanel_showListOrderOrCreateOrder, "card3");
@@ -822,12 +888,12 @@ public class GUI_SellProduct extends javax.swing.JFrame {
             try {
 
                 CustomerOrderId = Integer.parseInt(Table_ListCustomerOrder.getValueAt(IndexRowSelected, 0).toString());
-
+                
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
             if (CustomerOrderId != -1) {
-
+                
                 // get customerOrder
                 //String[] columeNames = new String[]{"ID", "customer Id ", "Employee Id", "TimeStamp ", "VAT", "CK", "TotalMoney", "HavePaid", "Still Owe", "Status", "Description"};
                 int CustomerId = Integer.parseInt(Table_ListCustomerOrder.getValueAt(IndexRowSelected, 1).toString());
@@ -845,31 +911,31 @@ public class GUI_SellProduct extends javax.swing.JFrame {
                 CustomCombo ItemCombo_Employee = new CustomCombo(employee.getId(), employee.getName());
                 cmb_Employee.setSelectedItem(ItemCombo_Employee);
                 // get list product buy in customer buy ID
-                ArrayList<DTO_CustomerOrderDetail> companyOrderDetails = bLL_CustomerOrderDetail.GetCustomerOderDetailById(CustomerId);
+                ArrayList<DTO_CustomerOrderDetail> customerOrderDetails = bLL_CustomerOrderDetail.GetCustomerOderDetailById(CustomerOrderId);
                 DefaultTableModel model = (DefaultTableModel) Table_Order_Detail.getModel();
                 NumberFormat f = NumberFormat.getInstance();
                 f.setGroupingUsed(false);
-                if (companyOrderDetails.size() > 0) {
+                if (customerOrderDetails.size() > 0) {
                     model.setRowCount(0);
-                    for (int i = 0; i < companyOrderDetails.size(); i++) {
-                        double Quantity = companyOrderDetails.get(i).getQuantity();
-                        double Cost = companyOrderDetails.get(i).getCost();
+                    for (int i = 0; i < customerOrderDetails.size(); i++) {
+                        double Quantity = customerOrderDetails.get(i).getQuantity();
+                        double Cost = customerOrderDetails.get(i).getCost();
                         double IntoMoney = Quantity * Cost;
 
                         model.insertRow(i, new Object[]{"",
                             "",
-                            companyOrderDetails.get(i).getProductUnit(), Quantity,
-                            Cost, f.format(IntoMoney), companyOrderDetails.get(i).getDescription()});
-                        Table_Order_Detail.setValueAt(companyOrderDetails.get(i).getProductId(), i, 0);
+                            customerOrderDetails.get(i).getProductUnit(), Quantity,
+                            Cost, f.format(IntoMoney), customerOrderDetails.get(i).getDescription()});
+                        Table_Order_Detail.setValueAt(customerOrderDetails.get(i).getProductId(), i, 0);
                         Table_Order_Detail.setValueAt(f.format(IntoMoney), i, 5);
                     }
                     Update = true;
                     txt_VAT.setValue(VAT);
                     txt_CK.setValue(CK);
                     txt_Total.setText(f.format(TotalMoney).toString());
-                    CompanyOrderId_Update = CompanyOrderId;
-                    IndexRowInListCompanyOrder = IndexRowSelected;
-                    btn_CompanyOrderActionPerformed(evt);
+                    CustomerOrderId_Update = CustomerOrderId;
+                    IndexRowInListcustomerOrder = IndexRowSelected;
+                    btn_CustomerOrderActionPerformed(evt);
                 }
             }
 
@@ -882,54 +948,54 @@ public class GUI_SellProduct extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             int IndexRowSelected = Table_ListCustomerOrder.getSelectedRow();
-            int CompanyOrderId = -1;
+            int CustomerOderId = -1;
             try {
 
-                CompanyOrderId = Integer.parseInt(Table_ListCustomerOrder.getValueAt(IndexRowSelected, 0).toString());
+                CustomerOderId = Integer.parseInt(Table_ListCustomerOrder.getValueAt(IndexRowSelected, 0).toString());
 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
-            bLL_CompanyOrder.Delete(CompanyOrderId);
+            bLL_CustomerOder.Delete(CustomerOderId);
         } catch (Exception e) {
         }
     }//GEN-LAST:event_btn_DeleteActionPerformed
 
-    private void btn_PayMoneyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PayMoneyActionPerformed
+    private void btn_CollectMoneyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CollectMoneyActionPerformed
         // TODO add your handling code here:
         try {
             int IndexRowSelected = Table_ListCustomerOrder.getSelectedRow();
-            int CompanyOrderId = -1;
+            int CustomerorderId = -1;
             try {
 
-                CompanyOrderId = Integer.parseInt(Table_ListCustomerOrder.getValueAt(IndexRowSelected, 0).toString());
+                CustomerorderId = Integer.parseInt(Table_ListCustomerOrder.getValueAt(IndexRowSelected, 0).toString());
 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
-            int SupplierId = Integer.parseInt(Table_ListCustomerOrder.getValueAt(IndexRowSelected, 1).toString());
+            int CustomerId = Integer.parseInt(Table_ListCustomerOrder.getValueAt(IndexRowSelected, 1).toString());
             int EmployeeId = Integer.parseInt(Table_ListCustomerOrder.getValueAt(IndexRowSelected, 2).toString());
             String DateCreate = Table_ListCustomerOrder.getValueAt(IndexRowSelected, 3).toString();
-            if (CompanyOrderId != -1) {
-                GUI_PayMoney jframeGUI_PayMoney = new GUI_PayMoney(SupplierId, CompanyOrderId, EmployeeId, DateCreate);
-                jframeGUI_PayMoney.setLocationRelativeTo(null);
-                jframeGUI_PayMoney.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                jframeGUI_PayMoney.setVisible(true);
-                jframeGUI_PayMoney.setVisible(true);
+            if (CustomerorderId != -1) {
+                GUI_CollectMoney jframeGUI_CollectMoney = new GUI_CollectMoney(CustomerId, CustomerorderId, EmployeeId, DateCreate);
+                jframeGUI_CollectMoney.setLocationRelativeTo(null);
+                jframeGUI_CollectMoney.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                jframeGUI_CollectMoney.setVisible(true);
+                jframeGUI_CollectMoney.setVisible(true);
             }
 
         } catch (Exception e) {
             int IndexRowSelected = Table_ListCustomerOrder.getSelectedRow();
         }
-    }//GEN-LAST:event_btn_PayMoneyActionPerformed
+    }//GEN-LAST:event_btn_CollectMoneyActionPerformed
 
     private void btn_SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SaveActionPerformed
         // TODO add your handling code here:
         //String[] columeNames = new String[]{"Product Id", "Product Name", "Unit", "Quantity", "cost", "into money", "Note"};
-        ArrayList<DTO_CompanyOrderDetail> listProductBuy = new ArrayList<DTO_CompanyOrderDetail>();
-        DTO_CompanyOrder companyOder = null;
+        ArrayList<DTO_CustomerOrderDetail> listProductBuy = new ArrayList<DTO_CustomerOrderDetail>();
+        DTO_CustomerOrder customerOrder = null;
         try {
-            int SupplierId = Integer.parseInt(cmb_CustomerId.getSelectedItem().toString());
+            int CustomerId = Integer.parseInt(cmb_CustomerId.getSelectedItem().toString());
             int EmployeeId = ((CustomCombo) (cmb_Employee.getSelectedItem())).getID();
             String DateCreate = txt_DateCreateOrder.getText();
 
@@ -943,11 +1009,11 @@ public class GUI_SellProduct extends javax.swing.JFrame {
 
             }
             if (!Update) {
-                companyOder = new DTO_CompanyOrder(SupplierId, EmployeeId, DateCreate, VAT, CK, TotalMoney, Description);
+                customerOrder = new DTO_CustomerOrder(CustomerId, EmployeeId, DateCreate, VAT, CK, TotalMoney, Description);
             } else {
                 //String[] columeNames = new String[]{"ID", "Supplier Id ", "Employee Id", "TimeStamp ", "VAT", "CK", "TotalMoney", "HavePaid", "Still Owe", "Status", "Description"};
-                double HavePaid = Double.parseDouble(Table_ListCustomerOrder.getValueAt(IndexRowInListCompanyOrder, 7).toString());
-                companyOder = new DTO_CompanyOrder(CompanyOrderId_Update, SupplierId, EmployeeId, DateCreate, VAT, CK, TotalMoney, HavePaid, Description);
+                double HavePaid = Double.parseDouble(Table_ListCustomerOrder.getValueAt(IndexRowInListcustomerOrder, 7).toString());
+                customerOrder = new DTO_CustomerOrder(CustomerOrderId_Update, CustomerId, EmployeeId, DateCreate, VAT, CK, TotalMoney, HavePaid, Description);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
@@ -1005,24 +1071,23 @@ public class GUI_SellProduct extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "co san pham khong day du thong tin vui long xoa hoac dien day du thong tin");
                 break;
             }
-            int supplierId = Integer.parseInt(cmb_CustomerId.getSelectedItem().toString());
-            // CompanyOrderId_Update is trash dose not make any sense
-            DTO_CompanyOrderDetail companyOrderDetail = new DTO_CompanyOrderDetail(CompanyOrderId_Update, ProductId, Unit, Quantity, Cost, Note);
-            listProductBuy.add(companyOrderDetail);
+            int CustomerId = Integer.parseInt(cmb_CustomerId.getSelectedItem().toString());
+            // CustomerOrderId_Update is trash dose not make any sense
+            DTO_CustomerOrderDetail customerOrderDetail = new DTO_CustomerOrderDetail(CustomerOrderId_Update, ProductId, Unit, Quantity, Cost, Note);
+            listProductBuy.add(customerOrderDetail);
         }
 
         try {
             if (listProductBuy.size() > 0) {
                 if (!Update) {
-                    bLL_CompanyOrder.Insert(companyOder, listProductBuy);
+                    bLL_CustomerOder.Insert(customerOrder, listProductBuy);
                 } else {
-                    bLL_CompanyOrder.Update_CompanyOrderWithDetail(companyOder, listProductBuy);
+                    bLL_CustomerOder.Update_CustomerOrderWithDetail(customerOrder, listProductBuy);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, " Hoa don khong co san pham nao");
             }
         } catch (SQLException ex) {
-            Logger.getLogger(GUI_BuyProduct.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btn_SaveActionPerformed
 
@@ -1040,15 +1105,159 @@ public class GUI_SellProduct extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_DeleteRowActionPerformed
 
+    public void ClearCustomerInput() {
+        cmb_CustomerId.setSelectedIndex(0);
+        cmb_Employee.setSelectedIndex(0);
+        DefaultTableModel model = (DefaultTableModel) Table_Order_Detail.getModel();
+        model.setRowCount(0);
+        model.insertRow(Table_Order_Detail.getRowCount(), new Object[]{"", "",
+            "", "", "", "", "", ""});
+        txt_VAT.setValue(0D);
+        txt_CK.setValue(0D);
+        txt_Total.setText("0");
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         Update = false;
-        ClearCompanyInput();
+        ClearCustomerInput();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    public void LoadCustomerEmployeeForCombobox() {
+        DefaultComboBoxModel mod_cmb_CustomerName = new DefaultComboBoxModel();
+        DefaultComboBoxModel mod_cmb_customerId = new DefaultComboBoxModel();
+
+        DefaultComboBoxModel mod_cmb_Employee = new DefaultComboBoxModel();
+
+        for (int i = 0; i < list_Customer.size(); i++) {
+            // create object(is a row in table) 
+            Object items_cmbcustomerName = new CustomCombo(list_Customer.get(i).getId(), list_Customer.get(i).getName());
+            mod_cmb_CustomerName.addElement(items_cmbcustomerName);
+
+            Object item_cmbCustomerId = list_Customer.get(i).getId();
+            mod_cmb_customerId.addElement(item_cmbCustomerId);
+
+        }
+
+        for (int j = 0; j < list_employee.size(); j++) {
+
+            Object item_Employee = new CustomCombo(list_employee.get(j).getId(), list_employee.get(j).getName());
+            mod_cmb_Employee.addElement(item_Employee);
+        }
+
+        cmb_CustomerName.setModel(mod_cmb_CustomerName);
+        cmb_CustomerId.setModel(mod_cmb_customerId);
+        cmb_Employee.setModel(mod_cmb_Employee);
+
+        cmb_CustomerName.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                int index = cmb_CustomerName.getSelectedIndex();
+                if (cmb_CustomerId.getSelectedIndex() != index) {
+                    cmb_CustomerId.setSelectedIndex(index);
+                    LoadInformationCustomer(index);
+                }
+            }
+        });
+        
+        cmb_CustomerId.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                int index_itemslected = cmb_CustomerId.getSelectedIndex();
+                if (cmb_CustomerName.getSelectedIndex() != index_itemslected) {
+                    cmb_CustomerName.setSelectedIndex(index_itemslected);
+                    LoadInformationCustomer(index_itemslected);
+                }
+            }
+        });
+
+    }
+
+    public void LoadInformationCustomer(int Index_SelectCustomerCmbox) {
+        txt_Address.setText(list_Customer.get(Index_SelectCustomerCmbox).getAddress());
+        txt_PhoneNumber.setText(list_Customer.get(Index_SelectCustomerCmbox).getPhoneNumber());
+    }
+    public void LoadCreateOrder() {
+        //set local date to day create order
+        LocalDate DateNow = LocalDate.now();
+        txt_DateCreateOrder.setText(DateNow.toString());
+        txt_DateCreateOrder.setEditable(false);
+        LoadInformationCustomer(0);
+    }
+    public void AddEventForVAT_CK() {
+        txt_CK.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                String StringCurrentTotalMoney = "";
+                try {
+                    StringCurrentTotalMoney = txt_Total.getText();
+
+                } catch (Exception err) {
+
+                }
+                try {
+                    double CurrenttotalMoney = SumTo_TotalMoey();
+                    double VAT = Double.parseDouble(txt_VAT.getValue().toString());
+                    double CK = Double.parseDouble(txt_CK.getValue().toString());
+                    double NewTotalMoney = CurrenttotalMoney + (VAT * CurrenttotalMoney) - (CK * CurrenttotalMoney);
+                    NumberFormat f = NumberFormat.getInstance();
+                    f.setGroupingUsed(false);
+                    String StringewTotalMoney = f.format(NewTotalMoney);
+                    txt_Total.setText(StringewTotalMoney);
+
+                } catch (Exception err) {
+                }
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+        });
+        txt_VAT.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                String StringCurrentTotalMoney = "";
+                try {
+                    StringCurrentTotalMoney = txt_Total.getText();
+
+                } catch (Exception err) {
+
+                }
+                try {
+                    double CurrenttotalMoney = SumTo_TotalMoey();
+                    double VAT = Double.parseDouble(txt_VAT.getValue().toString());
+                    double CK = Double.parseDouble(txt_CK.getValue().toString());
+                    double NewTotalMoney = CurrenttotalMoney + (VAT * CurrenttotalMoney) - (CK * CurrenttotalMoney);
+                    NumberFormat f = NumberFormat.getInstance();
+                    f.setGroupingUsed(false);
+                    String StringewTotalMoney = f.format(NewTotalMoney);
+                    txt_Total.setText(StringewTotalMoney);
+
+                } catch (Exception err) {
+                }
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+        });
+    }
+        /**
+         * @param args the command line arguments
+         */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1076,21 +1285,27 @@ public class GUI_SellProduct extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI_SellProduct().setVisible(true);
+                try {
+                    new GUI_SellProduct().setVisible(true);
+                } catch (SQLException ex) {
+                    java.util.logging.Logger.getLogger(GUI_SellProduct.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel JPane_ListCompanyOrder;
     private javax.swing.JTable Table_ListCustomerOrder;
     private javax.swing.JTable Table_Order_Detail;
+    private javax.swing.JButton btn_CollectMoney;
     private javax.swing.JButton btn_CreateNew;
     private javax.swing.JButton btn_CustomerOrder;
     private javax.swing.JButton btn_Delete;
     private javax.swing.JButton btn_DeleteRow;
     private javax.swing.JButton btn_ListCustomerOrder;
-    private javax.swing.JButton btn_PayMoney;
     private javax.swing.JButton btn_Save;
     private javax.swing.JButton btn_Update;
     private javax.swing.JComboBox<String> cmb_CustomerId;

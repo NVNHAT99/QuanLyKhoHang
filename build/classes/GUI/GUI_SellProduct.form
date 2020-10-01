@@ -118,7 +118,7 @@
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="btn_CreateNew" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="btn_PayMoney" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_CollectMoney" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btn_Update" min="-2" pref="78" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -143,7 +143,7 @@
                           <Component id="btn_CreateNew" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btn_Update" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btn_Delete" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btn_PayMoney" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_CollectMoney" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                   </Group>
@@ -201,12 +201,12 @@
                 <Property name="text" type="java.lang.String" value="List Customer Order"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btn_PayMoney">
+            <Component class="javax.swing.JButton" name="btn_CollectMoney">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Pay Money"/>
+                <Property name="text" type="java.lang.String" value="Collect Money"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_PayMoneyActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_CollectMoneyActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

@@ -13,6 +13,65 @@ import java.sql.Date;
  */
 public class DTO_CustomerOrder {
 
+    public DTO_CustomerOrder(int CustomerId, int EmployeeId, String DateCreate, double VAT, double CK, double TotalMoney, String Description) {
+        
+        this.Id = -1;
+        this.CustomerId = CustomerId;
+        this.EmployeeId = EmployeeId;
+        this.TimeStamp = Date.valueOf(DateCreate);
+        this.VAT = VAT;
+        this.CK = CK;
+        this.TotalMoney = TotalMoney;
+        this.HavePaid = 0;
+        this.StillOwe = TotalMoney;
+        this.Status = false;
+        this.Description = Description;
+        this.IsDelete = false;
+    }
+    public DTO_CustomerOrder() {
+        this.Id = -1;
+        this.CustomerId = -1;
+        this.EmployeeId = -1;
+        this.TimeStamp = null;
+        this.VAT = 0;
+        this.TotalMoney = 0;
+        this.HavePaid = 0;
+        this.StillOwe = 0;
+        this.Status = false;
+        this.Description = "";
+        this.IsDelete = false;
+    }
+
+    public DTO_CustomerOrder(int CustomerId, int EmployeeId, String TimeStamp, double VAT, double CK, double TotalMoney, double havePaid, String Description) {
+        this.Id = -1;
+        this.CustomerId = CustomerId;
+        this.EmployeeId = EmployeeId;
+        this.TimeStamp = Date.valueOf(TimeStamp);
+        this.VAT = VAT;
+        this.CK = CK;
+        this.TotalMoney = TotalMoney;
+        this.HavePaid = havePaid;
+        this.StillOwe = TotalMoney;
+        this.Status = false;
+        this.Description = Description;
+        this.IsDelete = false;
+    }
+
+    public DTO_CustomerOrder(int CustomerOrderId, int CustomerId, int EmployeeId, String DateCreate, double VAT, double CK, double TotalMoney, double HavePaid, String Description) {
+        this.Id = CustomerOrderId;
+        this.CustomerId = CustomerId;
+        this.EmployeeId = EmployeeId;
+        this.TimeStamp = Date.valueOf(DateCreate);
+        this.VAT = VAT;
+        this.CK = CK;
+        this.TotalMoney = TotalMoney;
+        this.HavePaid = HavePaid;
+        this.StillOwe = TotalMoney;
+        this.Status = false;
+        this.Description = Description;
+        this.IsDelete = false;
+    }
+
     /**
      * @return the Id
      */

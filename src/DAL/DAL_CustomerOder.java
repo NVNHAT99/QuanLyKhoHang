@@ -19,7 +19,8 @@ import javax.swing.JOptionPane;
  *
  * @author Nhat
  */
-public class DAL_CustomerOder extends DAL{
+public class DAL_CustomerOder extends DAL {
+
     static DAL_CustomerOderDetail dAL_CustomerOderDetail = new DAL_CustomerOderDetail();
     static DAL_Product dAL_Product = new DAL_Product();
     static DAL_CollectMoney dAL_CollectMoney = new DAL_CollectMoney();
@@ -59,7 +60,7 @@ public class DAL_CustomerOder extends DAL{
         return result;
     }
 
-    public DTO_CustomerOrder GetById(int CustomerOrderId ) throws SQLException {
+    public DTO_CustomerOrder GetById(int CustomerOrderId) throws SQLException {
 
         DTO_CustomerOrder result = new DTO_CustomerOrder();
         try {
@@ -93,7 +94,7 @@ public class DAL_CustomerOder extends DAL{
         return result;
     }
 
-    public int Insert(int CustomerId , int EmployeeId, Date TimeStamp, String Description, double VAT, double CK,
+    public int Insert(int CustomerId, int EmployeeId, Date TimeStamp, String Description, double VAT, double CK,
             double TotalMoney, double StillOwe, Connection _Connection) throws SQLException {
         int result = -1;
         Connection cnn = _Connection;
@@ -127,7 +128,7 @@ public class DAL_CustomerOder extends DAL{
         //-1 false not exist
         for (int i = 0; i < list_CustomerOderDetails.size(); i++) {
             if ((customerOrderDetail.getProductId() == list_CustomerOderDetails.get(i).getProductId())
-                    && (customerOrderDetail.getCustomerOrderId()== list_CustomerOderDetails.get(i).getCustomerOrderId())) {
+                    && (customerOrderDetail.getCustomerOrderId() == list_CustomerOderDetails.get(i).getCustomerOrderId())) {
                 return i;
             }
         }
@@ -148,7 +149,10 @@ public class DAL_CustomerOder extends DAL{
                             customerOderDetails.get(i).getQuantity(), customerOderDetails.get(i).getCost(),
                             customerOderDetails.get(i).getDescription(), customerOderDetails.get(i).getProductUnit(), Cnn);
                     // update unit in stock
-                    dAL_Product.Update_ByCustomerOrder(customerOderDetails.get(i).getProductId(), customerOderDetails.get(i).getQuantity(), Cnn);
+                    if (!dAL_Product.Update_ByCustomerOrder(customerOderDetails.get(i).getProductId(), customerOderDetails.get(i).getQuantity(), Cnn)) {
+                        Cnn.rollback();
+                        return false;
+                    }
                 }
                 Cnn.commit();
             } catch (Exception e) {
@@ -162,7 +166,7 @@ public class DAL_CustomerOder extends DAL{
         return true;
     }
 
-    public boolean Update(int Id,int CustomerId, int EmployeeId, Date TimeStamp, String Description, double VAT, double CK,
+    public boolean Update(int Id, int CustomerId, int EmployeeId, Date TimeStamp, String Description, double VAT, double CK,
             double TotalMoney, double HavePaid, double StillOwe, Connection _Connection) throws SQLException {
         Connection cnn = _Connection;
         // default  RoleId for New Employeer
@@ -275,7 +279,10 @@ public class DAL_CustomerOder extends DAL{
                                 connection);
                         // update unit instok
                         double Quanity = 0 - OldCustomerOderDetails.get(i).getQuantity();
-                        dAL_Product.Update_ByCustomerOrder(OldCustomerOderDetails.get(i).getProductId(), Quanity, connection);
+                        if (!dAL_Product.Update_ByCustomerOrder(OldCustomerOderDetails.get(i).getProductId(), Quanity, connection)) {
+                            connection.rollback();
+                            return false;
+                        }
                     }
                 }
                 // update and insert in here
@@ -294,7 +301,11 @@ public class DAL_CustomerOder extends DAL{
                                     NewCustomerOderDetails.get(j).getCost(), NewCustomerOderDetails.get(j).getDescription(),
                                     NewCustomerOderDetails.get(j).getProductUnit(), connection);
                             // update Unit in stock
-                            dAL_Product.Update_ByCustomerOrder(NewCustomerOderDetails.get(j).getProductId(), SubQuantity, connection);
+                            if (!dAL_Product.Update_ByCustomerOrder(NewCustomerOderDetails.get(j).getProductId(), SubQuantity, connection)) {
+                                connection.rollback();
+                                return false;
+                            }
+
                         }
                     } else {
                         // insert New
@@ -302,8 +313,11 @@ public class DAL_CustomerOder extends DAL{
                                 NewCustomerOderDetails.get(j).getQuantity(), NewCustomerOderDetails.get(j).getCost(),
                                 NewCustomerOderDetails.get(j).getDescription(), NewCustomerOderDetails.get(j).getProductUnit(), connection);
                         // update Unit in stock
-                        dAL_Product.Update_ByCustomerOrder(NewCustomerOderDetails.get(j).getProductId(),
-                                NewCustomerOderDetails.get(j).getQuantity(), connection);
+                        if (!dAL_Product.Update_ByCustomerOrder(NewCustomerOderDetails.get(j).getProductId(),
+                                NewCustomerOderDetails.get(j).getQuantity(), connection)) {
+                            connection.rollback();
+                            return false;
+                        }
                     }
                 }
                 connection.commit();
@@ -349,5 +363,5 @@ public class DAL_CustomerOder extends DAL{
         }
         return true;
     }
-    
+
 }

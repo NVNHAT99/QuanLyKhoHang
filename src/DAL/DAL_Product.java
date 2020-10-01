@@ -193,16 +193,16 @@ public class DAL_Product extends DAL {
         return result;
     }
 
-    public double GetUnitsInStock(int Id,Connection _Connection) throws SQLException {
+    public double GetUnitsInStock(int Id, Connection _Connection) throws SQLException {
         double rs = 0;
         Connection cnn = _Connection;
         try {
             String sqlFind = "Select UnitsInStock "
                     + " from products where IsDelete != 1 And Id = ?";
-            preparedStatement =_Connection.prepareStatement(sqlFind);
+            preparedStatement = _Connection.prepareStatement(sqlFind);
             preparedStatement.setInt(1, Id);
             resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 rs = resultSet.getDouble(1);
             }
         } catch (Exception e) {
@@ -214,11 +214,11 @@ public class DAL_Product extends DAL {
         boolean result = false;
         try {
             Connection cnn = _Connection;
-            double NewUnitInStock = GetUnitsInStock(ID,cnn)+Quantity;
+            double NewUnitInStock = GetUnitsInStock(ID, cnn) + Quantity;
             String sql = "Update products SET UnitsInStock = ?  WHERE Id = ? ";
             preparedStatement = cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            
-            preparedStatement.setDouble(1,NewUnitInStock);
+
+            preparedStatement.setDouble(1, NewUnitInStock);
             preparedStatement.setInt(2, ID);
             int rs = preparedStatement.executeUpdate();
 
@@ -227,36 +227,29 @@ public class DAL_Product extends DAL {
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,e);
+            JOptionPane.showMessageDialog(null, e);
 
         }
         return result;
     }
-    
+
     public boolean Update_ByCustomerOrder(int ID, double Quantity, Connection _Connection) throws SQLException {
-        boolean result = false;
         Connection cnn = _Connection;
-        double NewUnitInStock = GetUnitsInStock(ID,cnn) - Quantity;
-        try {
-            String sql = "Update products SET UnitsInStock = ?  WHERE Id = ? ";
-            preparedStatement = cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            
-            preparedStatement.setDouble(1,NewUnitInStock);
-            preparedStatement.setInt(2, ID);
-            int rs = preparedStatement.executeUpdate();
-
-            if (rs > 0) {
-                result = true;
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,e);
-
+        double NewUnitInStock = GetUnitsInStock(ID, cnn) - Quantity;
+        if (NewUnitInStock < 0) {
+            JOptionPane.showMessageDialog(null, "So luong San Pham Khong Du : so ton du: " + GetUnitsInStock(ID, cnn));
+            ID = -999;
         }
-        if(NewUnitInStock < 0){
-            JOptionPane.showMessageDialog(null,"So luong San Pham Khong Du : so ton du: " + GetUnitsInStock(ID,cnn));
-        }
-        return result;
+        String sql = "Update products SET UnitsInStock = ?  WHERE Id = ? ";
+        preparedStatement = cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        preparedStatement.setDouble(1, NewUnitInStock);
+        preparedStatement.setInt(2, ID);
+        int rs = preparedStatement.executeUpdate();
+        if(rs>0)
+            return true;
+        return false;
+
     }
 
     public boolean Delete(int ID) throws SQLException {
