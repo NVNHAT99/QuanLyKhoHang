@@ -106,16 +106,16 @@ public class GUI_CollectMoney extends javax.swing.JFrame {
             jPanel_GroupInfo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_GroupInfo1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel_GroupInfo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel_GroupInfo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel_GroupInfo1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
-                        .addComponent(cmb_Customer, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cmb_Customer, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel_GroupInfo1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cmb_CustomerOrder, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(cmb_CustomerOrder, 0, 148, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel_GroupInfo1Layout.setVerticalGroup(
             jPanel_GroupInfo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,7 +175,7 @@ public class GUI_CollectMoney extends javax.swing.JFrame {
         jPanel_InfomationLayout.setHorizontalGroup(
             jPanel_InfomationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_InfomationLayout.createSequentialGroup()
-                .addComponent(jPanel_GroupInfo1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel_GroupInfo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel_GroupInfo2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -358,7 +358,7 @@ public class GUI_CollectMoney extends javax.swing.JFrame {
         NumberFormat f = new DecimalFormat("#0.00");
         f.setGroupingUsed(false);
         try {
-            dTO_CustomerOrder = bLL_CustomerOrder.GetById(CustomerId);
+            dTO_CustomerOrder = bLL_CustomerOrder.GetById(CustomerOrderId);
         } catch (SQLException ex) {
             //Logger.getLogger(GUI_PayMoney.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -215,6 +215,10 @@ public class DAL_CustomerOder extends DAL {
                 Status = true;
                 StillOwe = 0;
             }
+            else if(StillOwe < 0){
+                JOptionPane.showMessageDialog(null, "So tien tra lon hon so tien dang no");
+                return false;
+            }
 
             preparedStatement.setDouble(1, HavePaid);
             preparedStatement.setDouble(2, StillOwe);
@@ -240,8 +244,14 @@ public class DAL_CustomerOder extends DAL {
 
             try {
                 connection.setAutoCommit(false);
-                dAL_CollectMoney.Insert(customerOrder.getId(), EmployeeId, TimeStamp, SupplierId, PayMoney, Description, connection);
-                UpdateCollect(customerOrder.getId(), customerOrder.getHavePaid(), customerOrder.getStillOwe(), connection);
+                if (!dAL_CollectMoney.Insert(customerOrder.getId(), EmployeeId, TimeStamp, SupplierId, PayMoney, Description, connection)) {
+                    connection.rollback();
+                    return false;
+                }
+                if(!UpdateCollect(customerOrder.getId(), customerOrder.getHavePaid(), customerOrder.getStillOwe(), connection)){
+                    connection.rollback();
+                    return false;
+                }
                 connection.commit();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);

@@ -26,7 +26,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="tabbedPane_Main" alignment="0" max="32767" attributes="0"/>
+          <Component id="tabbedPane_Main" alignment="0" pref="448" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -68,6 +68,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Role"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_RoleActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btn_ChangePassword">
               <Properties>
@@ -77,11 +80,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_ChangePasswordActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btn_SystemLog">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="System Log"/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JButton" name="btn_Exit">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Exit"/>
@@ -90,6 +88,21 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_ExitActionPerformed"/>
               </Events>
             </Component>
+            <Container class="javax.swing.JPanel" name="jPanel3">
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <EmptySpace min="0" pref="141" max="32767" attributes="0"/>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <EmptySpace min="0" pref="123" max="32767" attributes="0"/>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+            </Container>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="Tab_Model">
@@ -162,7 +175,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jPanel2" alignment="1" pref="472" max="32767" attributes="0"/>
+                  <Component id="jPanel2" alignment="1" pref="443" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">

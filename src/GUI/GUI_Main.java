@@ -40,8 +40,8 @@ public class GUI_Main extends javax.swing.JFrame {
         btn_Infomation = new javax.swing.JButton();
         btn_Role = new javax.swing.JButton();
         btn_ChangePassword = new javax.swing.JButton();
-        btn_SystemLog = new javax.swing.JButton();
         btn_Exit = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
         Tab_Model = new javax.swing.JPanel();
         btn_Product = new javax.swing.JButton();
         btn_Catgories = new javax.swing.JButton();
@@ -70,6 +70,11 @@ public class GUI_Main extends javax.swing.JFrame {
         Tab_System.add(btn_Infomation);
 
         btn_Role.setText("Role");
+        btn_Role.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_RoleActionPerformed(evt);
+            }
+        });
         Tab_System.add(btn_Role);
 
         btn_ChangePassword.setText("Change Pass");
@@ -80,9 +85,6 @@ public class GUI_Main extends javax.swing.JFrame {
         });
         Tab_System.add(btn_ChangePassword);
 
-        btn_SystemLog.setText("System Log");
-        Tab_System.add(btn_SystemLog);
-
         btn_Exit.setText("Exit");
         btn_Exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -90,6 +92,19 @@ public class GUI_Main extends javax.swing.JFrame {
             }
         });
         Tab_System.add(btn_Exit);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 141, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 123, Short.MAX_VALUE)
+        );
+
+        Tab_System.add(jPanel3);
 
         tabbedPane_Main.addTab("System", Tab_System);
 
@@ -165,7 +180,7 @@ public class GUI_Main extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,7 +195,7 @@ public class GUI_Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPane_Main)
+            .addComponent(tabbedPane_Main, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,6 +308,17 @@ public class GUI_Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_SellProductActionPerformed
 
+    private void btn_RoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RoleActionPerformed
+        // TODO add your handling code here:
+        try {
+            GUI_Role jframeGUI_Role = new GUI_Role();
+            jframeGUI_Role.setLocationRelativeTo(null);
+            jframeGUI_Role.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            jframeGUI_Role.setVisible(true);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btn_RoleActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -342,11 +368,11 @@ public class GUI_Main extends javax.swing.JFrame {
     private javax.swing.JButton btn_Role;
     private javax.swing.JButton btn_SellProduct;
     private javax.swing.JButton btn_Supplier;
-    private javax.swing.JButton btn_SystemLog;
     private javax.swing.JButton btn_customer;
     private javax.swing.JButton btn_paymoney;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JTabbedPane tabbedPane_Main;
     // End of variables declaration//GEN-END:variables
 }

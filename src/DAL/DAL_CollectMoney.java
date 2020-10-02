@@ -18,7 +18,7 @@ public class DAL_CollectMoney extends DAL{
             double PayMoney, String Description, Connection _Connection) throws SQLException {
         boolean result = false;
         Connection Cnn = _Connection;
-        String sql = "insert into companypayfororder(CustomerOrderId,EmployeerId ,TimeStamp,CustomerId,PayMoney,Description) VALUES (?,?,?,?,?,?)";
+        String sql = "insert into customerpayfororder(CustomerOrderId,EmployeerId ,TimeStamp,CustomerId,PayMoney,Description) VALUES (?,?,?,?,?,?)";
         preparedStatement = Cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
         preparedStatement.setInt(1, CustomerOrderId);
