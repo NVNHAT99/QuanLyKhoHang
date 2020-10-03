@@ -53,7 +53,7 @@ public class DAL_Employee extends DAL {
         ArrayList<DTO_employee> result = new ArrayList<DTO_employee>();
         try {
             connection = dbUltils.Get_connection();
-            String sqlFind = "Select Username,Password from employees where Username = ? and IsDelete!=1";
+            String sqlFind = "Select Username,Password,RoleId  from employees where Username = ? and IsDelete!=1";
             preparedStatement = connection.prepareStatement(sqlFind);
 
             preparedStatement.setString(1, UserName);
@@ -63,6 +63,7 @@ public class DAL_Employee extends DAL {
                 DTO_employee employee = new DTO_employee();
                 employee.setUsername(resultSet.getString(1));
                 employee.setPassword(resultSet.getString(2));
+                employee.setRoleId(resultSet.getInt(3));
                 result.add(employee);
             }
         } catch (Exception e) {
@@ -73,6 +74,7 @@ public class DAL_Employee extends DAL {
         }
         return result;
     }
+
     public DTO_employee GetById(int EmloyeeId) throws SQLException {
         DTO_employee result = new DTO_employee();
         try {
@@ -83,10 +85,10 @@ public class DAL_Employee extends DAL {
             preparedStatement.setInt(1, EmloyeeId);
 
             resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 result.setId(resultSet.getInt(1));
                 result.setUsername(resultSet.getString(2));
-                
+
             }
         } catch (Exception e) {
             JOptionPane.showInputDialog(e);
@@ -96,6 +98,7 @@ public class DAL_Employee extends DAL {
         }
         return result;
     }
+
     public boolean CheckEmployeeEmailExist(int EmployeeId, String EmployeeEmail) throws SQLException {
         boolean result = false;// not exist
         try {
@@ -272,6 +275,21 @@ public class DAL_Employee extends DAL {
             connection.close();
         }
         return result;
+    }
+
+    public boolean UpdateByDeleteRole(int RoleId, Connection _Connection) throws SQLException {
+        boolean result = false;
+        connection = dbUltils.Get_connection();
+        String sql = "Update Employees SET RoleId = 4 WHERE RoleId  = ?";
+        preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        preparedStatement.setInt(1, RoleId);
+        int rs = preparedStatement.executeUpdate();
+
+        if (rs > 0) {
+            result = true;
+        }
+        return  result;
     }
 
 }

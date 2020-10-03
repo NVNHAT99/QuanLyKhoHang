@@ -6,7 +6,9 @@
 package GUI;
 
 import BLL.BLL_Supplier;
+import DTO.DTO_Permissions;
 import DTO.DTO_Supplier;
+import static GUI.GUI_Role.permissionses;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -24,14 +26,28 @@ import javax.swing.text.MaskFormatter;
  */
 public class GUI_Supplier extends javax.swing.JFrame {
 
+    static ArrayList<DTO_Permissions> permissionses = null;
     /**
      * Creates new form GUI_Supplier
      */
     static BLL_Supplier bLL_Supplier = new BLL_Supplier();
 
-    public GUI_Supplier() throws SQLException, ParseException {
+    public GUI_Supplier(ArrayList<DTO_Permissions> permissions) throws SQLException, ParseException {
         initComponents();
+        permissionses = permissions;
         Load();
+        LoadPermissions();
+    }
+    public void LoadPermissions() {
+        if (!permissionses.get(3).isAllowInsert()) {
+            btn_Insert.setEnabled(false);
+        }
+        if (!permissionses.get(3).isAllowDelete()) {
+            btn_delete.setEnabled(false);
+        }
+        if (!permissionses.get(3).isAllowUpdate()) {
+            btn_Update.setEnabled(false);
+        }
     }
 
     public void Load() throws SQLException, ParseException {
@@ -326,7 +342,7 @@ public class GUI_Supplier extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new GUI_Supplier().setVisible(true);
+                    new GUI_Supplier(permissionses).setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(GUI_Supplier.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ParseException ex) {

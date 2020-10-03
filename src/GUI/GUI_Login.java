@@ -6,11 +6,15 @@
 package GUI;
 
 import BLL.BLL_Employee;
+import BLL.BLL_Permissions;
+import BLL.BLL_Role;
+import DTO.DTO_Permissions;
 import DTO.DTO_employee;
 import java.awt.GridLayout;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import org.mindrot.BCrypt;
 
 /**
  *
@@ -21,6 +25,8 @@ public class GUI_Login extends javax.swing.JFrame {
     /**
      * Creates new form GUI_Login
      */
+    static BLL_Role bLL_Role =  new BLL_Role();
+    static BLL_Permissions bLL_Permissions = new BLL_Permissions();
     public GUI_Login() {
         initComponents();
         this.pack();
@@ -83,8 +89,10 @@ public class GUI_Login extends javax.swing.JFrame {
             BLL_Employee Bll_employee = new BLL_Employee();
             try {
                 if (BLL_Employee.Login(UserName, password)) {
+                    
                     ArrayList<DTO_employee> employee = Bll_employee.FindbyUserName(UserName);
-                    GUI_Main jfarm_main = new GUI_Main(employee.get(0));
+                    ArrayList<DTO_Permissions> permissionses = bLL_Permissions.GetPermissionsByRoleId(employee.get(0).getRoleId());
+                    GUI_Main jfarm_main = new GUI_Main(employee.get(0),permissionses);
                     jfarm_main.pack();
                     setVisible(false);
                     jfarm_main.pack();

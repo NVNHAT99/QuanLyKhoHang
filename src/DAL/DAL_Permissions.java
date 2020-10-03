@@ -6,6 +6,7 @@
 package DAL;
 
 import DTO.DTO_Permissions;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -46,89 +47,67 @@ public class DAL_Permissions extends DAL {
         return result;
     }
 
-    public boolean Insert(int RoleId, int ModelId,Boolean AllowInsert, Boolean AllowSelect, Boolean AllowUpdate, Boolean AllowDelete) throws SQLException {
+    public boolean Insert(int RoleId, int ModelId, Boolean AllowInsert, Boolean AllowSelect, Boolean AllowUpdate,
+            Boolean AllowDelete, Connection _Connection) throws SQLException {
         boolean result = false;
-        try {
-            connection = dbUltils.Get_connection();
-            String sql = "Insert into Permissions(RoleId,ModelId,AllowInsert,AllowSelect,AllowUpdate,AllowDelete) "
-                    + " values(?,?,?,?,?,?) " ;
-            preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        Connection cnn = _Connection;
+        String sql = "Insert into Permissions(RoleId,ModelId,AllowInsert,AllowSelect,AllowUpdate,AllowDelete) "
+                + " values(?,?,?,?,?,?) ";
+        preparedStatement = cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
-            preparedStatement.setInt(1, RoleId);
-            preparedStatement.setInt(2, ModelId);
-            preparedStatement.setBoolean(3, AllowInsert);
-            preparedStatement.setBoolean(4, AllowSelect);
-            preparedStatement.setBoolean(5, AllowUpdate);
-            preparedStatement.setBoolean(6, AllowDelete);
-            int rs = preparedStatement.executeUpdate();
+        preparedStatement.setInt(1, RoleId);
+        preparedStatement.setInt(2, ModelId);
+        preparedStatement.setBoolean(3, AllowInsert);
+        preparedStatement.setBoolean(4, AllowSelect);
+        preparedStatement.setBoolean(5, AllowUpdate);
+        preparedStatement.setBoolean(6, AllowDelete);
+        int rs = preparedStatement.executeUpdate();
 
-            if (rs > 0) {
-                result = true;
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showInputDialog(e);
-
-        } finally {
-            connection.close();
+        if (rs > 0) {
+            result = true;
         }
         return result;
     }
 
-    public boolean Update(int RoleId, int ModelId, Boolean AllowInsert, Boolean AllowSelect, Boolean AllowUpdate, Boolean AllowDelete) throws SQLException {
+    public boolean Update(int RoleId, int ModelId, Boolean AllowInsert, Boolean AllowSelect, Boolean AllowUpdate,
+            Boolean AllowDelete, Connection _Connection) throws SQLException {
 
         boolean result = false;
-        try {
-            connection = dbUltils.Get_connection();
-            String sql = "Update Permissions Set AllowInsert=?,AllowSelect=?,AllowUpdate=?,AllowDelete=? where RoleId=? and ModelId=?";
-            
-            preparedStatement = connection.prepareStatement(sql);
+        Connection cnn = _Connection;
+        String sql = "Update Permissions Set AllowInsert=?,AllowSelect=?,AllowUpdate=?,AllowDelete=? where RoleId=? and ModelId=?";
 
-            resultSet = preparedStatement.executeQuery();
-            preparedStatement.setBoolean(1, AllowInsert);
-            preparedStatement.setBoolean(2, AllowSelect);
-            preparedStatement.setBoolean(3, AllowUpdate);
-            preparedStatement.setBoolean(4, AllowDelete);
-            preparedStatement.setInt(5, RoleId);
-            preparedStatement.setInt(6, ModelId);
-            int rs = preparedStatement.executeUpdate();
+        preparedStatement = cnn.prepareStatement(sql);
 
-            if (rs > 0) {
-                result = true;
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+        preparedStatement.setBoolean(1, AllowInsert);
+        preparedStatement.setBoolean(2, AllowSelect);
+        preparedStatement.setBoolean(3, AllowUpdate);
+        preparedStatement.setBoolean(4, AllowDelete);
+        preparedStatement.setInt(5, RoleId);
+        preparedStatement.setInt(6, ModelId);
+        int rs = preparedStatement.executeUpdate();
 
-        } finally {
-            connection.close();
+        if (rs > 0) {
+            result = true;
         }
         return result;
     }
 
-    public boolean Delete(int RoleId) throws SQLException {
-
+    public boolean Delete(int RoleId,Connection _Connection) throws SQLException {
         boolean result = false;
-        try {
-            connection = dbUltils.Get_connection();
-            String sql = "Delete from Permissions Where RoleId = ? ";
-            preparedStatement = connection.prepareStatement(sql);
-            
-            preparedStatement.setInt(1, RoleId);
-            
-            resultSet = preparedStatement.executeQuery();
-            preparedStatement.setInt(1, RoleId);
-            int rs = preparedStatement.executeUpdate();
+        Connection cnn = _Connection;
+        String sql = "Delete from Permissions Where RoleId = ? ";
 
-            if (rs > 0) {
-                result = true;
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+        preparedStatement = cnn.prepareStatement(sql);
 
-        } finally {
-            connection.close();
+        preparedStatement.setInt(1, RoleId);
+        int rs = preparedStatement.executeUpdate();
+
+        if (rs > 0) {
+            result = true;
         }
         return result;
+
+        
     }
 
 }

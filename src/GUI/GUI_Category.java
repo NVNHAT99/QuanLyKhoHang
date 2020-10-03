@@ -8,7 +8,10 @@ package GUI;
 import BLL.BLL_Category;
 import DTO.Custom_DTO.CustomDTO_Product;
 import DTO.DTO_Category;
+import DTO.DTO_Permissions;
+import static GUI.GUI_BuyProduct.permissionses;
 import static GUI.GUI_Product.bll_product;
+import java.awt.CardLayout;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -31,10 +34,26 @@ public class GUI_Category extends javax.swing.JFrame {
      * Creates new form GUI_Category
      */
     static BLL_Category bll_category = new BLL_Category();
+    static ArrayList<DTO_Permissions> permissionses = null;
 
-    public GUI_Category() throws SQLException {
+    public GUI_Category(ArrayList<DTO_Permissions> permissions) throws SQLException {
         initComponents();
+
+        permissionses = permissions;
         Load();
+        LoadPermissions();
+    }
+
+    public void LoadPermissions() {
+        if (!permissionses.get(2).isAllowInsert()) {
+            btn_Insert.setEnabled(false);
+        }
+        if (!permissionses.get(2).isAllowDelete()) {
+            btn_delete.setEnabled(false);
+        }
+        if (!permissionses.get(2).isAllowUpdate()) {
+            btn_Update.setEnabled(false);
+        }
     }
 
     public void Load() throws SQLException {
@@ -258,7 +277,7 @@ public class GUI_Category extends javax.swing.JFrame {
 
             }
             category.setDescription(Description);
-            GUI_Insert_Update_Category jframUpdate_category = new GUI_Insert_Update_Category(category,this);
+            GUI_Insert_Update_Category jframUpdate_category = new GUI_Insert_Update_Category(category, this);
             jframUpdate_category.pack();
             jframUpdate_category.setLocationRelativeTo(null);
             jframUpdate_category.setVisible(true);
@@ -272,7 +291,7 @@ public class GUI_Category extends javax.swing.JFrame {
         try {
             int rowselectted = Table_Category.getSelectedRow();
             int Category_Id = Integer.parseInt(Table_Category.getValueAt(rowselectted, 0).toString());
-            bll_category.Delete(Category_Id,this);
+            bll_category.Delete(Category_Id, this);
         } catch (Exception e) {
         }
     }//GEN-LAST:event_btn_deleteActionPerformed
@@ -308,7 +327,7 @@ public class GUI_Category extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new GUI_Category().setVisible(true);
+                    new GUI_Category(permissionses).setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(GUI_Category.class.getName()).log(Level.SEVERE, null, ex);
                 }

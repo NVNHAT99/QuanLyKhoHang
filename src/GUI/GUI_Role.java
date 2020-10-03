@@ -9,6 +9,7 @@ import BLL.BLL_Permissions;
 import BLL.BLL_Role;
 import DTO.DTO_Permissions;
 import DTO.DTO_Role;
+import static GUI.GUI_Customer.permissionses;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.SQLException;
@@ -27,18 +28,34 @@ public class GUI_Role extends javax.swing.JFrame {
 
     static BLL_Role bLL_Role = new BLL_Role();
     static BLL_Permissions bLL_Permissions = new BLL_Permissions();
-    ArrayList<DTO_Role> ListRole = bLL_Role.GetAllRole();
+    ArrayList<DTO_Role> ListRole = null;
+    static ArrayList<DTO_Permissions> permissionses = null;
     /**
      * Creates new form GUI_Role
      */
-    public GUI_Role() throws SQLException {
+    public GUI_Role(ArrayList<DTO_Permissions> permissions) throws SQLException {
         initComponents();
+        permissionses = permissions;
         LoadListRole();
         LoadRoleDetailDefault();
+        Setdefault();
+        LoadPermissions();
+    }
+    public void LoadPermissions() {
+        if (!permissionses.get(0).isAllowInsert()) {
+            btn_AddnewRole.setEnabled(false);
+        }
+        if (!permissionses.get(0).isAllowDelete()) {
+            btn_Delete.setEnabled(false);
+        }
+        if (!permissionses.get(0).isAllowUpdate()) {
+            btn_Update.setEnabled(false);
+        }
     }
 
     public void LoadListRole() throws SQLException {
         
+        ListRole = bLL_Role.GetAllRole();
         DefaultComboBoxModel mod_Supplier = new DefaultComboBoxModel();
         for (int i = 0; i < ListRole.size(); i++) {
             // create object(is a row in table) 
@@ -60,6 +77,10 @@ public class GUI_Role extends javax.swing.JFrame {
                 }else{
                     return Integer.class;
                 }
+            }
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // or a condition at your choice with row and column
             }
         };
         //model.addRow(new Object[]{0,0,false,false,false,false});
@@ -86,6 +107,10 @@ public class GUI_Role extends javax.swing.JFrame {
             }
         });
     }
+    public void Setdefault(){
+        cmb_Role.setSelectedIndex(1);
+        cmb_Role.setSelectedIndex(0);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -103,9 +128,11 @@ public class GUI_Role extends javax.swing.JFrame {
         jPanel_RoleDetail = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         Table_RoleDetail = new javax.swing.JTable();
-        btn_Save = new javax.swing.JButton();
+        btn_Update = new javax.swing.JButton();
         btn_AddnewRole = new javax.swing.JButton();
         btn_Delete = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -150,37 +177,63 @@ public class GUI_Role extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(Table_RoleDetail);
 
-        btn_Save.setText("Update");
+        btn_Update.setText("Update");
+        btn_Update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_UpdateActionPerformed(evt);
+            }
+        });
 
         btn_AddnewRole.setText("Add New Role");
+        btn_AddnewRole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_AddnewRoleActionPerformed(evt);
+            }
+        });
 
         btn_Delete.setText("Delete");
+        btn_Delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_DeleteActionPerformed(evt);
+            }
+        });
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setText("model : \n\t1 Role\n\t2 Employee\n\t3 Category\n\t4 Supplier\n\t5 Product\n\t6 Customer\n\t7 Customer Order\n\t8 Company Order\t");
+        jScrollPane2.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout jPanel_RoleDetailLayout = new javax.swing.GroupLayout(jPanel_RoleDetail);
         jPanel_RoleDetail.setLayout(jPanel_RoleDetailLayout);
         jPanel_RoleDetailLayout.setHorizontalGroup(
             jPanel_RoleDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_RoleDetailLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel_RoleDetailLayout.createSequentialGroup()
+                .addGap(92, 92, 92)
                 .addComponent(btn_AddnewRole)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btn_Save)
+                .addComponent(btn_Update)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btn_Delete)
-                .addGap(124, 124, 124))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel_RoleDetailLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2)
+                .addContainerGap())
         );
         jPanel_RoleDetailLayout.setVerticalGroup(
             jPanel_RoleDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_RoleDetailLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel_RoleDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_Save)
+                    .addComponent(btn_Update)
                     .addComponent(btn_AddnewRole)
                     .addComponent(btn_Delete))
-                .addGap(0, 43, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -208,13 +261,51 @@ public class GUI_Role extends javax.swing.JFrame {
                         .addGap(30, 30, 30)
                         .addComponent(jPanel_RoleDetail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                         .addComponent(jPanel_RoleList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_AddnewRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddnewRoleActionPerformed
+        // TODO add your handling code here:
+        try {
+            GUI_Insert_Update_Role jframeGUI_Insert_Update_Role = new GUI_Insert_Update_Role(null,this);
+            jframeGUI_Insert_Update_Role.pack();
+            jframeGUI_Insert_Update_Role.setLocationRelativeTo(null);
+            jframeGUI_Insert_Update_Role.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            jframeGUI_Insert_Update_Role.setVisible(true);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btn_AddnewRoleActionPerformed
+
+    private void btn_UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_UpdateActionPerformed
+        // TODO add your handling code here:
+        CustomCombo role = (CustomCombo) cmb_Role.getSelectedItem();
+        try {
+            GUI_Insert_Update_Role jframeGUI_Insert_Update_Role = new GUI_Insert_Update_Role(role,this);
+            jframeGUI_Insert_Update_Role.pack();
+            jframeGUI_Insert_Update_Role.setLocationRelativeTo(null);
+            jframeGUI_Insert_Update_Role.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            jframeGUI_Insert_Update_Role.setVisible(true);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btn_UpdateActionPerformed
+
+    private void btn_DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_DeleteActionPerformed
+        // TODO add your handling code here:
+        CustomCombo role = (CustomCombo) cmb_Role.getSelectedItem();
+        if(role.getID()!=1){
+            try {
+                bLL_Role.Delete(role.getID(),this);
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(GUI_Role.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btn_DeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -247,7 +338,7 @@ public class GUI_Role extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new GUI_Role().setVisible(true);
+                    new GUI_Role(permissionses).setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(GUI_Role.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -260,12 +351,14 @@ public class GUI_Role extends javax.swing.JFrame {
     private javax.swing.JTable Table_RoleDetail;
     private javax.swing.JButton btn_AddnewRole;
     private javax.swing.JButton btn_Delete;
-    private javax.swing.JButton btn_Save;
+    private javax.swing.JButton btn_Update;
     private javax.swing.JComboBox<String> cmb_Role;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel_RoleDetail;
     private javax.swing.JPanel jPanel_RoleList;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 }

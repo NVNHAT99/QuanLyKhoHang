@@ -5,8 +5,11 @@
  */
 package GUI;
 
+import BLL.BLL_Role;
+import DTO.DTO_Permissions;
 import DTO.DTO_employee;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,11 +22,40 @@ public class GUI_Main extends javax.swing.JFrame {
     /**
      * Creates new form GUI_Main
      */
-    static DTO_employee _employee;
-
-    public GUI_Main(DTO_employee employee) {
+    static DTO_employee employee;
+    static ArrayList<DTO_Permissions> permissionses = null;
+    public GUI_Main(DTO_employee _employee,ArrayList<DTO_Permissions> permissions) {
         initComponents();
-        _employee = employee;
+        employee = _employee;
+        permissionses = permissions;
+        LoadPermissiones();
+    }
+    
+    public  void LoadPermissiones(){
+        if(!permissionses.get(0).isAllowSelect()){
+            btn_Role.setEnabled(false);
+        }
+        if(!permissionses.get(1).isAllowSelect()){
+            btn_Employee.setEnabled(false);
+        }
+        if(!permissionses.get(2).isAllowSelect()){
+            btn_Catgories.setEnabled(false);
+        }
+        if(!permissionses.get(3).isAllowSelect()){
+            btn_Supplier.setEnabled(false);
+        }
+        if(!permissionses.get(4).isAllowSelect()){
+            btn_Product.setEnabled(false);
+        }
+        if(!permissionses.get(5).isAllowSelect()){
+            btn_customer.setEnabled(false);
+        }
+        if(!permissionses.get(6).isAllowSelect()){
+            btn_SellProduct.setEnabled(false);
+        }
+        if(!permissionses.get(7).isAllowSelect()){
+            btn_BuyProduct.setEnabled(false);
+        }
     }
 
     /**
@@ -195,7 +227,7 @@ public class GUI_Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPane_Main, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
+            .addComponent(tabbedPane_Main)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -214,7 +246,7 @@ public class GUI_Main extends javax.swing.JFrame {
 
     private void btn_ChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ChangePasswordActionPerformed
         // TODO add your handling code here:
-        GUI_ChangPassword jframChangPassword = new GUI_ChangPassword(_employee);
+        GUI_ChangPassword jframChangPassword = new GUI_ChangPassword(employee);
         jframChangPassword.setResizable(false);
         jframChangPassword.setVisible(true);
 
@@ -222,13 +254,13 @@ public class GUI_Main extends javax.swing.JFrame {
 
     private void btn_ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ExitActionPerformed
         // TODO add your handling code here:
-        dispose();
+        System.exit(0);
     }//GEN-LAST:event_btn_ExitActionPerformed
 
     private void btn_ProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ProductActionPerformed
         try {
             // TODO add your handling code here:
-            GUI_Product gUI_Product = new GUI_Product();
+            GUI_Product gUI_Product = new GUI_Product(permissionses);
             gUI_Product.setLocationRelativeTo(null);
             gUI_Product.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             gUI_Product.setLocationRelativeTo(null);
@@ -242,7 +274,7 @@ public class GUI_Main extends javax.swing.JFrame {
     private void btn_CatgoriesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CatgoriesActionPerformed
         try {
             // TODO add your handling code here:
-            GUI_Category jframeGUI_Category = new GUI_Category();
+            GUI_Category jframeGUI_Category = new GUI_Category(permissionses);
             jframeGUI_Category.setLocationRelativeTo(null);
             jframeGUI_Category.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             jframeGUI_Category.setVisible(true);
@@ -255,7 +287,7 @@ public class GUI_Main extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             // TODO add your handling code here:
-            GUI_Employee jframeGUI_Employee = new GUI_Employee();
+            GUI_Employee jframeGUI_Employee = new GUI_Employee(permissionses);
             jframeGUI_Employee.setLocationRelativeTo(null);
             jframeGUI_Employee.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             jframeGUI_Employee.setVisible(true);
@@ -267,7 +299,7 @@ public class GUI_Main extends javax.swing.JFrame {
     private void btn_SupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SupplierActionPerformed
         // TODO add your handling code here:
         try {
-            GUI_Supplier jframeGUI_Supplier = new GUI_Supplier();
+            GUI_Supplier jframeGUI_Supplier = new GUI_Supplier(permissionses);
             jframeGUI_Supplier.setLocationRelativeTo(null);
             jframeGUI_Supplier.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             jframeGUI_Supplier.setVisible(true);
@@ -278,7 +310,7 @@ public class GUI_Main extends javax.swing.JFrame {
     private void btn_customerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_customerActionPerformed
         // TODO add your handling code here:
         try {
-            GUI_Customer jframeGUI_Customer = new GUI_Customer();
+            GUI_Customer jframeGUI_Customer = new GUI_Customer(permissionses);
             jframeGUI_Customer.setLocationRelativeTo(null);
             jframeGUI_Customer.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             jframeGUI_Customer.setVisible(true);
@@ -289,7 +321,7 @@ public class GUI_Main extends javax.swing.JFrame {
     private void btn_BuyProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuyProductActionPerformed
         // TODO add your handling code here:
         try {
-            GUI_BuyProduct jframeGUI_BuyProduct = new GUI_BuyProduct();
+            GUI_BuyProduct jframeGUI_BuyProduct = new GUI_BuyProduct(permissionses);
             jframeGUI_BuyProduct.setLocationRelativeTo(null);
             jframeGUI_BuyProduct.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             jframeGUI_BuyProduct.setVisible(true);;
@@ -300,7 +332,7 @@ public class GUI_Main extends javax.swing.JFrame {
     private void btn_SellProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SellProductActionPerformed
         // TODO add your handling code here:
         try {
-            GUI_SellProduct jframeGUI_SellProduct = new GUI_SellProduct();
+            GUI_SellProduct jframeGUI_SellProduct = new GUI_SellProduct(permissionses);
             jframeGUI_SellProduct.setLocationRelativeTo(null);
             jframeGUI_SellProduct.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             jframeGUI_SellProduct.setVisible(true);
@@ -311,7 +343,7 @@ public class GUI_Main extends javax.swing.JFrame {
     private void btn_RoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RoleActionPerformed
         // TODO add your handling code here:
         try {
-            GUI_Role jframeGUI_Role = new GUI_Role();
+            GUI_Role jframeGUI_Role = new GUI_Role(permissionses);
             jframeGUI_Role.setLocationRelativeTo(null);
             jframeGUI_Role.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             jframeGUI_Role.setVisible(true);
@@ -349,7 +381,7 @@ public class GUI_Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI_Main(_employee).setVisible(true);
+                new GUI_Main(employee,permissionses).setVisible(true);
             }
         });
     }

@@ -5,8 +5,11 @@
  */
 package DAL;
 
+import DTO.DTO_Permissions;
 import DTO.DTO_Role;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -16,6 +19,9 @@ import javax.swing.JOptionPane;
  * @author Nhat
  */
 public class DAL_Role extends DAL {
+
+    static DAL_Permissions dAL_Permissions = new DAL_Permissions();
+    static DAL_Employee dAL_Employee = new DAL_Employee();
 
     public ArrayList<DTO_Role> GetAllRole() throws SQLException {
 
@@ -67,76 +73,121 @@ public class DAL_Role extends DAL {
         return result;
     }
 
-    public boolean Insert(String RoleName, String description) throws SQLException {
-        boolean result = false;
-        try {
-            connection = dbUltils.Get_connection();
-            String sql = "Insert into roles(Name,Description) values(?,?)";
-            preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+    public int Insert(String RoleName, String description, Connection _Connection) throws SQLException {
+        int result = -1;
+        Connection cnn = _Connection;
+        String sql = "Insert into roles(Name,Description) values(?,?)";
+        preparedStatement = cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
-            preparedStatement.setString(1, RoleName);
-            preparedStatement.setString(2, description);
-            int rs = preparedStatement.executeUpdate();
+        preparedStatement.setString(1, RoleName);
+        preparedStatement.setString(2, description);
+        int rs = preparedStatement.executeUpdate();
 
-            if (rs > 0) {
-                result = true;
+        if (rs > 0) {
+            ResultSet key = preparedStatement.getGeneratedKeys();
+            if (key.next()) {
+                result = key.getInt(1);
             }
-
-        } catch (Exception e) {
-            JOptionPane.showInputDialog(e);
-
-        } finally {
-            connection.close();
         }
         return result;
     }
 
-    public boolean Update(int RoleId, String RoleName, String description) throws SQLException {
-
-        boolean result = false;
+    public boolean InsertNewRoleWithPermission(DTO_Role NewRole, ArrayList<DTO_Permissions> permissionses) throws SQLException {
         try {
             connection = dbUltils.Get_connection();
-            String sql = "Update  Roles set Name=?,Description=? where Id=?";
-            preparedStatement = connection.prepareStatement(sql);
-
-            resultSet = preparedStatement.executeQuery();
-            preparedStatement.setString(1, RoleName);
-            preparedStatement.setString(2, description);
-            int rs = preparedStatement.executeUpdate();
-
-            if (rs > 0) {
-                result = true;
+            connection.setAutoCommit(false);
+            int RoleId = Insert(NewRole.getName(), NewRole.getDescription(), connection);
+            for (int i = 0; i < 8; i++) {
+                dAL_Permissions.Insert(RoleId, i + 1, permissionses.get(i).isAllowInsert(),
+                        permissionses.get(i).isAllowSelect(), permissionses.get(i).isAllowUpdate(),
+                        permissionses.get(i).isAllowDelete(), connection);
             }
+            connection.commit();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
+            connection.rollback();
+            return false;
 
         } finally {
             connection.close();
+        }
+        return true;
+    }
+
+    public boolean Update(int RoleId, String RoleName, String description, Connection _Connection) throws SQLException {
+
+        boolean result = false;
+        Connection cnn = _Connection;
+        String sql = "Update  Roles set Name=?,Description=? where Id=?";
+        preparedStatement = cnn.prepareStatement(sql);
+        preparedStatement.setString(1, RoleName);
+        preparedStatement.setString(2, description);
+        preparedStatement.setInt(3, RoleId);
+        int rs = preparedStatement.executeUpdate();
+
+        if (rs > 0) {
+            result = true;
         }
         return result;
     }
-    public boolean Delete(int RoleId) throws SQLException {
 
-        boolean result = false;
+    public boolean UpdateRoleWithPermission(DTO_Role NewRole, ArrayList<DTO_Permissions> permissionses) throws SQLException {
         try {
             connection = dbUltils.Get_connection();
-            String sql = "Delete from Roles Where Id = ? ";
-            preparedStatement = connection.prepareStatement(sql);
-
-            resultSet = preparedStatement.executeQuery();
-            preparedStatement.setInt(1,RoleId);
-            int rs = preparedStatement.executeUpdate();
-
-            if (rs > 0) {
-                result = true;
+            connection.setAutoCommit(false);
+            Update(NewRole.getId(), NewRole.getName(), NewRole.getDescription(), connection);
+            for (int i = 0; i < 8; i++) {
+                dAL_Permissions.Update(NewRole.getId(), i + 1, permissionses.get(i).isAllowInsert(),
+                        permissionses.get(i).isAllowSelect(), permissionses.get(i).isAllowUpdate(),
+                        permissionses.get(i).isAllowDelete(), connection);
             }
+            connection.commit();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
+            connection.rollback();
+            return false;
 
         } finally {
             connection.close();
         }
+        return true;
+    }
+
+    public boolean Delete(int RoleId, Connection _Connection) throws SQLException {
+
+        boolean result = false;
+        Connection cnn = _Connection;
+        String sql = "Delete from Roles Where Id = ? ";
+        preparedStatement = cnn.prepareStatement(sql);
+        preparedStatement.setInt(1, RoleId);
+        int rs = preparedStatement.executeUpdate();
+
+        if (rs > 0) {
+            result = true;
+        }
         return result;
+
+    }
+    public boolean DeleteWithPermissions(int RoleId) throws SQLException {
+
+        try {
+            connection = dbUltils.Get_connection();
+            connection.setAutoCommit(false);
+            dAL_Employee.UpdateByDeleteRole(RoleId,connection);
+            dAL_Permissions.Delete(RoleId, connection);
+            Delete(RoleId, connection);
+            connection.commit();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+            connection.rollback();
+            return false;
+
+        } finally {
+            connection.close();
+        }
+        return true;
+
     }
     
+
 }

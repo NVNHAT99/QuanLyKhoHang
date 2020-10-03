@@ -7,6 +7,8 @@ package GUI;
 
 import BLL.BLL_Customer;
 import DTO.DTO_Customer;
+import DTO.DTO_Permissions;
+import static GUI.GUI_Category.permissionses;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -27,11 +29,25 @@ public class GUI_Customer extends javax.swing.JFrame {
     /**
      * Creates new form GUI_Customer1
      */
+    static ArrayList<DTO_Permissions> permissionses = null;
     static BLL_Customer bLL_Customer = new BLL_Customer();
     
-    public GUI_Customer() throws SQLException, ParseException {
+    public GUI_Customer(ArrayList<DTO_Permissions> permissions) throws SQLException, ParseException {
         initComponents();
+        permissionses = permissions;
         Load();
+        LoadPermissions();
+    }
+    public void LoadPermissions() {
+        if (!permissionses.get(5).isAllowInsert()) {
+            btn_Insert.setEnabled(false);
+        }
+        if (!permissionses.get(5).isAllowDelete()) {
+            btn_delete.setEnabled(false);
+        }
+        if (!permissionses.get(5).isAllowUpdate()) {
+            btn_Update.setEnabled(false);
+        }
     }
     
     public void Load() throws SQLException, ParseException {
@@ -85,7 +101,7 @@ public class GUI_Customer extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btn_Insert2 = new javax.swing.JButton();
+        btn_Insert = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         btn_Update = new javax.swing.JButton();
         txt_Address = new javax.swing.JTextField();
@@ -105,10 +121,10 @@ public class GUI_Customer extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btn_Insert2.setText("Insert");
-        btn_Insert2.addActionListener(new java.awt.event.ActionListener() {
+        btn_Insert.setText("Insert");
+        btn_Insert.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_Insert2ActionPerformed(evt);
+                btn_InsertActionPerformed(evt);
             }
         });
 
@@ -196,7 +212,7 @@ public class GUI_Customer extends javax.swing.JFrame {
                 .addGap(47, 163, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btn_Insert2)
+                .addComponent(btn_Insert)
                 .addGap(18, 18, 18)
                 .addComponent(btn_Update)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -236,7 +252,7 @@ public class GUI_Customer extends javax.swing.JFrame {
                     .addComponent(txt_Gender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_Insert2)
+                    .addComponent(btn_Insert)
                     .addComponent(btn_Update)
                     .addComponent(btn_delete)
                     .addComponent(btn_close))
@@ -281,14 +297,14 @@ public class GUI_Customer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_UpdateActionPerformed
 
-    private void btn_Insert2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Insert2ActionPerformed
+    private void btn_InsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_InsertActionPerformed
         // TODO add your handling code here:
         GUI_Insert_Update_Customer jframGUI_Insert_Customer = new  GUI_Insert_Update_Customer(null,this);
             jframGUI_Insert_Customer.pack();
             jframGUI_Insert_Customer.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             jframGUI_Insert_Customer.setLocationRelativeTo(null);
             jframGUI_Insert_Customer.setVisible(true);
-    }//GEN-LAST:event_btn_Insert2ActionPerformed
+    }//GEN-LAST:event_btn_InsertActionPerformed
 
     /**
      * @param args the command line arguments
@@ -322,7 +338,7 @@ public class GUI_Customer extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new GUI_Customer().setVisible(true);
+                    new GUI_Customer(permissionses).setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(GUI_Customer.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ParseException ex) {
@@ -334,7 +350,7 @@ public class GUI_Customer extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable Table_Customer;
-    private javax.swing.JButton btn_Insert2;
+    private javax.swing.JButton btn_Insert;
     private javax.swing.JButton btn_Update;
     private javax.swing.JButton btn_close;
     private javax.swing.JButton btn_delete;

@@ -6,7 +6,9 @@
 package GUI;
 
 import BLL.BLL_Employee;
+import DTO.DTO_Permissions;
 import DTO.DTO_employee;
+import static GUI.GUI_Customer.permissionses;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,16 +29,29 @@ public class GUI_Employee extends javax.swing.JFrame {
      * Creates new form GUI_Employee
      */
     static BLL_Employee bLL_Employee = new BLL_Employee();
+    static ArrayList<DTO_Permissions> permissionses = null;
 
-    public GUI_Employee() throws SQLException {
+    public GUI_Employee(ArrayList<DTO_Permissions> permissions) throws SQLException {
         initComponents();
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        permissionses = permissions;
         load();
+        LoadPermissions();
+    }
+    public void LoadPermissions() {
+        if (!permissionses.get(1).isAllowInsert()) {
+            btn_Signup.setEnabled(false);
+        }
+        if (!permissionses.get(1).isAllowDelete()) {
+            btn_delete.setEnabled(false);
+        }
+        if (!permissionses.get(1).isAllowUpdate()) {
+            btn_Update.setEnabled(false);
+        }
     }
 
     public void load() throws SQLException {
         ArrayList<DTO_employee> list_employee = bLL_Employee.GetAllEmloyee();
-        String[] columeNames = new String[]{"ID", "Username", "Email ", "Name", "PhoneNumber", "Salary", "Birthdate", "Gender", "IsDelete","RoleId"};
+        String[] columeNames = new String[]{"ID", "Username", "Email ", "Name", "PhoneNumber", "Salary", "Birthdate", "Gender", "IsDelete", "RoleId"};
         DefaultTableModel model = new DefaultTableModel(null, columeNames) {
 
             @Override
@@ -325,39 +340,39 @@ public class GUI_Employee extends javax.swing.JFrame {
         try {
             int Rowslected = Table_Employee.getSelectedRow();
             DTO_employee employee = new DTO_employee();
-            employee.setId(Integer.parseInt(Table_Employee.getValueAt(Rowslected,0).toString()));
-            employee.setUsername(Table_Employee.getValueAt(Rowslected,1).toString());
-            employee.setEmail(Table_Employee.getValueAt(Rowslected,2).toString());
+            employee.setId(Integer.parseInt(Table_Employee.getValueAt(Rowslected, 0).toString()));
+            employee.setUsername(Table_Employee.getValueAt(Rowslected, 1).toString());
+            employee.setEmail(Table_Employee.getValueAt(Rowslected, 2).toString());
             try {
-                 employee.setName(Table_Employee.getValueAt(Rowslected,3).toString());
+                employee.setName(Table_Employee.getValueAt(Rowslected, 3).toString());
             } catch (Exception e) {
-                 employee.setName("");
+                employee.setName("");
             }
             try {
-                 employee.setPhoneNumber(Table_Employee.getValueAt(Rowslected,4).toString());
+                employee.setPhoneNumber(Table_Employee.getValueAt(Rowslected, 4).toString());
             } catch (Exception e) {
-                 employee.setPhoneNumber("");
+                employee.setPhoneNumber("");
             }
-            
+
             try {
-                employee.setSalary(Double.parseDouble(Table_Employee.getValueAt(Rowslected,5).toString()));
+                employee.setSalary(Double.parseDouble(Table_Employee.getValueAt(Rowslected, 5).toString()));
             } catch (Exception e) {
                 employee.setSalary(0);
             }
-            if(String.valueOf(Table_Employee.getValueAt(Rowslected,6)).equals("null")){
+            if (String.valueOf(Table_Employee.getValueAt(Rowslected, 6)).equals("null")) {
                 employee.setDate(null);
-            }else{
-                employee.setDate(Date.valueOf(String.valueOf(Table_Employee.getValueAt(Rowslected,6))));
+            } else {
+                employee.setDate(Date.valueOf(String.valueOf(Table_Employee.getValueAt(Rowslected, 6))));
             }
             try {
-                employee.setGender(String.valueOf(Table_Employee.getValueAt(Rowslected,7)));
+                employee.setGender(String.valueOf(Table_Employee.getValueAt(Rowslected, 7)));
             } catch (Exception e) {
                 employee.setGender("");
             }
-            employee.setIsDelete(Boolean.parseBoolean(Table_Employee.getValueAt(Rowslected,8).toString()));
-            employee.setRoleId(Integer.parseInt(Table_Employee.getValueAt(Rowslected,9).toString()));
-            
-            GUI_UpdateEmployee jframguiGUI_UpdateEmployee = new GUI_UpdateEmployee(this,employee, false);
+            employee.setIsDelete(Boolean.parseBoolean(Table_Employee.getValueAt(Rowslected, 8).toString()));
+            employee.setRoleId(Integer.parseInt(Table_Employee.getValueAt(Rowslected, 9).toString()));
+
+            GUI_UpdateEmployee jframguiGUI_UpdateEmployee = new GUI_UpdateEmployee(this, employee, false);
             jframguiGUI_UpdateEmployee.pack();
             jframguiGUI_UpdateEmployee.setLocationRelativeTo(null);
             jframguiGUI_UpdateEmployee.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -371,7 +386,7 @@ public class GUI_Employee extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             int Rowslected = Table_Employee.getSelectedRow();
-            int Id_emloyee_delete = Integer.parseInt(Table_Employee.getValueAt(Rowslected,0).toString());
+            int Id_emloyee_delete = Integer.parseInt(Table_Employee.getValueAt(Rowslected, 0).toString());
             bLL_Employee.Delete(Id_emloyee_delete, this);
         } catch (Exception e) {
         }
@@ -408,7 +423,7 @@ public class GUI_Employee extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new GUI_Employee().setVisible(true);
+                    new GUI_Employee(permissionses).setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(GUI_Employee.class.getName()).log(Level.SEVERE, null, ex);
                 }

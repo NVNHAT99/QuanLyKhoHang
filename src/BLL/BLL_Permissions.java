@@ -22,11 +22,4 @@ public class BLL_Permissions {
         return dAL_Permissions.GetPermissionsByRoleId(RoleId);
     }
     
-    public boolean Update(int RoleId, int ModelId, Boolean AllowInsert, Boolean AllowSelect, Boolean AllowUpdate, Boolean AllowDelete) throws SQLException {
-        return dAL_Permissions.Update(RoleId, ModelId, AllowInsert, AllowSelect, AllowUpdate, AllowDelete);
-    }
-    
-    public boolean Delete(int RoleId) throws SQLException {
-        return dAL_Permissions.Delete(RoleId);
-    }
 }

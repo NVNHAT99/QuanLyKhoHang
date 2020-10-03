@@ -6,9 +6,12 @@
 package BLL;
 
 import DAL.DAL_Role;
+import DTO.DTO_Permissions;
 import DTO.DTO_Role;
+import GUI.GUI_Role;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -26,16 +29,39 @@ public class BLL_Role {
         return dAL_Role.SelectRole(RoleId);
     }
     
-    public boolean Insert(String RoleName, String description) throws SQLException {
-       
-        return dAL_Role.Insert(RoleName, description);
+    public void InsertNewRoleWithPermission(DTO_Role NewRole, ArrayList<DTO_Permissions> permissionses) throws SQLException {
+        if(NewRole.getName().equals("")){
+            JOptionPane.showMessageDialog(null,"Ten Role Khong duoc phep de trong");
+        }else{
+            if(dAL_Role.InsertNewRoleWithPermission(NewRole, permissionses)){
+                JOptionPane.showMessageDialog(null,"Them Role Moi Thanh Cong");
+            }
+            else{
+                JOptionPane.showMessageDialog(null,"Them Role Moi That Bai");
+            }
+        }
     }
     
-    public boolean Update(int RoleId, String RoleName, String description) throws SQLException {
-        return dAL_Role.Update(RoleId, RoleName, description);
+    public void UpdateRoleWithPermission(DTO_Role NewRole, ArrayList<DTO_Permissions> permissionses) throws SQLException {
+        if(NewRole.getName().equals("")){
+            JOptionPane.showMessageDialog(null,"Ten Role Khong duoc phep de trong");
+        }else{
+            if(dAL_Role.UpdateRoleWithPermission(NewRole, permissionses)){
+                JOptionPane.showMessageDialog(null,"Cap Nhap Thanh Cong");
+            }
+            else{
+                JOptionPane.showMessageDialog(null,"Cap Nhap That Bai");
+            }
+        }
     }
-    public boolean Delete(int RoleId) throws SQLException {
-        return dAL_Role.Delete(RoleId);
+    public void Delete(int RoleId,GUI_Role gui_role) throws SQLException {
+        if(dAL_Role.DeleteWithPermissions(RoleId)){
+            gui_role.LoadListRole();
+            gui_role.Setdefault();
+            JOptionPane.showMessageDialog(null,"Xoa Role Thanh Cong");
+        }else{
+            JOptionPane.showMessageDialog(null, "xoa Role That Bai");
+        }
     }
     
 }

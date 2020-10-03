@@ -10,8 +10,10 @@ import BLL.BLL_Product;
 import BLL.BLL_Supplier;
 import DTO.Custom_DTO.CustomDTO_Product;
 import DTO.DTO_Category;
+import DTO.DTO_Permissions;
 import DTO.DTO_Product;
 import DTO.DTO_Supplier;
+import static GUI.GUI_Customer.permissionses;
 import java.awt.Image;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,13 +41,27 @@ public class GUI_Product extends javax.swing.JFrame {
     static BLL_Product bll_product = new BLL_Product();
     static BLL_Supplier bLL_Supplier = new BLL_Supplier();
     static BLL_Category bLL_Category = new BLL_Category();
+    static ArrayList<DTO_Permissions> permissionses = null;
 
     /**
      * Creates new form GUI_Product
      */
-    public GUI_Product() throws SQLException {
+    public GUI_Product(ArrayList<DTO_Permissions> permissions) throws SQLException {
         initComponents();
+        permissionses = permissions;
         Load();
+        LoadPermissions();
+    }
+    public void LoadPermissions() {
+        if (!permissionses.get(4).isAllowInsert()) {
+            btn_Insert.setEnabled(false);
+        }
+        if (!permissionses.get(4).isAllowDelete()) {
+            btn_delete.setEnabled(false);
+        }
+        if (!permissionses.get(4).isAllowUpdate()) {
+            btn_Update.setEnabled(false);
+        }
     }
 
     /**
@@ -386,7 +402,7 @@ public class GUI_Product extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new GUI_Product().setVisible(true);
+                    new GUI_Product(permissionses).setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(GUI_Product.class.getName()).log(Level.SEVERE, null, ex);
                 }

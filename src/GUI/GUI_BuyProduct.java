@@ -12,6 +12,7 @@ import BLL.BLL_Product;
 import BLL.BLL_Supplier;
 import DTO.DTO_CompanyOrder;
 import DTO.DTO_CompanyOrderDetail;
+import DTO.DTO_Permissions;
 import DTO.DTO_Product;
 import DTO.DTO_Supplier;
 import DTO.DTO_employee;
@@ -72,13 +73,15 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
 
     DefaultComboBoxModel mod_cmb_ProductID = new DefaultComboBoxModel();
     DefaultComboBoxModel mod_cmb_ProductName = new DefaultComboBoxModel();
+    static ArrayList<DTO_Permissions> permissionses = null;
 
-    public GUI_BuyProduct() throws SQLException {
+    public GUI_BuyProduct(ArrayList<DTO_Permissions> permissions) throws SQLException {
         initComponents();
         jPanel_groupButtonFuction.setBorder(BorderFactory.createLineBorder(Color.black));
         jPanel_showListOrderOrCreateOrder.setBorder(BorderFactory.createLineBorder(Color.black));
         LoadSupplierEmployeeForCombobox();
         LoadData_ForTableOrder();
+        permissionses = permissions;
         if (!Update) {
             //add new blank row
             DefaultTableModel get_model = (DefaultTableModel) Table_Order_Detail.getModel();
@@ -133,7 +136,28 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         txt_CK.setValue(0D);
         txt_Total.setText("0");
         LoadCreateOrder();
+        LoadPermissions();
 
+    }
+
+    public void LoadPermissions() {
+        if (!permissionses.get(7).isAllowInsert()) {
+            btn_CreateNew.setEnabled(false);
+            Table_ListCompanyOrder.removeAll();
+            try {
+                LoadForListCompanyOrder();
+            } catch (SQLException ex) {
+                Logger.getLogger(GUI_BuyProduct.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            CardLayout cardLayout = (CardLayout) jPanel_showListOrderOrCreateOrder.getLayout();
+            cardLayout.show(jPanel_showListOrderOrCreateOrder, "card3");
+        }
+        if (!permissionses.get(7).isAllowDelete()) {
+            btn_Delete.setEnabled(false);
+        }
+        if (!permissionses.get(7).isAllowUpdate()) {
+            btn_Update.setEnabled(false);
+        }
     }
 
     public boolean CheckProductOrderExist(int ProductId, int Column, int RowChange) {
@@ -637,10 +661,12 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
             jPanel_groupButtonFuctionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_groupButtonFuctionLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel_groupButtonFuctionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btn_CompanyOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_ListCompanyOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btn_CompanyOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(27, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_groupButtonFuctionLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_ListCompanyOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel_groupButtonFuctionLayout.setVerticalGroup(
             jPanel_groupButtonFuctionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1250,7 +1276,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
             int EmployeeId = Integer.parseInt(Table_ListCompanyOrder.getValueAt(IndexRowSelected, 2).toString());
             String DateCreate = Table_ListCompanyOrder.getValueAt(IndexRowSelected, 3).toString();
             if (CompanyOrderId != -1) {
-                GUI_PayMoney jframeGUI_PayMoney = new GUI_PayMoney(SupplierId,CompanyOrderId,EmployeeId,DateCreate);
+                GUI_PayMoney jframeGUI_PayMoney = new GUI_PayMoney(SupplierId, CompanyOrderId, EmployeeId, DateCreate);
                 jframeGUI_PayMoney.setLocationRelativeTo(null);
                 jframeGUI_PayMoney.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                 jframeGUI_PayMoney.setVisible(true);
@@ -1310,7 +1336,7 @@ public class GUI_BuyProduct extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new GUI_BuyProduct().setVisible(true);
+                    new GUI_BuyProduct(permissionses).setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(GUI_BuyProduct.class.getName()).log(Level.SEVERE, null, ex);
                 }

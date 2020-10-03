@@ -13,9 +13,11 @@ import BLL.BLL_Product;
 import DTO.DTO_Customer;
 import DTO.DTO_CustomerOrderDetail;
 import DTO.DTO_CustomerOrder;
+import DTO.DTO_Permissions;
 import DTO.DTO_Product;
 import DTO.DTO_employee;
 import static GUI.GUI_BuyProduct.Update;
+import static GUI.GUI_BuyProduct.permissionses;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.ItemEvent;
@@ -26,6 +28,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
@@ -56,6 +59,7 @@ public class GUI_SellProduct extends javax.swing.JFrame {
     static boolean Update = false;
     static int CustomerOrderId_Update = -1;// for update
     static int IndexRowInListcustomerOrder = -1;
+    static ArrayList<DTO_Permissions> permissionses = null;
 
     ArrayList<DTO_Product> list_product = bLL_Product.GetAllProductsNotDelete();
     ArrayList<DTO_Customer> list_Customer = bLL_Customer.GetAllCustomer();
@@ -67,10 +71,11 @@ public class GUI_SellProduct extends javax.swing.JFrame {
     /**
      * Creates new form GUI_SellProduct
      */
-    public GUI_SellProduct() throws SQLException {
+    public GUI_SellProduct(ArrayList<DTO_Permissions> permissions) throws SQLException {
         initComponents();
         jPanel_groupButtonFuction.setBorder(BorderFactory.createLineBorder(Color.black));
         jPanel_showListOrderOrCreateOrder.setBorder(BorderFactory.createLineBorder(Color.black));
+        permissionses = permissions;
         LoadCustomerEmployeeForCombobox();
         LoadData_ForTableOrder();
         if (!Update) {
@@ -127,7 +132,28 @@ public class GUI_SellProduct extends javax.swing.JFrame {
         txt_CK.setValue(0D);
         txt_Total.setText("0");
         LoadCreateOrder();
-
+        LoadPermissions();
+    }
+    
+    public void LoadPermissions() {
+        if (!permissionses.get(6).isAllowInsert()) {
+            btn_CreateNew.setEnabled(false);
+            Table_ListCustomerOrder.removeAll();
+            try {
+                LoadForListCustomerOrder();
+            } catch (SQLException ex) {
+                Logger.getLogger(GUI_BuyProduct.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            CardLayout cardLayout = (CardLayout) jPanel_showListOrderOrCreateOrder.getLayout();
+            cardLayout.show(jPanel_showListOrderOrCreateOrder, "card3");
+        }
+        if (!permissionses.get(6).isAllowDelete()) {
+            btn_Delete.setEnabled(false);
+        }
+        if (!permissionses.get(6).isAllowUpdate()) {
+            btn_Update.setEnabled(false);
+        }
+        
     }
 
     public boolean CheckProductOrderExist(int ProductId, int Column, int RowChange) {
@@ -1283,7 +1309,7 @@ public class GUI_SellProduct extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new GUI_SellProduct().setVisible(true);
+                    new GUI_SellProduct(permissionses).setVisible(true);
                 } catch (SQLException ex) {
                     java.util.logging.Logger.getLogger(GUI_SellProduct.class.getName()).log(Level.SEVERE, null, ex);
                 }
