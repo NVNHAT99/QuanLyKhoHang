@@ -149,7 +149,10 @@ public class DAL_CompanyOrder extends DAL {
                             companyOrderDetails.get(i).getQuantity(), companyOrderDetails.get(i).getCost(),
                             companyOrderDetails.get(i).getDescription(), companyOrderDetails.get(i).getProductUnit(), Cnn);
                     // update unit in stock
-                    dAL_Product.Update_ByCompanyOrder(companyOrderDetails.get(i).getProductId(), companyOrderDetails.get(i).getQuantity(), Cnn);
+                    if(!dAL_Product.Update_ByCompanyOrder(companyOrderDetails.get(i).getProductId(), companyOrderDetails.get(i).getQuantity(), Cnn)){
+                        Cnn.rollback();
+                        return false;
+                    }
                 }
                 Cnn.commit();
             } catch (Exception e) {

@@ -145,7 +145,7 @@ public class GUI_Insert_Update_Product extends javax.swing.JFrame {
 
         jLabel8.setText("UnitStock :");
 
-        txt_UnitStock.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
+        txt_UnitStock.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -278,6 +278,7 @@ public class GUI_Insert_Update_Product extends javax.swing.JFrame {
             int category_ID = ((CustomCombo) cmb_Category.getSelectedItem()).getID();
             try {
                 bll_product.Insert(txt_Name.getText(), txt_price.getText(), Supplier_ID, category_ID, txt_unit.getText(), txt_UnitStock.getText(), txt_ImagePath.getText(), GuiProduct);
+                Current_Product=null;
             } catch (SQLException ex) {
                 Logger.getLogger(GUI_Insert_Update_Product.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -320,15 +321,6 @@ public class GUI_Insert_Update_Product extends javax.swing.JFrame {
 //        CustomCombo supplier = (CustomCombo) cmb_Supplier.getSelectedItem();
 //        JOptionPane.showMessageDialog(null, supplier.getID());
 
-        // set format number textfield
-        NumberFormat format_unit = NumberFormat.getInstance();
-        NumberFormatter formatter_unit = new NumberFormatter(format_unit);
-        formatter_unit.setValueClass(Integer.class);
-        formatter_unit.setMinimum(1);
-        formatter_unit.setMaximum(Integer.MAX_VALUE);
-        formatter_unit.setAllowsInvalid(false);
-
-        txt_UnitStock.setFormatterFactory(new DefaultFormatterFactory(formatter_unit));
         txt_UnitStock.setText("1");
     }
 

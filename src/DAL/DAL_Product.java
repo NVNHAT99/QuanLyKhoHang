@@ -133,7 +133,7 @@ public class DAL_Product extends DAL {
         return result;
     }
 
-    public boolean Insert(String Name, double Price, int SupplierId, int CategoryId, String Unit, int UnitsInStock, String ImagePath) throws SQLException {
+    public boolean Insert(String Name, double Price, int SupplierId, int CategoryId, String Unit, double UnitsInStock, String ImagePath) throws SQLException {
         boolean result = false;
         try {
             connection = dbUltils.Get_connection();
@@ -145,7 +145,7 @@ public class DAL_Product extends DAL {
             preparedStatement.setInt(3, SupplierId);
             preparedStatement.setInt(4, CategoryId);
             preparedStatement.setString(5, Unit);
-            preparedStatement.setInt(6, UnitsInStock);
+            preparedStatement.setDouble(6, UnitsInStock);
             preparedStatement.setString(7, ImagePath);
 
             int rs = preparedStatement.executeUpdate();
@@ -163,7 +163,7 @@ public class DAL_Product extends DAL {
         return result;
     }
 
-    public boolean Update(int ID, String Name, double Price, int SupplierId, int CategoryId, String Unit, int UnitsInStock, String ImagePath) throws SQLException {
+    public boolean Update(int ID, String Name, double Price, int SupplierId, int CategoryId, String Unit, double UnitsInStock, String ImagePath) throws SQLException {
         boolean result = false;
         try {
             connection = dbUltils.Get_connection();
@@ -175,7 +175,7 @@ public class DAL_Product extends DAL {
             preparedStatement.setInt(3, SupplierId);
             preparedStatement.setInt(4, CategoryId);
             preparedStatement.setString(5, Unit);
-            preparedStatement.setInt(6, UnitsInStock);
+            preparedStatement.setDouble(6, UnitsInStock);
             preparedStatement.setString(7, ImagePath);
             preparedStatement.setInt(8, ID);
             int rs = preparedStatement.executeUpdate();
@@ -211,6 +211,7 @@ public class DAL_Product extends DAL {
     }
 
     public boolean Update_ByCompanyOrder(int ID, double Quantity, Connection _Connection) throws SQLException {
+        
         boolean result = false;
         try {
             Connection cnn = _Connection;

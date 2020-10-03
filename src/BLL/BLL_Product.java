@@ -37,13 +37,14 @@ public class BLL_Product {
 
         if ((Name.equals(null) || Name.equals(""))
                 || (Price.equals(null) || Price.equals(""))
-                || (Unit.equals(null) || Unit.equals(""))) {
+                || (Unit.equals(null) || Unit.equals(""))
+                || (UnitStock.equals(null) || UnitStock.equals(""))) {
             JOptionPane.showMessageDialog(null, "co du lieu de trong moi kiem tra lai");
         } else {
             if (!CheckProductNameExist(SupplierId, Name)) {
                 try {
                     if (dal_product.Insert(Name, Float.parseFloat(Price), SupplierId, CategoryId, Unit,
-                            Integer.parseInt(UnitStock), ImagePath)) {
+                            Double.parseDouble(UnitStock), ImagePath)) {
                         gUI_Product.Load();
                         JOptionPane.showMessageDialog(null, "Them san pham thanh cong");
                     }
@@ -61,12 +62,13 @@ public class BLL_Product {
     public void Update(int ID, String Name, String Price, int SupplierId, int CategoryId, String Unit, String UnitsInStock, String ImagePath, GUI_Product gUI_Product) throws SQLException {
         if ((Name.equals(null) || Name.equals(""))
                 || (Price.equals(null) || Price.equals(""))
-                || (Unit.equals(null) || Unit.equals(""))) {
+                || (Unit.equals(null) || Unit.equals(""))
+                || (UnitsInStock.equals(null) || UnitsInStock.equals(""))) {
             JOptionPane.showMessageDialog(null, "co du lieu de trong moi kiem tra lai");
         } else {
             try {
                 if (dal_product.Update(ID, Name, Double.parseDouble(Price), SupplierId, CategoryId, Unit,
-                        Integer.parseInt(UnitsInStock), ImagePath)) {
+                        Double.parseDouble(UnitsInStock), ImagePath)) {
                     JOptionPane.showMessageDialog(null, "Cap Nhap pham thanh cong");
                     gUI_Product.Load();
                 } else {
